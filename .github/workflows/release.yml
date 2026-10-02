@@ -1,0 +1,43 @@
+name: Release
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Tag matches the app version
+        run: |
+          want="${GITHUB_REF_NAME#v}"
+          have=$(awk -F'"' '/MARKETING_VERSION/{print $2}' project.yml)
+          [ "$want" = "$have" ] || { echo "tag $GITHUB_REF_NAME but project.yml says $have"; exit 1; }
+      - name: Core tests
+        working-directory: Packages/GameReadyCore
+        run: swift test
+      - name: Build
+        run: |
+          brew install xcodegen
+          scripts/build.sh
+          cd dist && shasum -a 256 Game-Ready.zip | tee Game-Ready.zip.sha256
+      - name: Release notes from CHANGELOG.md
+        run: |
+          v="${GITHUB_REF_NAME#v}"
+          awk -v v="$v" '$0 ~ "^## \\[" v "\\]"{p=1; next} /^## \[/{if(p) exit} p && !/^\[/' CHANGELOG.md > notes.md
+          cat >> notes.md <<'NOTES'
+
+          ### Install
+          1. Download **Game-Ready.zip** below and unzip it.
+          2. Move **Game Ready** to Applications and open it.
+          3. The first time, macOS blocks it because it isn't notarised yet: open **System Settings → Privacy & Security** and choose **Open Anyway**.
+
+          Apple silicon, macOS 15 or later. `Game-Ready.zip.sha256` holds the checksum.
+          NOTES
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" dist/Game-Ready.zip dist/Game-Ready.zip.sha256 --title "Game Ready $GITHUB_REF_NAME" --notes-file notes.md

@@ -8,6 +8,7 @@
 ![SwiftUI](https://img.shields.io/badge/SwiftUI-macOS_15+-0D96F6?logo=apple&logoColor=white)
 ![Apple silicon](https://img.shields.io/badge/Apple_silicon-arm64-000000?logo=apple&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green)
+[![Release](https://img.shields.io/github/v/release/CaputoDavide93/MacOS-Game-Mode)](https://github.com/CaputoDavide93/MacOS-Game-Mode/releases/latest)
 [![CI](https://github.com/CaputoDavide93/MacOS-Game-Mode/actions/workflows/ci.yml/badge.svg)](https://github.com/CaputoDavide93/MacOS-Game-Mode/actions/workflows/ci.yml)
 
 </div>
@@ -74,6 +75,16 @@ Why each choice was made: [docs/decisions.md](docs/decisions.md). Look and feel:
 
 ## 🚀 Quick Start
 
+### Download
+
+1. Get **Game-Ready.zip** from the [latest release](https://github.com/CaputoDavide93/MacOS-Game-Mode/releases/latest) and unzip it.
+2. Move **Game Ready** to Applications and open it.
+3. The first time, macOS blocks it because it isn't notarised yet: open **System Settings → Privacy & Security** and choose **Open Anyway**.
+
+Apple silicon, macOS 15 or later.
+
+### Build from source
+
 Requires an Apple silicon Mac with macOS 15 or later, Xcode 16+, and [XcodeGen](https://github.com/yonaskolb/XcodeGen).
 
 ```bash
@@ -82,8 +93,11 @@ scripts/build.sh                      # → build/…/Game Ready.app and dist/Ga
 open "build/dd/Build/Products/Release/Game Ready.app"
 ```
 
-The build is ad-hoc signed, not notarised. On another Mac, the first launch is blocked: open
-**System Settings → Privacy & Security** and choose **Open Anyway** (macOS 15 and later).
+The build is ad-hoc signed, not notarised, so the first launch needs **Open Anyway** as above.
+
+To release: bump `MARKETING_VERSION` in `project.yml`, move the CHANGELOG's `[Unreleased]`
+notes under the new version, then `git tag vX.Y.Z && git push --tags`. The Release workflow
+tests, builds and publishes the zip with those notes.
 
 ---
 

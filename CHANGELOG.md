@@ -4,6 +4,8 @@ All notable changes to this project are documented here. Format: [Keep a Changel
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-10-02
+
 ### Added
 - Pre-flight check: connection, Wi-Fi signal, Mac → router hop, internet latency, UDP loss
   (IPv4 and IPv6), IPv6, speed with latency under load, line busy, Mac state, background apps,
@@ -20,3 +22,6 @@ All notable changes to this project are documented here. Format: [Keep a Changel
 - A game server that never answers, or a Wi-Fi link with no rate, counts as "couldn't measure", never a pass.
 - `--check` (JSON results) and `--screenshots <dir>` command-line modes.
 - App icon drawn as SVG (`App/Design/AppIcon.svg`), rendered by `tools/gen_icon.sh`.
+
+[Unreleased]: https://github.com/CaputoDavide93/MacOS-Game-Mode/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/CaputoDavide93/MacOS-Game-Mode/releases/tag/v0.1.0
