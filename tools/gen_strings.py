@@ -20,7 +20,11 @@ APP = ROOT / "App/Sources"
 
 def enum_cases(path: pathlib.Path, name: str) -> list[str]:
     text = path.read_text()
-    body = re.search(r"enum %s\b[^{]*\{(.*?)\n\}" % name, text, re.S).group(1)
+    # Stop at the closing brace with the enum's own indentation (enums can be nested).
+    m = re.search(r"^([ \t]*)(?:public |private |fileprivate |internal )?enum %s\b[^{]*\{" % name, text, re.M)
+    indent = m.group(1)
+    end = re.search(r"\n%s\}" % re.escape(indent), text[m.end():])
+    body = text[m.end():m.end() + end.start()]
     cases = []
     for line in body.splitlines():
         line = line.split("//")[0].strip()

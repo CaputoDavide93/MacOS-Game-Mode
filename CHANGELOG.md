@@ -13,6 +13,9 @@ All notable changes to this project are documented here. Format: [Keep a Changel
 - Live watch in the menu bar while Game Mode is on, labelling each hiccup as the Mac's Wi-Fi,
   the internet, or the Mac.
 - History of checks and sessions (90 days), CSV export, Delete All Data.
+- Game Mode also sets AirDrop to No One and turns off Handoff and Universal Control, and restores every setting from a saved plan, even after a crash.
+- Play opens Xbox Cloud Gaming, GeForce NOW (its Mac app when installed) or Amazon Luna.
+- Better xCloud: read its settings to tick the checklist; opt-in tuning during Game Mode, undone on "off".
 - English and Italian.
 - A game server that never answers, or a Wi-Fi link with no rate, counts as "couldn't measure", never a pass.
 - `--check` (JSON results), `--screenshots <dir>` and `--icon <dir>` command-line modes.

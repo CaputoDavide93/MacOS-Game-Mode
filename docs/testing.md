@@ -23,5 +23,8 @@ Device-only behaviour. ✅ verified · ⚠️ partly · ⬜ not yet run.
 | Quit with Game Mode on → restored before exit | ⬜ | |
 | Kill the app with Game Mode on → reopening offers "Turn off" | ⬜ | |
 | Live watch labels a router spike as "Mac's Wi-Fi" and a server-only spike as "Internet" | ⬜ | Logic covered by unit tests |
+| AirDrop No One / Handoff off / Universal Control off take effect, and come back on "off" | ⬜ | The `defaults` round trip is tested on a throwaway domain; the effect on the real agents is not yet seen |
+| Better xCloud: read with an xbox.com tab open; tune on Game Mode on; original values back on "off" | ⬜ | Script generation is compiled (`osacompile`) and executed (JavaScriptCore) in tests; not yet run against the real page |
+| Play opens each service (and the GeForce NOW app when installed) | ⬜ | |
 | VoiceOver reads every result as "name: grade. sentence" | ⬜ | |
 | Light and dark render correctly | ✅ | `--screenshots`, reviewed by eye |

@@ -25,7 +25,8 @@ struct CheckView: View {
                 if model.running { progress }
                 GameModeRow()
                 Button { model.play() } label: {
-                    Label(isGreen ? L("ui.play") : L("ui.playAnyway"), systemImage: "gamecontroller")
+                    Label(String(format: L(isGreen ? "ui.playOn" : "ui.playAnywayOn"), model.settings.platform.displayName),
+                          systemImage: "gamecontroller")
                 }
                 .buttonStyle(SecondaryButtonStyle())
                 .keyboardShortcut("p", modifiers: .command)
@@ -141,19 +142,20 @@ struct GameModeRow: View {
         }
     }
 
-    private var busy: Bool { model.gameMode.phase == .starting || model.gameMode.phase == .stopping }
+    private var busy: Bool { model.switching || model.gameMode.phase == .starting || model.gameMode.phase == .stopping }
 
     private var statusText: String {
         switch model.gameMode.phase {
         case .starting: return L("ui.gameMode.starting")
         case .stopping: return L("ui.gameMode.stopping")
         case .failed(let message): return L("ui.gameMode.failed") + " " + message
-        default: return L("ui.gameMode.help")
+        default: return model.changesError.map { L("ui.gameMode.failed") + " " + $0 } ?? L("ui.gameMode.help")
         }
     }
 
     private var statusColor: Color {
         if case .failed = model.gameMode.phase { return Theme.bad }
+        if model.changesError != nil { return Theme.bad }
         return Theme.textVariant
     }
 }

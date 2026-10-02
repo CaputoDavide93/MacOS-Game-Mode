@@ -6,6 +6,7 @@ enum Shell {
     struct Result: Sendable {
         var status: Int32
         var output: String
+        var error: String = ""
     }
 
     static func run(_ executable: String, _ arguments: [String], timeout: TimeInterval = 30) async -> Result {
@@ -14,17 +15,25 @@ enum Shell {
             process.executableURL = URL(fileURLWithPath: executable)
             process.arguments = arguments
             let pipe = Pipe()
+            let errPipe = Pipe()
             process.standardOutput = pipe
-            process.standardError = Pipe()
+            process.standardError = errPipe
             let box = OutputBox()
+            let errBox = OutputBox()
+            errPipe.fileHandleForReading.readabilityHandler = { handle in
+                let data = handle.availableData
+                if !data.isEmpty { errBox.append(data) }
+            }
             pipe.fileHandleForReading.readabilityHandler = { handle in
                 let data = handle.availableData
                 if !data.isEmpty { box.append(data) }
             }
             process.terminationHandler = { p in
                 pipe.fileHandleForReading.readabilityHandler = nil
+                errPipe.fileHandleForReading.readabilityHandler = nil
                 box.append(pipe.fileHandleForReading.readDataToEndOfFile())
-                continuation.resume(returning: Result(status: p.terminationStatus, output: box.string))
+                errBox.append(errPipe.fileHandleForReading.readDataToEndOfFile())
+                continuation.resume(returning: Result(status: p.terminationStatus, output: box.string, error: errBox.string))
             }
             do {
                 try process.run()

@@ -14,6 +14,7 @@ final class AppModel {
     let checklist = Checklist()
     let gameMode = GameModeController()
     let live = LiveMonitor()
+    let changes = SessionChanges()
     let history = HistoryStore(directory: GameModeController.supportDir)
 
     private(set) var results: [CheckResult] = []
@@ -39,6 +40,14 @@ final class AppModel {
     init() {
         try? history.prune()
         entries = history.load()
+        // An undo left over from a session whose Game Mode is already off (e.g. Better xCloud
+        // couldn't be restored because no xbox.com tab was open): retry it quietly.
+        Task { await retryPendingRestore() }
+    }
+
+    func retryPendingRestore() async {
+        guard !gameMode.isOn, !gameMode.leftOn, !switching, changes.hasPendingRestore else { return }
+        await changes.restore()
     }
 
     var stepCount: Int { includeSpeed ? Step.allCases.count : Step.allCases.count - 1 }
@@ -47,6 +56,7 @@ final class AppModel {
 
     func runCheck() async {
         guard !running else { return }   // a second click while running does nothing
+        await retryPendingRestore()
         running = true
         stepsDone = 0
         results = []
@@ -65,14 +75,18 @@ final class AppModel {
         let routerHost = net.router
         async let hopSamples: [Double?] = routerHost == nil ? [] : PingProbe.run(host: routerHost!, count: 100, interval: 0.1)
         async let cfSamples = PingProbe.run(host: Endpoints.cloudflareDNSv4, count: 50, interval: 0.1)
-        async let gameSamples = PingProbe.run(host: settings.gameServerHost, count: 50, interval: 0.1)
+        // The game-server ping is Xbox's front door; other platforms are graded on Cloudflare alone.
+        let pingGame = settings.platform == .xboxCloud
+        async let gameSamples: [Double?] = pingGame ? PingProbe.run(host: settings.gameServerHost, count: 50, interval: 0.1) : []
         let hop = await hopSamples
         out.append(hop.isEmpty ? .notMeasured(.hop) : grader.hop(PingStats(samples: hop)))
         advance(out)
 
         step = .internet
         let cf = await cfSamples, game = await gameSamples
-        out.append(grader.internet(["Cloudflare": PingStats(samples: cf), "Game server": PingStats(samples: game)]))
+        var targets = ["Cloudflare": PingStats(samples: cf)]
+        if pingGame { targets["Game server"] = PingStats(samples: game) }
+        out.append(grader.internet(targets))
         advance(out)
 
         step = .udp
@@ -94,6 +108,10 @@ final class AppModel {
         let noisy = AppsProbe.runningNoisy(enabled: settings.quitApps).compactMap(\.localizedName)
         out.append(grader.apps(noisy: noisy, timeMachineRunning: await AppsProbe.timeMachineRunning()))
         await checklist.detect()
+        if settings.platform.usesBetterXcloud {
+            await changes.refreshXcloud(browser: settings.browser)
+            checklist.applyBetterXcloud(changes.xcloudSettings)
+        }
         out.append(grader.checklist(checklist.states))
         advance(out)
 
@@ -146,9 +164,18 @@ final class AppModel {
 
     // MARK: - Game Mode and play
 
+    /// True while Game Mode is switching; the switch ignores clicks until it settles.
+    private(set) var switching = false
+    private(set) var changesError: String?
+
     func toggleGameMode() async {
+        guard !switching else { return }   // one transition at a time
+        switching = true
+        defer { switching = false }
+        changesError = nil
         if gameMode.isOn || gameMode.leftOn {
             await gameMode.turnOff()
+            await changes.restore()
             if let summary = live.stop() {
                 lastSession = summary
                 try? history.append(.session(summary))
@@ -158,15 +185,31 @@ final class AppModel {
             let apps = AppsProbe.runningNoisy(enabled: settings.quitApps)
             await gameMode.turnOn(quitting: apps)
             if gameMode.isOn {
+                do {
+                    try await changes.apply(betterXcloud: settings.tuneBetterXcloud && settings.platform.usesBetterXcloud,
+                                            browser: settings.browser)
+                } catch {
+                    // Couldn't record the originals: change nothing, and back out of Game Mode.
+                    changesError = error.localizedDescription
+                    await gameMode.turnOff()
+                    await changes.restore()
+                    return
+                }
                 live.start(router: router ?? NetworkProbe.snapshot().router, server: settings.gameServerHost)
             }
         }
     }
 
+    /// Opens the chosen platform: its own Mac app when installed, otherwise the browser.
     func play() {
-        guard let url = URL(string: settings.playURL), url.scheme == "https" else { return }
+        let platform = settings.platform
         let config = NSWorkspace.OpenConfiguration()
         config.activates = true
+        if let id = platform.nativeAppBundleID, let app = NSWorkspace.shared.urlForApplication(withBundleIdentifier: id) {
+            NSWorkspace.shared.openApplication(at: app, configuration: config)
+            return
+        }
+        let url = platform.playURL
         if let app = NSWorkspace.shared.urlForApplication(withBundleIdentifier: settings.browser.bundleID) {
             NSWorkspace.shared.open([url], withApplicationAt: app, configuration: config)
         } else {

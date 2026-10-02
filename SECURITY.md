@@ -33,6 +33,23 @@ Game Mode runs one script as root, after macOS asks for an administrator passwor
   only what it changed when the flag disappears or the script stops.
 - Turning Game Mode off is deleting the flag file; no further root access happens.
 
+## Settings changed as the user
+
+Game Mode also sets AirDrop to No One and turns off Handoff and Universal Control (user
+`defaults`, no root). Their original values, including "not set", are saved to
+`restore-plan.json` before anything changes and put back on "off", with each one read back
+to confirm. If a current value can't be read, or the undo plan can't be saved, nothing is
+changed at all.
+
+## Better xCloud (opt-in)
+
+Reading or tuning Better xCloud uses the browser's AppleScript support. It needs you to turn
+on the browser's **Allow JavaScript from Apple Events** and to approve macOS's Automation
+prompt. That browser option lets *any* app you have allowed to control the browser run
+scripts in your pages, so only turn it on if you're comfortable with that. Game Ready runs two
+fixed scripts, only in a tab whose real host is xbox.com (the page checks its own host first): one reads `localStorage["BetterXcloud"]`, the other
+writes three keys. Values are passed as JSON data, never as code.
+
 ## Supported versions
 
 Only the latest commit on `main` is supported.

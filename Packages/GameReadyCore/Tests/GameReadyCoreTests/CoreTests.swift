@@ -537,3 +537,215 @@ import Testing
         #expect(s.contains(#"rmdir "$LOCK""#))
     }
 }
+
+@Suite struct PlatformTests {
+    @Test func everyPlatformOpensAnAllowedHTTPSPage() {
+        for p in GamingPlatform.allCases {
+            #expect(p.playURL.scheme == "https")
+            #expect(Endpoints.allHosts.contains(p.playURL.host!), "\(p) host not in Endpoints")
+        }
+        #expect(GamingPlatform.xboxCloud.usesBetterXcloud && !GamingPlatform.geforceNow.usesBetterXcloud)
+    }
+}
+
+@Suite struct SharingSettingTests {
+    @Test func applyAndRestoreArguments() {
+        let a = SharingSetting.airDrop
+        #expect(a.applyArguments == ["write", "com.apple.sharingd", "DiscoverableMode", "-string", "Off"])
+        #expect(a.restoreArguments(original: "Contacts Only") == ["write", "com.apple.sharingd", "DiscoverableMode", "-string", "Contacts Only"])
+        // Absent before = the macOS default → restore by deleting, never by guessing a value.
+        #expect(a.restoreArguments(original: nil) == ["delete", "com.apple.sharingd", "DiscoverableMode"])
+        let h = SharingSetting.handoffAdvertise
+        #expect(h.applyArguments.first == "-currentHost")
+        #expect(h.restoreArguments(original: "1") == ["-currentHost", "write", h.domain, h.key, "-bool", "true"])
+    }
+
+    @Test func boolsCompareAcrossReadAndWriteForms() {
+        #expect(SharingSetting.universalControl.isGameValue("1"))
+        #expect(!SharingSetting.universalControl.isGameValue("0"))
+        #expect(SharingSetting.handoffAdvertise.isGameValue("0"))
+        #expect(!SharingSetting.airDrop.isGameValue(nil))
+    }
+
+    @Test func restorePlanSurvivesDisk() throws {
+        let plan = RestorePlan(sharing: [.airDrop: "Contacts Only", .universalControl: nil],
+                               betterXcloud: [BetterXcloud.Key.maxBitrate: .number(5_000_000), BetterXcloud.Key.preferIPv6: nil])
+        let back = try JSONDecoder().decode(RestorePlan.self, from: JSONEncoder().encode(plan))
+        #expect(back == plan)
+        #expect(back.sharing[.universalControl]! == nil)   // absent stays absent
+    }
+}
+
+@Suite struct BetterXcloudTests {
+    @Test func parse() {
+        #expect(BetterXcloud.parse(nil) == nil)
+        #expect(BetterXcloud.parse("null") == nil)
+        #expect(BetterXcloud.parse("[1]") == nil)
+        let s = BetterXcloud.parse(#"{"server.ipv6.prefer":true,"stream.video.maxBitrate":0,"server.region":"UkSouth"}"#)
+        #expect(s?["server.ipv6.prefer"] == .bool(true))
+        #expect(s?["stream.video.maxBitrate"] == .number(0))
+    }
+
+    @Test func snapshotOnlyHoldsWhatThePresetChanges() {
+        let current: [String: JSONValue] = ["server.ipv6.prefer": .bool(true), "stream.video.maxBitrate": .number(5_120_000),
+                                            "server.region": .string("UkSouth")]
+        let snap = BetterXcloud.snapshot(of: current)
+        #expect(snap.keys.sorted() == ["stream.video.codecProfile", "stream.video.maxBitrate"])
+        #expect(snap["stream.video.maxBitrate"]! == .number(5_120_000))
+        #expect(snap["stream.video.codecProfile"]! == nil)        // absent before → delete on undo
+        #expect(snap["server.region"] == nil)                     // region is never touched
+    }
+
+    @Test func presetStatus() {
+        var s: [String: JSONValue] = ["server.ipv6.prefer": .bool(true), "stream.video.maxBitrate": .number(0),
+                                      "stream.video.codecProfile": .string("high")]
+        #expect(BetterXcloud.matchesPreset(s) && BetterXcloud.qualityDone(s) && BetterXcloud.ipv6Done(s))
+        s["stream.video.codecProfile"] = .string("normal")
+        #expect(!BetterXcloud.matchesPreset(s) && !BetterXcloud.qualityDone(s))
+    }
+
+    @Test func writeScriptCarriesValuesAsJSONNotCode() throws {
+        let js = try BetterXcloud.writeScript(["stream.video.codecProfile": .string("x');alert(1);//"), "server.ipv6.prefer": nil])
+        // The hostile string ends up inside a JSON string literal, escaped; the removal is listed by name.
+        #expect(js.contains(#""stream.video.codecProfile":"x');alert(1);\/\/""#) || js.contains(#""stream.video.codecProfile":"x');alert(1);//""#))
+        #expect(js.contains(#"var r=["server.ipv6.prefer"]"#))
+        #expect(js.hasPrefix("(function(){") && js.hasSuffix("})()"))
+    }
+
+    @Test func writeScriptRunsInJavaScriptCore() throws {
+        // Execute the generated script against a fake localStorage and check the result.
+        let js = try BetterXcloud.writeScript(["stream.video.maxBitrate": .number(0), "server.ipv6.prefer": nil])
+        let harness = """
+        var store={'BetterXcloud':'{"server.ipv6.prefer":true,"server.region":"UkSouth"}'};
+        var localStorage={getItem:function(k){return k in store?store[k]:null},setItem:function(k,v){store[k]=String(v)}};
+        \(js)
+        """
+        let out = try runJS(harness)
+        let saved = BetterXcloud.parse(out)
+        #expect(saved?["stream.video.maxBitrate"] == .number(0))
+        #expect(saved?["server.ipv6.prefer"] == nil)
+        #expect(saved?["server.region"] == .string("UkSouth"))
+    }
+
+    private func runJS(_ source: String) throws -> String {
+        let p = Process()
+        p.executableURL = URL(fileURLWithPath: "/usr/bin/osascript")
+        p.arguments = ["-l", "JavaScript", "-e", source]
+        let out = Pipe(); p.standardOutput = out; p.standardError = Pipe()
+        try p.run(); p.waitUntilExit()
+        return String(decoding: out.fileHandleForReading.readDataToEndOfFile(), as: UTF8.self)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+}
+
+@Suite struct BrowserScriptTests {
+    private func compiles(_ source: String) throws -> Bool {
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".applescript")
+        try source.write(to: url, atomically: true, encoding: .utf8)
+        let p = Process()
+        p.executableURL = URL(fileURLWithPath: "/usr/bin/osacompile")
+        p.arguments = ["-o", url.deletingPathExtension().appendingPathExtension("scpt").path, url.path]
+        p.standardError = Pipe(); p.standardOutput = Pipe()
+        try p.run(); p.waitUntilExit()
+        return p.terminationStatus == 0
+    }
+
+    @Test func compilesForEveryBrowser() throws {
+        let js = try BetterXcloud.writeScript(BetterXcloud.preset.mapValues { Optional($0) })
+        // AppleScript takes a browser's commands from the installed app, so only installed ones can compile.
+        let browsers = [("Google Chrome", "com.google.Chrome", false), ("Safari", "com.apple.Safari", true),
+                        ("Microsoft Edge", "com.microsoft.edgemac", false)]
+        var compiled = 0
+        for (name, id, safari) in browsers where FileManager.default.fileExists(atPath: "/Applications/\(name).app")
+            || FileManager.default.fileExists(atPath: "/System/Volumes/Preboot/Cryptexes/App/System/Applications/\(name).app") {
+            #expect(try compiles(BrowserScripts.run(js, bundleID: id, safari: safari)), "\(name)")
+            compiled += 1
+        }
+        #expect(compiled >= 1)
+    }
+
+    @Test func hostileTextStaysInsideTheString() throws {
+        // AppleScript must read the literal back as exactly the original text: nothing runs.
+        let hostile = #"x" & (do shell script "id") & "\"#
+        let p = Process()
+        p.executableURL = URL(fileURLWithPath: "/usr/bin/osascript")
+        p.arguments = ["-e", "return " + BrowserScripts.appleScriptString(hostile)]
+        let out = Pipe(); p.standardOutput = out; p.standardError = Pipe()
+        try p.run(); p.waitUntilExit()
+        let back = String(decoding: out.fileHandleForReading.readDataToEndOfFile(), as: UTF8.self)
+        #expect(back.trimmingCharacters(in: .newlines) == hostile)
+        #expect(try compiles(BrowserScripts.run(hostile, bundleID: "com.apple.Safari", safari: true)))
+    }
+}
+
+/// Exercises the real `defaults` tool on a throwaway domain, never a real setting.
+@Suite(.serialized) struct SharingRoundTripTests {
+    let domain = "io.github.caputodavide93.gameready.tests"
+
+    private func defaults(_ args: [String]) throws -> (Int32, String) {
+        let p = Process()
+        p.executableURL = URL(fileURLWithPath: "/usr/bin/defaults")
+        p.arguments = args
+        let out = Pipe(); p.standardOutput = out; p.standardError = Pipe()
+        try p.run(); p.waitUntilExit()
+        return (p.terminationStatus, String(decoding: out.fileHandleForReading.readDataToEndOfFile(), as: UTF8.self)
+            .trimmingCharacters(in: .whitespacesAndNewlines))
+    }
+
+    @Test func absentKeyIsRestoredByDeleting() throws {
+        let s = SharingSetting(domain: domain, key: "Mode", currentHost: false, kind: .string, gameValue: "Off", reloadProcess: nil)
+        _ = try defaults(["delete", domain])
+        #expect(try defaults(s.readArguments).0 != 0)           // absent to begin with
+        _ = try defaults(s.applyArguments)
+        #expect(s.isGameValue(try defaults(s.readArguments).1))
+        _ = try defaults(s.restoreArguments(original: nil))
+        #expect(try defaults(s.readArguments).0 != 0)           // absent again
+        _ = try defaults(["delete", domain])
+    }
+
+    @Test func boolValueRoundTrips() throws {
+        let s = SharingSetting(domain: domain, key: "Allowed", currentHost: false, kind: .bool, gameValue: "false", reloadProcess: nil)
+        _ = try defaults(["write", domain, "Allowed", "-bool", "true"])
+        let original = try defaults(s.readArguments).1          // "1"
+        _ = try defaults(s.applyArguments)
+        #expect(try defaults(s.readArguments).1 == "0")
+        _ = try defaults(s.restoreArguments(original: original))
+        #expect(try defaults(s.readArguments).1 == "1")
+        _ = try defaults(["delete", domain])
+    }
+}
+
+@Suite struct ReviewFourTests {
+    @Test func onlyAGenuineMissingKeyCountsAsAbsent() {
+        #expect(SharingSetting.classifyRead(status: 0, output: "Off\n", error: "") == .value("Off"))
+        #expect(SharingSetting.classifyRead(status: 1, output: "",
+            error: "The domain/default pair of (com.apple.sharingd, DiscoverableMode) does not exist") == .absent)
+        #expect(SharingSetting.classifyRead(status: 1, output: "", error: "Domain com.apple.universalcontrol not found") == .absent)
+        #expect(SharingSetting.classifyRead(status: 1, output: "", error: "Could not find key 'X' in domain 'Y'") == .absent)
+        // Anything else is an error: never recorded as "absent" (which would delete a real value on restore).
+        #expect(SharingSetting.classifyRead(status: 1, output: "", error: "Permission denied") == .failed)
+        #expect(SharingSetting.classifyRead(status: -1, output: "", error: "") == .failed)
+    }
+
+    @Test func planRemembersTheBrowser() throws {
+        let plan = RestorePlan(sharing: [:], betterXcloud: ["k": .bool(true)], betterXcloudBrowser: "com.apple.Safari")
+        #expect(try JSONDecoder().decode(RestorePlan.self, from: JSONEncoder().encode(plan)).betterXcloudBrowser == "com.apple.Safari")
+    }
+
+    @Test func scriptRefusesPagesThatAreNotXbox() throws {
+        func run(host: String) throws -> String {
+            let js = BrowserScripts.guarded("'ran'")
+            let p = Process()
+            p.executableURL = URL(fileURLWithPath: "/usr/bin/osascript")
+            p.arguments = ["-l", "JavaScript", "-e", "var location={hostname:'\(host)'};\n" + js]
+            let out = Pipe(); p.standardOutput = out; p.standardError = Pipe()
+            try p.run(); p.waitUntilExit()
+            return String(decoding: out.fileHandleForReading.readDataToEndOfFile(), as: UTF8.self).trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+        #expect(try run(host: "www.xbox.com") == "ran")
+        #expect(try run(host: "xbox.com") == "ran")
+        #expect(try run(host: "attacker.example") == BrowserScripts.notXboxMarker)
+        #expect(try run(host: "xbox.com.attacker.example") == BrowserScripts.notXboxMarker)
+        #expect(try run(host: "notxbox.com") == BrowserScripts.notXboxMarker)
+    }
+}

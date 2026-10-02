@@ -1888,6 +1888,40 @@
         }
       }
     },
+    "ui.changes.cannotRead": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn't read the current %@ setting, so nothing was changed."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Impossibile leggere l'impostazione %@ attuale, quindi non è stato cambiato nulla."
+          }
+        }
+      }
+    },
+    "ui.changes.cannotSave": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn't save the undo plan, so nothing was changed."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Impossibile salvare il piano di ripristino, quindi non è stato cambiato nulla."
+          }
+        }
+      }
+    },
     "ui.checkAgain": {
       "extractionState": "manual",
       "localizations": {
@@ -2013,13 +2047,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Switches off AirDrop's radio, keeps the Mac awake, pauses Time Machine and quits apps that get in the way. Asks for your password once."
+            "value": "Switches off AirDrop, Handoff and Universal Control, keeps the Mac awake, pauses Time Machine and quits apps that get in the way. Turning it off puts every setting back. Asks for your password once."
           }
         },
         "it": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "Spegne la radio di AirDrop, tiene sveglio il Mac, mette in pausa Time Machine e chiude le app che disturbano. Chiede la password una volta."
+            "value": "Spegne AirDrop, Handoff e Controllo universale, tiene sveglio il Mac, mette in pausa Time Machine e chiude le app che disturbano. Disattivandola, tutte le impostazioni tornano com'erano. Chiede la password una volta."
           }
         }
       }
@@ -2313,36 +2347,36 @@
         }
       }
     },
-    "ui.play": {
+    "ui.playAnywayOn": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Play"
+            "value": "Play anyway on %@"
           }
         },
         "it": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "Gioca"
+            "value": "Gioca comunque su %@"
           }
         }
       }
     },
-    "ui.playAnyway": {
+    "ui.playOn": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Play anyway"
+            "value": "Play on %@"
           }
         },
         "it": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "Gioca comunque"
+            "value": "Gioca su %@"
           }
         }
       }
@@ -2445,6 +2479,23 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "Browser per Gioca"
+          }
+        }
+      }
+    },
+    "ui.settings.platform": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gaming service"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Servizio di gioco"
           }
         }
       }
@@ -2581,6 +2632,244 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "Cronologia"
+          }
+        }
+      }
+    },
+    "ui.xcloud.applied": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tuned for this session. Your own settings come back when Game Mode goes off."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Regolato per questa sessione. Le tue impostazioni tornano quando la Modalità gioco si spegne."
+          }
+        }
+      }
+    },
+    "ui.xcloud.browserClosed": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The browser isn't open."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Il browser non è aperto."
+          }
+        }
+      }
+    },
+    "ui.xcloud.differs": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not tuned yet. Turn on \"Game Mode also tunes Better xCloud\" in Settings, or change it yourself."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Non ancora regolato. Attiva \"La Modalità gioco regola anche Better xCloud\" nelle Impostazioni, o cambialo tu."
+          }
+        }
+      }
+    },
+    "ui.xcloud.failed": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn't change Better xCloud's settings. Nothing was left half-changed."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Impossibile modificare le impostazioni di Better xCloud. Niente è rimasto a metà."
+          }
+        }
+      }
+    },
+    "ui.xcloud.jsDisabled": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The browser blocks this. In Chrome or Edge: View → Developer → Allow JavaScript from Apple Events. In Safari: Develop → Allow JavaScript from Apple Events."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Il browser lo blocca. In Chrome o Edge: Visualizza → Sviluppatore → Consenti JavaScript dagli Apple Events. In Safari: Sviluppo → Consenti JavaScript dagli Apple Events."
+          }
+        }
+      }
+    },
+    "ui.xcloud.matches": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Already set: highest bitrate, high profile, Prefer IPv6."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Già impostato: bitrate massimo, profilo alto, Preferisci IPv6."
+          }
+        }
+      }
+    },
+    "ui.xcloud.noTab": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open xbox.com in the browser so Game Ready can read Better xCloud's settings."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Apri xbox.com nel browser così Game Ready può leggere le impostazioni di Better xCloud."
+          }
+        }
+      }
+    },
+    "ui.xcloud.notAllowed": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "macOS didn't allow Game Ready to control the browser. Turn it on in System Settings → Privacy & Security → Automation."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "macOS non ha permesso a Game Ready di controllare il browser. Attivalo in Impostazioni di Sistema → Privacy e sicurezza → Automazione."
+          }
+        }
+      }
+    },
+    "ui.xcloud.notInstalled": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Better xCloud isn't installed in this browser, or hasn't saved any settings yet."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Better xCloud non è installato in questo browser, o non ha ancora salvato impostazioni."
+          }
+        }
+      }
+    },
+    "ui.xcloud.refresh": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Refresh"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Aggiorna"
+          }
+        }
+      }
+    },
+    "ui.xcloud.restorePending": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your Better xCloud settings will be put back next time xbox.com is open."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Le tue impostazioni di Better xCloud verranno ripristinate la prossima volta che apri xbox.com."
+          }
+        }
+      }
+    },
+    "ui.xcloud.tune": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Game Mode also tunes Better xCloud"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "La Modalità gioco regola anche Better xCloud"
+          }
+        }
+      }
+    },
+    "ui.xcloud.tune.help": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sets the highest bitrate, the high H.264 profile and Prefer IPv6, and puts your own settings back when Game Mode goes off. Needs an open xbox.com tab and, in the browser, Allow JavaScript from Apple Events."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Imposta il bitrate massimo, il profilo H.264 alto e Preferisci IPv6, e ripristina le tue impostazioni quando la Modalità gioco si spegne. Serve una scheda xbox.com aperta e, nel browser, Consenti JavaScript dagli Apple Events."
+          }
+        }
+      }
+    },
+    "ui.xcloud.unknown": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not read yet. Open xbox.com and press Refresh."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Non ancora letto. Apri xbox.com e premi Aggiorna."
           }
         }
       }

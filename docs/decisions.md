@@ -86,3 +86,38 @@ answered, and a strong Wi-Fi signal passed with no link rate. A target or readin
 returns nothing now grades `unknown`; for an essential check that makes the verdict
 incomplete (D4). The guard also takes an atomic `mkdir` lock before it reads any setting,
 so two starts can't both capture and later restore different values.
+
+## D15 — Game Mode also changes user settings, and undoes them from a saved plan (2026-10-02)
+AirDrop (No One), Handoff and Universal Control wake the AirDrop radio, so Game Mode turns
+them off too. These are user `defaults`, so no root is needed. Before any change the
+original values are written to `restore-plan.json` in the app's support folder ("absent" is
+recorded too, and undone by deleting the key, never by guessing a default). On "off" each
+setting is restored and read back; only what reads back as the original leaves the plan, so
+a crash or a failed write is retried next time.
+
+## D16 — Better xCloud through the browser's own AppleScript, opt-in (2026-10-02)
+Better xCloud stores its settings as one JSON object in the xbox.com page's localStorage
+(`BetterXcloud`). The only supported way in from outside is the browser's AppleScript
+`execute javascript` / `do JavaScript`, which needs the browser's "Allow JavaScript from
+Apple Events" and macOS's Automation consent. Writing is opt-in ("Game Mode also tunes
+Better xCloud"), changes only three keys (Prefer IPv6, unlimited bitrate, high H.264
+profile), never region or resolution, verifies by reading back, and restores the original
+values on "off". Values travel as JSON inside the script, never spliced in as code. Reading
+(to tick the checklist) works with the same permissions and changes nothing.
+
+## D17 — Play opens the chosen service (2026-10-02)
+Xbox Cloud Gaming, GeForce NOW or Amazon Luna. GeForce NOW opens its own Mac app when it's
+installed, otherwise every service opens in the chosen browser. The game-server ping is
+Xbox's front door, so for the other services internet latency is graded on Cloudflare alone
+rather than on a server we can't vouch for.
+
+## D18 — Fail closed before changing anything (2026-10-02)
+From review: a `defaults read` failure must never be recorded as "not set" (restore would
+then delete a real value), so only `defaults`' own "does not exist" counts as absent and any
+other failure stops Game Mode before it changes anything. The undo plan must be on disk
+before the first change, or nothing changes. The plan records which browser was tuned and is
+restored there. Game Mode switches one transition at a time. Scripts run only in a page whose
+real host is xbox.com or a subdomain, checked by the page itself, not by matching the URL text.
+Not verified by us across macOS versions: the `defaults` keys for Universal Control (and, to a
+lesser degree, AirDrop and Handoff). If a key moves, the change has no effect and restore is a
+no-op; nothing breaks, but docs/testing.md keeps them unticked until seen working.

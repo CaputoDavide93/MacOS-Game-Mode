@@ -31,7 +31,9 @@ the same on screen. Game Ready measures each layer separately and gives one plai
 |---|---|---|
 | 🩺 | Pre-flight check | 11 checks in about a minute: connection type, Wi-Fi signal, the Mac → router hop, internet and game-server latency, UDP loss over IPv4 and IPv6, speed with latency under load, whether the line is busy, the Mac's power and heat, background apps, and a checklist |
 | 🚦 | One verdict | Ready, Ready with a warning, Not ready, or Couldn't finish. A check that couldn't measure never counts as a pass |
-| ⚡ | Game Mode | Switches off the AirDrop/Handoff radio (and keeps it off), turns off Low Power Mode, pauses Time Machine, keeps the Mac awake, quits apps that get in the way. One password prompt; everything is put back on "off" or quit |
+| ⚡ | Game Mode | Switches off the AirDrop/Handoff radio (and keeps it off), sets AirDrop to No One, turns off Handoff, Universal Control and Low Power Mode, pauses Time Machine, keeps the Mac awake, quits apps that get in the way. One password prompt; every setting is put back on "off" or quit, even after a crash |
+| 🎮 | Play | Opens Xbox Cloud Gaming, GeForce NOW (its Mac app when installed) or Amazon Luna |
+| 🎛️ | Better xCloud | Reads its settings to tick the checklist; opt-in, Game Mode sets the highest bitrate, the high H.264 profile and Prefer IPv6, and puts your own values back on "off" |
 | 📈 | Live watch | While Game Mode is on, a menu-bar dot and a log label every hiccup: the Mac's Wi-Fi, the internet, or the Mac |
 | ☑️ | Checklist | The settings no app can change for you (Location Services, AirDrop, Handoff, browser energy saver, stream quality), detected where macOS allows |
 | 🗂️ | History | Checks and game sessions for 90 days on the Mac, CSV export, Delete All Data |
@@ -75,8 +77,24 @@ The build is ad-hoc signed, not notarised. On another Mac, the first launch is b
 
 1. **Check now** (⌘R). Each step shows as it runs; the verdict card says what matters most.
 2. Switch on **Game Mode** (⌘G). macOS asks for your password once.
-3. **Play** (⌘P) opens Xbox Cloud Gaming in your browser (Chrome, Safari or Edge, in Settings).
-4. Watch the dot in the menu bar. Turning Game Mode off saves the session to History.
+3. **Play** (⌘P) opens your gaming service (Settings: Xbox Cloud Gaming, GeForce NOW or Amazon Luna) in Chrome, Safari or Edge.
+4. Watch the dot in the menu bar. Turning Game Mode off puts every setting back and saves the session to History.
+
+<details>
+<summary>Letting Game Ready read and tune Better xCloud</summary>
+
+1. Install [Better xCloud](https://github.com/redphx/better-xcloud) and open xbox.com once.
+2. In the browser, allow scripts from other apps: **Chrome / Edge:** View → Developer → Allow
+   JavaScript from Apple Events. **Safari:** Develop → Allow JavaScript from Apple Events.
+3. Press **Refresh** on the Better xCloud card (Checklist). macOS asks once whether Game Ready
+   may control the browser.
+4. To have Game Mode tune it, turn on **Game Mode also tunes Better xCloud** in Settings.
+
+The browser option lets any app you have allowed to control it run scripts in your web pages,
+which is why it's off by default. Game Ready only ever runs the two fixed scripts in
+`BetterXcloud.swift`.
+
+</details>
 
 From Terminal:
 

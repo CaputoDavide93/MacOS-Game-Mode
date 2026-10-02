@@ -36,6 +36,7 @@ struct ChecklistView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 8) {
+                if model.settings.platform.usesBetterXcloud { XcloudCard() }
                 ForEach(Checklist.Item.allCases) { item in
                     Card {
                         HStack(alignment: .top, spacing: 12) {
@@ -69,7 +70,13 @@ struct ChecklistView: View {
             .padding(Theme.padding)
         }
         .background(Theme.surface)
-        .task { await model.checklist.detect() }
+        .task {
+            await model.checklist.detect()
+            if model.settings.platform.usesBetterXcloud {
+                await model.changes.refreshXcloud(browser: model.settings.browser)
+                model.checklist.applyBetterXcloud(model.changes.xcloudSettings)
+            }
+        }
     }
 }
 
@@ -171,6 +178,9 @@ struct SettingsView: View {
     var body: some View {
         @Bindable var settings = model.settings
         Form {
+            Picker(L("ui.settings.platform"), selection: $settings.platform) {
+                ForEach(GamingPlatform.allCases) { Text($0.displayName).tag($0) }
+            }
             Picker(L("ui.settings.browser"), selection: $settings.browser) {
                 Text("Chrome").tag(Browser.chrome)
                 Text("Safari").tag(Browser.safari)
@@ -180,6 +190,16 @@ struct SettingsView: View {
                 VStack(alignment: .leading) {
                     Text(L("ui.settings.speed"))
                     Text(L("ui.settings.speed.help")).font(.caption).foregroundStyle(.secondary)
+                }
+            }
+            if settings.platform.usesBetterXcloud {
+                Section("Better xCloud") {
+                    Toggle(isOn: $settings.tuneBetterXcloud) {
+                        VStack(alignment: .leading) {
+                            Text(L("ui.xcloud.tune"))
+                            Text(L("ui.xcloud.tune.help")).font(.caption).foregroundStyle(.secondary)
+                        }
+                    }
                 }
             }
             Section(L("ui.settings.quitApps")) {
@@ -212,6 +232,7 @@ struct MenuBarView: View {
                 Toggle(L("ui.gameMode"), isOn: Binding(get: { model.gameMode.isOn },
                                                         set: { _ in Task { await model.toggleGameMode() } }))
                     .toggleStyle(.switch).controlSize(.small)
+                    .disabled(model.switching)
             }
             if model.live.running {
                 HStack(spacing: 16) {
@@ -246,5 +267,66 @@ struct MenuBarView: View {
             Text(ms.map { String(format: "%.0f ms", $0) } ?? "–").font(.title3.weight(.semibold)).monospacedDigit()
         }
         .accessibilityElement(children: .combine)
+    }
+}
+
+/// What Game Ready can see of Better xCloud, and what to do when it can't.
+struct XcloudCard: View {
+    @Environment(AppModel.self) private var model
+
+    var body: some View {
+        Card {
+            VStack(alignment: .leading, spacing: 6) {
+                HStack {
+                    Image(systemName: icon).foregroundStyle(color)
+                    Text("Better xCloud").font(.headline).foregroundStyle(Theme.text)
+                    Spacer()
+                    Button(L("ui.xcloud.refresh")) {
+                        Task {
+                            await model.changes.refreshXcloud(browser: model.settings.browser)
+                            model.checklist.applyBetterXcloud(model.changes.xcloudSettings)
+                        }
+                    }
+                    .buttonStyle(.link)
+                }
+                Text(L("ui.xcloud.\(key)")).font(.callout).foregroundStyle(Theme.textVariant)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .accessibilityElement(children: .combine)
+    }
+
+    private var key: String {
+        switch model.changes.xcloud {
+        case .unknown: return "unknown"
+        case .notInstalled: return "notInstalled"
+        case .noTab: return "noTab"
+        case .jsDisabled: return "jsDisabled"
+        case .notAllowed: return "notAllowed"
+        case .browserClosed: return "browserClosed"
+        case .failed: return "failed"
+        case .matches: return "matches"
+        case .differs: return "differs"
+        case .applied: return "applied"
+        case .restorePending: return "restorePending"
+        }
+    }
+
+    private var icon: String {
+        switch model.changes.xcloud {
+        case .matches, .applied: return Theme.symbol(.green)
+        case .differs, .restorePending: return Theme.symbol(.amber)
+        case .jsDisabled, .notAllowed, .failed: return Theme.symbol(.red)
+        default: return Theme.symbol(.unknown)
+        }
+    }
+
+    private var color: Color {
+        switch model.changes.xcloud {
+        case .matches, .applied: return Theme.good
+        case .differs, .restorePending: return Theme.warn
+        case .jsDisabled, .notAllowed, .failed: return Theme.bad
+        default: return Theme.textVariant
+        }
     }
 }

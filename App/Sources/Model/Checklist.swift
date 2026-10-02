@@ -57,6 +57,13 @@ final class Checklist {
         }
     }
 
+    /// Better xCloud's own settings answer two checklist items.
+    func applyBetterXcloud(_ settings: [String: JSONValue]?) {
+        guard let settings else { return }
+        apply(.streamQuality, BetterXcloud.qualityDone(settings))
+        apply(.streamIPv6, BetterXcloud.ipv6Done(settings))
+    }
+
     private func apply(_ item: Item, _ value: Bool) {
         source[item] = .detected
         setDone(item, value)

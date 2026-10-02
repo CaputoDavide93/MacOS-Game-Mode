@@ -30,7 +30,7 @@
 	<key>LSMinimumSystemVersion</key>
 	<string>15.0</string>
 	<key>NSAppleEventsUsageDescription</key>
-	<string>Game Ready asks macOS for your password once to switch Game Mode on.</string>
+	<string>Game Ready reads and, if you turn it on, tunes Better xCloud in your open xbox.com tab.</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>© 2026 Davide Caputo. MIT licence.</string>
 </dict>
