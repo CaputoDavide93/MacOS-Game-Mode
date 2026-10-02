@@ -1,0 +1,10 @@
+.reviews/
+build/
+.build/
+.swiftpm/
+DerivedData/
+GameReady.xcodeproj/
+*.xcuserstate
+xcuserdata/
+.DS_Store
+__pycache__/
