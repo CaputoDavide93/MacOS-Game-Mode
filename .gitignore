@@ -8,3 +8,4 @@ GameReady.xcodeproj/
 xcuserdata/
 .DS_Store
 __pycache__/
+dist/

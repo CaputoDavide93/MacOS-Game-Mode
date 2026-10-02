@@ -5,7 +5,9 @@ import GameReadyCore
 
 struct ContentView: View {
     enum Tab: String, CaseIterable { case check, checklist, history }
-    @State private var tab: Tab = .check
+    @State private var tab: Tab
+
+    init(tab: Tab = .check) { _tab = State(initialValue: tab) }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -23,6 +25,7 @@ struct ContentView: View {
             }
         }
         .background(Theme.surface)
+        .tint(Theme.primary)
         .frame(minWidth: 380, idealWidth: 440, minHeight: 560, idealHeight: 680)
     }
 }

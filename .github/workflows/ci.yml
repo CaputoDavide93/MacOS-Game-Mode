@@ -1,0 +1,22 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Core tests
+        working-directory: Packages/GameReadyCore
+        run: swift test
+      - name: Strings and diagram are current
+        run: |
+          python3 tools/gen_strings.py --check
+          python3 tools/gen_diagram.py --check
+      - name: Build the app
+        run: |
+          brew install xcodegen
+          scripts/build.sh
