@@ -749,3 +749,98 @@ import Testing
         #expect(try run(host: "notxbox.com") == BrowserScripts.notXboxMarker)
     }
 }
+
+@Suite struct ReadinessTests {
+    func result(_ id: CheckID, _ g: Grade, _ f: [Finding] = []) -> CheckResult { CheckResult(id: id, grade: g, findings: f) }
+
+    @Test func scoreWeightsAndHalves() {
+        let all = CheckID.allCases.map { result($0, .green) }
+        #expect(ReadinessScore.score(all) == 100)
+        #expect(ReadinessScore.score([]) == nil)
+        // connection (2) amber → loses 1 of 14.5 → 93
+        var r = all; r[0] = result(.connection, .amber)
+        #expect(ReadinessScore.score(r) == 93)
+        r[0] = result(.connection, .red)
+        #expect(ReadinessScore.score(r) == 86)
+        #expect(ReadinessScore.weights.keys.count == CheckID.allCases.count)   // every check has a weight
+    }
+
+    @Test func gameModeOffIsAlwaysAFix() {
+        let c = FixPlanner.Context(gameModeOn: false, betterXcloudNeedsTuning: false, betterXcloudBlocked: false, noisyApps: [])
+        #expect(FixPlanner.plan([], c).fixes == [.gameMode])
+        var on = c; on.gameModeOn = true
+        #expect(FixPlanner.plan([], on).fixes.isEmpty)
+    }
+
+    @Test func appsAreSortedAndOnlyBeforeGameMode() {
+        let c = FixPlanner.Context(gameModeOn: false, betterXcloudNeedsTuning: true, betterXcloudBlocked: false, noisyApps: ["Zoom", "Photos"])
+        #expect(FixPlanner.plan([], c).fixes == [.gameMode, .betterXcloud, .quitApps(["Photos", "Zoom"])])
+    }
+
+    @Test func adviceFromFindings() {
+        let c = FixPlanner.Context(gameModeOn: true, betterXcloudNeedsTuning: false, betterXcloudBlocked: true, noisyApps: [])
+        let p = FixPlanner.plan([result(.connection, .amber, [.wifi6GHz]), result(.speed, .amber, [.speedBloatMild]),
+                                 result(.mac, .amber, [.onBattery])], c)
+        #expect(p.advice == [.useCable, .plugIn, .turnOnSQM, .setUpBetterXcloud])
+    }
+
+    @Test func basicStates() {
+        let green = Verdict(results: CheckID.allCases.map { result($0, .green) })
+        #expect(BasicState.from(verdict: nil, plan: FixPlan(fixes: [], advice: [])) == .unchecked)
+        #expect(BasicState.from(verdict: green, plan: FixPlan(fixes: [.gameMode], advice: [])) == .canFix)
+        #expect(BasicState.from(verdict: green, plan: FixPlan(fixes: [], advice: [])) == .ready)
+        #expect(BasicState.from(verdict: green, plan: FixPlan(fixes: [], advice: [.useCable])) == .readyWithAdvice)
+        let red = Verdict(results: CheckID.allCases.map { result($0, $0 == .udp ? .red : .green) })
+        #expect(BasicState.from(verdict: red, plan: FixPlan(fixes: [], advice: [.slowLine])) == .problem)
+    }
+}
+
+@Suite struct ReviewSevenTests {
+    func r(_ id: CheckID, _ g: Grade, _ f: [Finding] = []) -> CheckResult { CheckResult(id: id, grade: g, findings: f) }
+
+    @Test func unfixableFailureIsNotHiddenByAFix() {
+        // UDP is losing packets (nothing Game Ready can fix) while Game Mode is also off.
+        let results = CheckID.allCases.map { $0 == .udp ? r(.udp, .red, [.udpLossy]) : r($0, .green) }
+        let v = Verdict(results: results)
+        #expect(BasicState.from(verdict: v, plan: FixPlan(fixes: [.gameMode], advice: [.slowLine])) == .problemButCanFix)
+    }
+
+    @Test func fixableFailureStaysCanFix() {
+        // A pausing Wi-Fi hop with AirDrop on is exactly what Game Mode fixes.
+        let results = CheckID.allCases.map { $0 == .hop ? r(.hop, .red, [.hopPausing]) : $0 == .mac ? r(.mac, .amber, [.awdlOn]) : r($0, .green) }
+        #expect(BasicState.from(verdict: Verdict(results: results), plan: FixPlan(fixes: [.gameMode], advice: [])) == .canFix)
+    }
+
+    @Test func noScoreUntilEveryCheckIsIn() {
+        // Only two passing results so far: not a 100.
+        #expect(ReadinessScore.score([r(.connection, .green), r(.wifi, .green)], complete: false) == nil)
+        #expect(ReadinessScore.score(CheckID.allCases.map { r($0, .green) }, complete: true) == 100)
+    }
+}
+
+@Suite struct ReviewEightTests {
+    func r(_ id: CheckID, _ g: Grade, _ f: [Finding] = []) -> CheckResult { CheckResult(id: id, grade: g, findings: f) }
+    let on = FixPlanner.Context(gameModeOn: true, betterXcloudNeedsTuning: false, betterXcloudBlocked: false, noisyApps: [])
+
+    @Test func warningWithNoMappedAdviceIsNeverPlainReady() {
+        // Game Mode on, internet a bit slow: no fix, no specific advice. Must not read "all good".
+        let results = CheckID.allCases.map { $0 == .internet ? r(.internet, .amber, [.internetSlowish]) : r($0, .green) }
+        let plan = FixPlanner.plan(results, on)
+        #expect(plan.advice == [.seeAdvanced])
+        #expect(BasicState.from(verdict: Verdict(results: results), plan: plan) == .readyWithAdvice)
+    }
+
+    @Test func allGreenStaysReady() {
+        let results = CheckID.allCases.map { r($0, .green) }
+        let plan = FixPlanner.plan(results, on)
+        #expect(plan.isEmpty)
+        #expect(BasicState.from(verdict: Verdict(results: results), plan: plan) == .ready)
+    }
+
+    @Test func warningCoveredByAFixNeedsNoExtraAdvice() {
+        // AirDrop on with Game Mode off: Game Mode is the answer, nothing generic to add.
+        let off = FixPlanner.Context(gameModeOn: false, betterXcloudNeedsTuning: false, betterXcloudBlocked: false, noisyApps: [])
+        let results = CheckID.allCases.map { $0 == .mac ? r(.mac, .amber, [.awdlOn]) : r($0, .green) }
+        #expect(FixPlanner.plan(results, off).advice.isEmpty)
+    }
+}

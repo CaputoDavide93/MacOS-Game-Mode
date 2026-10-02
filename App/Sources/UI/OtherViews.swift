@@ -3,30 +3,31 @@ import SwiftUI
 import UniformTypeIdentifiers
 import GameReadyCore
 
-struct ContentView: View {
-    enum Tab: String, CaseIterable { case check, checklist, history }
-    @State private var tab: Tab
-
-    init(tab: Tab = .check) { _tab = State(initialValue: tab) }
-
+/// The window: Basic or Advanced, chosen with the switch in the title bar.
+struct RootView: View {
+    @Environment(AppModel.self) private var model
     var body: some View {
-        VStack(spacing: 0) {
-            Picker("", selection: $tab) {
-                ForEach(Tab.allCases, id: \.self) { Text(L("ui.tab.\($0.rawValue)")).tag($0) }
-            }
-            .pickerStyle(.segmented)
-            .labelsHidden()
-            .padding(.horizontal, Theme.padding)
-            .padding(.vertical, 12)
-            switch tab {
-            case .check: CheckView()
-            case .checklist: ChecklistView()
-            case .history: HistoryView()
-            }
+        Group {
+            if model.settings.advancedMode { AdvancedView() } else { BasicView() }
         }
-        .background(Theme.surface)
-        .tint(Theme.primary)
-        .frame(minWidth: 380, idealWidth: 440, minHeight: 560, idealHeight: 680)
+        .tint(Theme.ready)
+        .frame(minWidth: model.settings.advancedMode ? 820 : 460, minHeight: 600)
+    }
+}
+
+/// Basic | Advanced.
+struct ModeSwitch: View {
+    @Environment(AppModel.self) private var model
+    var body: some View {
+        @Bindable var settings = model.settings
+        Picker(L("ui.mode"), selection: $settings.advancedMode) {
+            Text(L("ui.mode.basic")).tag(false)
+            Text(L("ui.mode.advanced")).tag(true)
+        }
+        .pickerStyle(.segmented)
+        .labelsHidden()
+        .frame(width: 190)
+        .help(L("ui.mode.help"))
     }
 }
 
@@ -178,6 +179,8 @@ struct EventLine: View {
 
 struct SettingsView: View {
     @Environment(AppModel.self) private var model
+    /// Inside Advanced's window rather than the Settings window.
+    var embedded = false
 
     var body: some View {
         @Bindable var settings = model.settings
@@ -219,7 +222,7 @@ struct SettingsView: View {
             }
         }
         .formStyle(.grouped)
-        .frame(width: 460, height: 560)
+        .frame(width: embedded ? nil : 460, height: embedded ? nil : 560)
     }
 }
 
@@ -235,8 +238,8 @@ struct MenuBarView: View {
                 Spacer()
                 Toggle(L("ui.gameMode"), isOn: Binding(get: { model.gameMode.isOn },
                                                         set: { _ in Task { await model.toggleGameMode() } }))
-                    .toggleStyle(.switch).controlSize(.small)
-                    .disabled(model.switching)
+                    .toggleStyle(TintedSwitchStyle(tint: Theme.ready))
+                    .disabled(model.switching || model.running)
             }
             if model.live.running {
                 HStack(spacing: 16) {
@@ -268,7 +271,8 @@ struct MenuBarView: View {
     private func reading(_ label: String, _ ms: Double?) -> some View {
         VStack(alignment: .leading) {
             Text(label).font(.caption).foregroundStyle(.secondary)
-            Text(ms.map { String(format: "%.0f ms", $0) } ?? "–").font(.title3.weight(.semibold)).monospacedDigit()
+            Text(ms.map { String(format: "%.0f ms", $0) } ?? "–").font(.system(size: 18, weight: .semibold, design: .monospaced))
+                .foregroundStyle(Theme.ready)
         }
         .accessibilityElement(children: .combine)
     }

@@ -121,3 +121,21 @@ real host is xbox.com or a subdomain, checked by the page itself, not by matchin
 Not verified by us across macOS versions: the `defaults` keys for Universal Control (and, to a
 lesser degree, AirDrop and Handoff). If a key moves, the change has no effect and restore is a
 no-op; nothing breaks, but docs/testing.md keeps them unticked until seen working.
+
+## D19 — Basic and Advanced views; native surfaces, one brand colour (2026-10-02)
+Chosen from ten mocked styles. **Basic** (from the "bold minimal" style) shows one status,
+one sentence and one button: **Fix & Play** applies every fix Game Ready can make itself
+(`FixPlanner`: Game Mode, the Better xCloud preset when it's readable, closing noisy apps),
+then opens the game. What it can't do (use a cable, plug in) is shown as one line of advice.
+If Game Mode can't start (password prompt cancelled), nothing is launched.
+**Advanced** mixes the native sidebar-and-grouped-rows layout with the gaming-HUD details:
+a readiness ring, monospaced readouts, coloured status bars.
+The earlier warm custom palette is replaced by the system's own surfaces and text, so the
+app looks like a Mac app; the one brand colour is "ready" green (neon in dark, deep green in
+light, both AA). Prominent buttons and switches are drawn by the app (`FilledButtonStyle`,
+`TintedSwitchStyle`) so they keep their colour in every window state.
+
+## D20 — The readiness score is a weighted pass rate (2026-10-02)
+`ReadinessScore`: each check has a weight (connection, hop, internet, UDP 2; Wi-Fi, speed
+1.5; line, Mac 1; IPv6, apps, checklist 0.5). Green counts fully, amber half, red and
+"couldn't measure" nothing. It's a summary for the ring, never used to decide the verdict.

@@ -27,12 +27,19 @@ the same on screen. Game Ready measures each layer separately and gives one plai
 
 <table>
   <tr>
-    <td align="center" width="50%"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/check-dark.png"><img src="docs/assets/screenshots/check-light.png" alt="Check: the verdict, Check again, the Game Mode switch, Play, and each result."></picture><br><sub>Check</sub></td>
-    <td align="center" width="50%"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/checklist-dark.png"><img src="docs/assets/screenshots/checklist-light.png" alt="Checklist: the Better xCloud card and the settings to switch off, some detected."></picture><br><sub>Checklist</sub></td>
+    <td align="center" width="50%"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/basic-dark.png"><img src="docs/assets/screenshots/basic-light.png" alt="Basic, before: Almost ready, the three fixes Game Ready will make, and Fix &amp; Play."></picture><br><sub>Basic: what Fix &amp; Play will do</sub></td>
+    <td align="center" width="50%"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/basic-ready-dark.png"><img src="docs/assets/screenshots/basic-ready-light.png" alt="Basic, after: Ready to play, Game Mode on, Better xCloud tuned, one app closed."></picture><br><sub>Basic: ready to play</sub></td>
   </tr>
   <tr>
-    <td align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/history-dark.png"><img src="docs/assets/screenshots/history-light.png" alt="History: a game session with two labelled hiccups, and past checks."></picture><br><sub>History</sub></td>
-    <td align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/menubar-dark.png"><img src="docs/assets/screenshots/menubar-light.png" alt="Menu bar: live router and game-server ping, the Game Mode switch, recent hiccups."></picture><br><sub>Menu bar, during a game</sub><br><br><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/settings-dark.png"><img src="docs/assets/screenshots/settings-light.png" width="80%" alt="Settings: gaming service, browser, speed test, Better xCloud tuning, apps to quit."></picture><br><sub>Settings</sub></td>
+    <td align="center" width="50%"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/advanced-overview-dark.png"><img src="docs/assets/screenshots/advanced-overview-light.png" alt="Advanced overview: readiness score, ping, speed, jitter and loss readouts, Game Mode switch, results grouped as Network and Line and Mac."></picture><br><sub>Advanced: overview</sub></td>
+    <td align="center" width="50%"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/advanced-checklist-dark.png"><img src="docs/assets/screenshots/advanced-checklist-light.png" alt="Advanced checklist: the Better xCloud card and the settings to switch off, some detected."></picture><br><sub>Advanced: checklist</sub></td>
+  </tr>
+  <tr>
+    <td align="center" width="50%"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/advanced-history-dark.png"><img src="docs/assets/screenshots/advanced-history-light.png" alt="Advanced history: a game session with two labelled hiccups, and past checks."></picture><br><sub>Advanced: history</sub></td>
+    <td align="center" width="50%"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/advanced-settings-dark.png"><img src="docs/assets/screenshots/advanced-settings-light.png" alt="Advanced settings: gaming service, browser, speed test, Better xCloud tuning, apps to quit."></picture><br><sub>Advanced: settings</sub></td>
+  </tr>
+  <tr>
+    <td align="center" colspan="2"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/menubar-dark.png"><img src="docs/assets/screenshots/menubar-light.png" width="300" alt="Menu bar: live router and game-server ping, the Game Mode switch, recent hiccups."></picture><br><sub>Menu bar, during a game</sub></td>
   </tr>
 </table>
 
@@ -44,6 +51,7 @@ All screenshots use demo data (`--screenshots`), never a real network.
 
 | | Feature | What it does |
 |---|---|---|
+| 🎚️ | Basic and Advanced | **Basic**: one status and one button, Fix & Play, which applies every fix and opens the game. **Advanced**: every number, a readiness score, grouped results |
 | 🩺 | Pre-flight check | 11 checks in about a minute: connection type, Wi-Fi signal, the Mac → router hop, internet and game-server latency, UDP loss over IPv4 and IPv6, speed with latency under load, whether the line is busy, the Mac's power and heat, background apps, and a checklist |
 | 🚦 | One verdict | Ready, Ready with a warning, Not ready, or Couldn't finish. A check that couldn't measure never counts as a pass |
 | ⚡ | Game Mode | Switches off the AirDrop/Handoff radio (and keeps it off), sets AirDrop to No One, turns off Handoff, Universal Control and Low Power Mode, pauses Time Machine, keeps the Mac awake, quits apps that get in the way. One password prompt; every setting is put back on "off" or quit, even after a crash |

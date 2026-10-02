@@ -1,35 +1,42 @@
 # Design
 
-Calm, warm and plain. One window, one main action per screen, plus a menu-bar extra.
-The tokens follow the house app standard. Status colours were added for this app and
-checked for contrast (WCAG AA ≥ 4.5:1) on both surfaces.
+A Mac app first: system surfaces, standard controls, one brand colour. Two views of one
+window (Basic, Advanced) plus a menu-bar extra. Every colour pair passes WCAG AA (≥ 4.5:1).
+This replaces the earlier warm custom palette (D19 in decisions.md).
 
 ## Colour tokens
 
-| Token | Light | Dark | Contrast on surface (L / D) |
-|---|---|---|---|
-| `surface` | `#F7F4EE` warm off-white | `#0F1826` deep navy | — |
-| `card` | `#FFFDF9` | `#1A2638` | — |
-| `text` | `#1B2A41` | `#EDEFF3` | 13.2 / 15.5 |
-| `textVariant` | `#55606E` | `#B7C1CE` | 5.8 / 9.8 |
-| `primary` | `#2F6F69` muted teal | `#8CC7BF` light teal | 5.3 / 9.4 |
-| `onPrimary` | `#FFFFFF` | `#0F1826` | 5.8 / 9.4 on primary |
-| `good` | `#2E7D4F` | `#7DD3A0` | 4.6 / 9.9 |
-| `warn` | `#8A5A00` | `#F2C14E` | 5.4 / 10.6 |
-| `bad` | `#B3261E` | `#F2938C` | 6.0 / 7.9 |
-| `outline` | `#1B2A41` at 12% | `#EDEFF3` at 14% | hairline only |
+Surfaces and text are the system's (`windowBackgroundColor`, `controlBackgroundColor`,
+`labelColor`, `secondaryLabelColor`, `separatorColor`), so light, dark and accessibility
+settings behave like any Mac app. The brand and status colours are fixed:
 
-Colour is never the only signal: every status has an icon and a word
-(`checkmark.circle` Ready, `exclamationmark.triangle` Warning, `xmark.octagon` Not ready,
-`questionmark.circle` Couldn't measure).
+| Token | Light | Dark | Contrast |
+|---|---|---|---|
+| `ready` (brand, good) | `#0B7A3E` | `#19F27A` | 5.4:1 on white · 11.1:1 on dark window |
+| `onReady` (text on ready) | `#FFFFFF` | `#0F1826` | 5.4 · 11.9 |
+| `warn` | `#B25000` | `#FF9F0A` | 5.2 · 8.1 |
+| `bad` | `#C4291C` | `#FF6961` | 5.7 · 5.9 |
+
+Basic's Fix & Play uses the user's own accent colour (blue by default). Colour is never the
+only signal: every status also has a symbol and words.
 
 ## Shape and type
 
-- Cards radius 18, buttons 14, chips 10. No shadows; a 1 pt hairline border.
-- System font. Titles weight 600; verdict headline `.title` weight 600.
-- Rounded SF Symbols. No emoji.
+- Grouped rows radius 10 with a separator-colour hairline, like System Settings. Filled
+  buttons are capsules. Shadows only on the status orb and the ring (glow in dark mode).
+- System font; Basic's title 34 pt heavy; readouts and values monospaced.
+- SF Symbols. No emoji.
 
-## Layout
+## Views
+
+- **Basic** (460 pt wide min): status orb → title → one sentence → what Fix & Play will do
+  (or what was done, as chips) → one filled button → one quiet footer line.
+- **Advanced** (820 pt wide min): sidebar (Overview, Checklist, History, Settings, live
+  readouts) and content: readiness ring + verdict + monospaced readouts → Check again,
+  Game Mode switch, Play → results grouped as Network and Line and Mac.
+- **Basic | Advanced** switch in the title bar.
+
+## Layout (before 2026-10-02, kept for history)
 
 - Main window 440 × 680 by default, resizable down to 380 × 560. 20 pt side padding.
 - Top: a segmented control for **Check · Checklist · History**. Settings live in the app's

@@ -4,6 +4,23 @@ All notable changes to this project are documented here. Format: [Keep a Changel
 
 ## [Unreleased]
 
+### Added
+- Basic and Advanced views. Basic: one status and **Fix & Play**, which applies every fix and opens the game. Advanced: sidebar, readiness score, monospaced readouts, grouped results.
+
+### Changed
+- Native macOS surfaces and text everywhere; one brand colour (ready green).
+
+### Fixed
+- Game Mode turned itself back off straight after the password prompt, with "the undo plan
+  can't be read", whenever there was no undo plan yet (the usual case). Compiler warnings now
+  fail the build; one had flagged this.
+- Screenshots no longer read or write the real preferences, history or undo plan.
+- Quitting during a check could leave Game Mode on; quit now waits for a switch in progress and
+  then turns Game Mode off.
+- A second Fix & Play during the password prompt could open the game before Game Mode was on.
+- An undo plan that can't be read is now reported instead of silently skipped.
+- Basic said "Ready to play" for some warnings with no advice; it now points to Advanced.
+
 ## [0.2.0] - 2026-10-02
 
 ### Added

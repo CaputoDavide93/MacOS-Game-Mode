@@ -37,7 +37,9 @@ final class SessionChanges {
     /// Nothing changes unless every original was read and the plan is safely on disk.
     func apply(betterXcloud: Bool, browser: Browser) async throws {
         // An existing plan that can't be read holds originals we'd otherwise overwrite: stop.
-        guard let existing = try? loadPlanStrict() else { throw ApplyError.unreadablePlan }
+        // (Not `try?`: that flattens "no plan yet", the normal case, into the same nil as a failure.)
+        let existing: RestorePlan?
+        do { existing = try loadPlanStrict() } catch { throw ApplyError.unreadablePlan }
         var plan = existing ?? RestorePlan()
         for setting in SharingSetting.all where plan.sharing[setting] == nil {
             switch await read(setting) {
@@ -87,8 +89,12 @@ final class SessionChanges {
 
     /// Puts back everything in the saved plan. Better xCloud is restored in the browser it was
     /// tuned in, which needs an open xbox.com tab; otherwise that part is retried next time.
-    func restore() async {
-        guard var plan = loadPlan() else { return }
+    /// False when a plan exists but can't be read: it stays on disk and the caller says so.
+    @discardableResult
+    func restore() async -> Bool {
+        let loaded: RestorePlan?
+        do { loaded = try loadPlanStrict() } catch { return false }
+        guard var plan = loaded else { return true }
         for (setting, original) in plan.sharing { await write(setting.restoreArguments(original: original)) }
         await reload()
         // Only what reads back as the original leaves the plan; anything else is retried next time.
@@ -117,6 +123,7 @@ final class SessionChanges {
             }
         }
         if plan.isEmpty { try? FileManager.default.removeItem(at: Self.planURL) } else { try? save(plan) }
+        return true
     }
 
     // MARK: - Read (checklist)
@@ -134,6 +141,12 @@ final class SessionChanges {
         case let other:
             xcloud = status(for: other)
         }
+    }
+
+    /// Screenshots only: Better xCloud found but not tuned yet.
+    func loadDemoDiffers() {
+        xcloud = .differs
+        xcloudSettings = [BetterXcloud.Key.maxBitrate: .number(5_120_000)]
     }
 
     /// Screenshots only.

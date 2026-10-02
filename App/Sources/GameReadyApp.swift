@@ -4,17 +4,19 @@ import GameReadyCore
 
 @main
 struct GameReadyApp: App {
-    @State private var model = AppModel()
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var delegate
+    /// Owned by the delegate, so quitting cleans up even if the main window never opened.
+    private var model: AppModel { delegate.model }
 
     var body: some Scene {
         Window("Game Ready", id: "main") {
-            ContentView()
+            RootView()
                 .environment(model)
-                .onAppear { delegate.model = model }
+                .toolbar { ToolbarItem(placement: .principal) { ModeSwitch().environment(model) } }
         }
         .windowResizability(.contentMinSize)
-        .defaultSize(width: 440, height: 680)
+        .windowToolbarStyle(.unified(showsTitle: false))
+        .defaultSize(width: 520, height: 640)
 
         Settings {
             SettingsView().environment(model)
@@ -41,8 +43,11 @@ struct GameReadyApp: App {
 }
 
 /// On quit, Game Mode is switched off so nothing stays changed behind the user's back.
+@MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
-    @MainActor weak var model: AppModel?
+    // A headless run (--screenshots, --check) builds its own model; this one must not prune the
+    // history or retry a restore behind it.
+    let model = AppModel(demo: CommandLine.arguments.contains("--screenshots") || CommandLine.arguments.contains("--check"))
 
     /// `Game Ready --check [--no-speed]`: run one check, print the results as JSON, quit.
     /// Used for testing and for scripting; it never touches Game Mode.
@@ -55,7 +60,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         guard args.contains("--check") else { return }
         MainActor.assumeIsolated {
             NSApp.setActivationPolicy(.prohibited)
-            let model = AppModel()
+            let model = AppModel(housekeeping: false)
             if args.contains("--no-speed") { model.speedTestOverride = false }   // this run only, not saved
             Task { @MainActor in
                 await model.runCheck()
@@ -74,9 +79,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
         MainActor.assumeIsolated {
             // Also clean up a Game Mode left on by a crash, or the root guard would outlive us.
-            guard let model, model.gameMode.isOn || model.gameMode.leftOn else { return .terminateNow }
+            guard model.gameMode.isOn || model.gameMode.leftOn || model.switching else { return .terminateNow }
             Task { @MainActor in
-                await model.toggleGameMode()
+                await model.shutDown()
                 sender.reply(toApplicationShouldTerminate: true)
             }
             return .terminateLater

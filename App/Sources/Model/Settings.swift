@@ -27,6 +27,8 @@ final class AppSettings {
     var platform: GamingPlatform { didSet { defaults.set(platform.rawValue, forKey: "platform") } }
     /// Opt-in: Game Mode also applies the Better xCloud preset (and undoes it on "off").
     var tuneBetterXcloud: Bool { didSet { defaults.set(tuneBetterXcloud, forKey: "tuneBetterXcloud") } }
+    /// Basic (one button) or Advanced (every number).
+    var advancedMode: Bool { didSet { defaults.set(advancedMode, forKey: "advancedMode") } }
 
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
@@ -36,6 +38,7 @@ final class AppSettings {
         runSpeedTest = defaults.object(forKey: "runSpeedTest") as? Bool ?? true
         platform = GamingPlatform(rawValue: defaults.string(forKey: "platform") ?? "") ?? .xboxCloud
         tuneBetterXcloud = defaults.bool(forKey: "tuneBetterXcloud")
+        advancedMode = defaults.bool(forKey: "advancedMode")
     }
 
     /// Only the built-in game server and play page are allowed (Endpoints, D-privacy).

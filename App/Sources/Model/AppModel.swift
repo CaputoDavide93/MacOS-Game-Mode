@@ -10,8 +10,9 @@ final class AppModel {
         case connection, hop, internet, udp, mac, speed
     }
 
-    let settings = AppSettings()
-    let checklist = Checklist()
+    let settings: AppSettings
+    let checklist: Checklist
+    private let defaults: UserDefaults
     let gameMode = GameModeController()
     let live = LiveMonitor()
     let changes = SessionChanges()
@@ -25,12 +26,22 @@ final class AppModel {
     private(set) var stepsDone = 0
     /// Persisted, so relaunching the app doesn't bypass the 2-minute gap (D6).
     private(set) var lastSpeedTest: Date? {
-        get { UserDefaults.standard.object(forKey: "lastSpeedTest") as? Date }
-        set { UserDefaults.standard.set(newValue, forKey: "lastSpeedTest") }
+        get { defaults.object(forKey: "lastSpeedTest") as? Date }
+        set { defaults.set(newValue, forKey: "lastSpeedTest") }
     }
     private(set) var entries: [HistoryEntry] = []
     private(set) var lastSession: SessionSummary?
     private(set) var router: String?
+    /// Headline numbers from the last check, for Advanced's readouts.
+    private(set) var metrics = CheckMetrics()
+    /// Display names of the noisy apps the last check found running.
+    private(set) var noisyApps: [String] = []
+    /// What Game Mode closed when it last turned on (for Basic's "done" chips).
+    private(set) var closedApps: [String] = []
+
+    struct CheckMetrics: Equatable {
+        var pingMs: Double?, jitterMs: Double?, lossPercent: Double?, downMbps: Double?
+    }
 
     private let grader = Grader()
     /// Screenshot mode: views must not run real probes that would overwrite the demo data.
@@ -39,20 +50,37 @@ final class AppModel {
     var speedTestOverride: Bool?
     private var includeSpeed: Bool { speedTestOverride ?? settings.runSpeedTest }
 
-    init() {
-        try? history.prune()
+    /// `demo: true` (screenshots) uses throwaway preferences and never touches the real
+    /// history or a pending restore, so rendering can't change anything on this Mac.
+    /// `housekeeping: false` (`--check`) reads the real settings but prunes nothing and never
+    /// retries a restore.
+    private static let demoSuite = "io.github.caputodavide93.gameready.demo"
+    private let housekeeping: Bool
+    init(demo: Bool = false, housekeeping: Bool = true) {
+        self.housekeeping = housekeeping && !demo
+        if demo, let scratch = UserDefaults(suiteName: Self.demoSuite) {
+            scratch.removePersistentDomain(forName: Self.demoSuite)
+            defaults = scratch
+        } else {
+            defaults = .standard
+        }
+        settings = AppSettings(defaults: defaults)
+        checklist = Checklist(defaults: defaults)
+        isDemo = demo
+        guard !demo else { return }
+        if self.housekeeping { try? history.prune() }
         entries = history.load()
         // An undo left over from a session whose Game Mode is already off (e.g. Better xCloud
         // couldn't be restored because no xbox.com tab was open): retry it quietly.
-        Task { await retryPendingRestore() }
+        if self.housekeeping { Task { await retryPendingRestore() } }
     }
 
     /// Holds the same lock as the Game Mode switch, so a retry can't interleave with a new session.
     func retryPendingRestore() async {
-        guard !gameMode.isOn, !gameMode.leftOn, !switching, changes.hasPendingRestore else { return }
+        guard housekeeping, !quitting, !gameMode.isOn, !gameMode.leftOn, !switching, changes.hasPendingRestore else { return }
         switching = true
         defer { switching = false }
-        await changes.restore()
+        if !(await changes.restore()) { changesError = SessionChanges.ApplyError.unreadablePlan.localizedDescription }
     }
 
     var stepCount: Int { includeSpeed ? Step.allCases.count : Step.allCases.count - 1 }
@@ -60,7 +88,7 @@ final class AppModel {
     // MARK: - Check
 
     func runCheck() async {
-        guard !running else { return }   // a second click while running does nothing
+        guard !running, !switching, !quitting else { return }   // never measure across a Game Mode switch
         await retryPendingRestore()
         running = true
         stepsDone = 0
@@ -89,6 +117,8 @@ final class AppModel {
 
         step = .internet
         let cf = await cfSamples, game = await gameSamples
+        let pingStats = PingStats(samples: pingGame ? game : cf)
+        metrics = CheckMetrics(pingMs: pingStats.avgMs, jitterMs: pingStats.jitterMs, lossPercent: nil, downMbps: nil)
         var targets = ["Cloudflare": PingStats(samples: cf)]
         if pingGame { targets["Game server"] = PingStats(samples: game) }
         out.append(grader.internet(targets))
@@ -98,6 +128,7 @@ final class AppModel {
         async let v4 = UDPProbe.run(server: Endpoints.cloudflareDNSv4)
         async let v6: [Double?]? = net.hasGlobalIPv6 ? await UDPProbe.run(server: Endpoints.cloudflareDNSv6) : nil
         let u4 = PingStats(samples: await v4)
+        metrics.lossPercent = u4.sent > 0 ? u4.lossPercent : nil
         let u6 = await v6.map { PingStats(samples: $0) }
         out.append(grader.udp(v4: u4, v6: u6))
         out.append(grader.ipv6(hasGlobalAddress: net.hasGlobalIPv6, udpV6: u6))
@@ -111,6 +142,7 @@ final class AppModel {
         let mac = await MacProbe.state()
         out.append(grader.mac(mac))
         let noisy = AppsProbe.runningNoisy(enabled: settings.quitApps).compactMap(\.localizedName)
+        noisyApps = noisy
         out.append(grader.apps(noisy: noisy, timeMachineRunning: await AppsProbe.timeMachineRunning()))
         await checklist.detect()
         if settings.platform.usesBetterXcloud {
@@ -129,6 +161,7 @@ final class AppModel {
             } else {
                 let m = await SpeedProbe.run(idleMedianMs: idle, latencyHost: Endpoints.cloudflareDNSv4)
                 lastSpeedTest = Date()
+                metrics.downMbps = m.downMbps
                 out.append(grader.speed(m))
             }
             advance(out)
@@ -174,35 +207,94 @@ final class AppModel {
     private(set) var changesError: String?
 
     func toggleGameMode() async {
-        guard !switching else { return }   // one transition at a time
+        if gameMode.isOn || gameMode.leftOn {
+            await turnGameModeOff()
+        } else {
+            await turnGameModeOn(tuneXcloud: settings.tuneBetterXcloud)
+        }
+    }
+
+    /// True only once Game Mode is fully on (not merely starting) and the changes are applied.
+    @discardableResult
+    func turnGameModeOn(tuneXcloud: Bool) async -> Bool {
+        if gameMode.phase == .on && !switching { return true }
+        guard !switching, !running, !quitting, !gameMode.isOn else { return false }   // one thing at a time
         switching = true
         defer { switching = false }
         changesError = nil
-        if gameMode.isOn || gameMode.leftOn {
+        let apps = AppsProbe.runningNoisy(enabled: settings.quitApps)
+        let names = apps.compactMap(\.localizedName)
+        await gameMode.turnOn(quitting: apps)
+        guard gameMode.phase == .on else { return false }
+        do {
+            try await changes.apply(betterXcloud: tuneXcloud && settings.platform.usesBetterXcloud, browser: settings.browser)
+        } catch {
+            // Couldn't record the originals: change nothing, and back out of Game Mode.
+            changesError = error.localizedDescription
             await gameMode.turnOff()
             await changes.restore()
-            if let summary = live.stop() {
-                lastSession = summary
-                try? history.append(.session(summary))
-                entries = history.load()
-            }
-        } else {
-            let apps = AppsProbe.runningNoisy(enabled: settings.quitApps)
-            await gameMode.turnOn(quitting: apps)
-            if gameMode.isOn {
-                do {
-                    try await changes.apply(betterXcloud: settings.tuneBetterXcloud && settings.platform.usesBetterXcloud,
-                                            browser: settings.browser)
-                } catch {
-                    // Couldn't record the originals: change nothing, and back out of Game Mode.
-                    changesError = error.localizedDescription
-                    await gameMode.turnOff()
-                    await changes.restore()
-                    return
-                }
-                live.start(router: router ?? NetworkProbe.snapshot().router, server: settings.gameServerHost)
-            }
+            return false
         }
+        closedApps = names
+        noisyApps = []
+        live.start(router: router ?? NetworkProbe.snapshot().router, server: settings.gameServerHost)
+        return true
+    }
+
+    func turnGameModeOff() async {
+        guard !switching, !running else { return }
+        await performOff()
+    }
+
+    /// Quit: no new check or switch can start; a switch in progress (e.g. the password prompt)
+    /// finishes first, then Game Mode goes off even if a check is still measuring.
+    func shutDown() async {
+        quitting = true
+        while switching { try? await Task.sleep(for: .milliseconds(100)) }
+        if gameMode.isOn || gameMode.leftOn { await performOff() }
+    }
+
+    private(set) var quitting = false
+
+    private func performOff() async {
+        switching = true
+        defer { switching = false }
+        changesError = nil
+        await gameMode.turnOff()
+        if !(await changes.restore()) { changesError = SessionChanges.ApplyError.unreadablePlan.localizedDescription }
+        closedApps = []
+        if let summary = live.stop() {
+            lastSession = summary
+            try? history.append(.session(summary))
+            entries = history.load()
+        }
+    }
+
+    // MARK: - Basic
+
+    var plan: FixPlan {
+        let xbox = settings.platform.usesBetterXcloud
+        return FixPlanner.plan(results, FixPlanner.Context(
+            gameModeOn: gameMode.isOn,
+            betterXcloudNeedsTuning: xbox && !gameMode.isOn && changes.xcloud == .differs,
+            betterXcloudBlocked: xbox && (changes.xcloud == .jsDisabled || changes.xcloud == .notAllowed),
+            noisyApps: noisyApps))
+    }
+
+    var basicState: BasicState { BasicState.from(verdict: verdict, plan: plan) }
+
+    var score: Int? { ReadinessScore.score(results, complete: !running && verdict != nil) }
+
+    /// Basic's one button: apply every fix Game Ready can make, then open the game.
+    /// If Game Mode can't start (the password prompt was cancelled), nothing is launched.
+    func fixAndPlay() async {
+        guard !switching, !running, !quitting else { return }
+        let p = plan
+        let needsGameMode = p.fixes.contains(.gameMode) || p.fixes.contains { if case .quitApps = $0 { return true }; return false }
+        if needsGameMode {
+            guard await turnGameModeOn(tuneXcloud: p.fixes.contains(.betterXcloud) || settings.tuneBetterXcloud) else { return }
+        }
+        play()
     }
 
     /// Opens the chosen platform: its own Mac app when installed, otherwise the browser.
@@ -224,7 +316,7 @@ final class AppModel {
 
     // MARK: - Demo data (screenshots only; never real measurements)
 
-    func loadDemo() {
+    func loadDemo(gameModeOn: Bool = true) {
         results = [
             CheckResult(id: .connection, grade: .amber, findings: [.wifi6GHz]),
             CheckResult(id: .wifi, grade: .green, findings: [.wifiStrong], details: ["rssi": "-52 dBm", "channel": "37 (160 MHz)", "rate": "2402 Mbps"]),
@@ -240,11 +332,17 @@ final class AppModel {
         ]
         verdict = Verdict(results: results)
         lastCheck = Date(timeIntervalSince1970: 1_790_000_000)
-        live.loadDemo(at: Date(timeIntervalSince1970: 1_790_003_600))
-        changes.loadDemo()
+        metrics = CheckMetrics(pingMs: 18, jitterMs: 2.6, lossPercent: 0, downMbps: 142)
         checklist.loadDemo()
-        gameMode.loadDemoOn()
-        isDemo = true
+        if gameModeOn {
+            live.loadDemo(at: Date(timeIntervalSince1970: 1_790_003_600))
+            changes.loadDemo()
+            gameMode.loadDemoOn()
+            closedApps = ["Zoom"]
+        } else {
+            changes.loadDemoDiffers()
+            noisyApps = ["Zoom"]
+        }
         let t = Date(timeIntervalSince1970: 1_790_003_600)
         entries = [
             .session(SessionSummary(start: t.addingTimeInterval(-3_000), end: t, events: [
