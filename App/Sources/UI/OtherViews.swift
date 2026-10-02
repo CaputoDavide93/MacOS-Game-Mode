@@ -137,7 +137,9 @@ struct HistoryView: View {
                         Spacer()
                         Text(s.start.formatted(date: .abbreviated, time: .shortened)).font(.caption).foregroundStyle(Theme.textVariant)
                     }
-                    Text(s.events.isEmpty ? L("ui.session.calm") : String(format: L("ui.session.hiccups"), s.events.count))
+                    Text(s.events.isEmpty ? L("ui.session.calm")
+                         : s.events.count == 1 ? L("ui.session.hiccupOne")
+                         : String(format: L("ui.session.hiccups"), s.events.count))
                         .font(.callout).foregroundStyle(Theme.textVariant)
                     ForEach(Array(s.events.prefix(8).enumerated()), id: \.offset) { _, e in EventLine(event: e) }
                 }

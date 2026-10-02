@@ -16,6 +16,14 @@
 	<array>
 		<string>en</string>
 		<string>it</string>
+		<string>es</string>
+		<string>fr</string>
+		<string>de</string>
+		<string>pt-BR</string>
+		<string>ja</string>
+		<string>zh-Hans</string>
+		<string>ko</string>
+		<string>hi</string>
 	</array>
 	<key>CFBundleName</key>
 	<string>Game Ready</string>

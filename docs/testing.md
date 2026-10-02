@@ -5,7 +5,7 @@
 | What | Command | Covers |
 |---|---|---|
 | Core tests | `cd Packages/GameReadyCore && swift test` | Every grading rule, the verdict, ping parsing, the 429 speed-test rule, the live layer split, history (append, prune, corrupt lines, failed writes), CSV, DNS bytes, the guard script (parses with macOS bash 3.2 and refuses to run without root, both executed; its flag re-check, lock and per-setting restore are source-level assertions, not executed, because the script needs root), and the host allowlist |
-| Strings | `python3 tools/gen_strings.py --check` | Every finding, check, step, event and checklist item has English and Italian copy; the catalogue is current |
+| Strings | `python3 tools/gen_strings.py --check` | Every finding, check, step, event and checklist item has copy; all 10 languages have exactly the English keys and the same placeholders; the catalogue is current |
 | Diagram | `python3 tools/gen_diagram.py --check` | `docs/assets/architecture-*.svg` match the code that draws them |
 | Everything | `scripts/check.sh` | All of the above plus a Release build |
 
@@ -28,3 +28,5 @@ Device-only behaviour. ✅ verified · ⚠️ partly · ⬜ not yet run.
 | Play opens each service (and the GeForce NOW app when installed) | ⬜ | |
 | VoiceOver reads every result as "name: grade. sentence" | ⬜ | |
 | Light and dark render correctly | ✅ | `--screenshots`, reviewed by eye |
+| Every language fits (no clipped text) | ⬜ | `--screenshots out -AppleLanguages '(de)'` per language |
+| Translations read naturally | ⬜ | Machine-assisted; each needs a native speaker before a store release |

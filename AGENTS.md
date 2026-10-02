@@ -35,5 +35,5 @@ This repository follows Davide Caputo's house standards. The full spec is
 - **Public repository.** No home-network details, names, addresses or measurements from any real household; screenshots use the demo data from `AppModel.loadDemo()`.
 - Logic belongs in `Packages/GameReadyCore` (pure Swift, no I/O) with tests; the app only measures and displays.
 - Every host the app contacts is in `Endpoints.allHosts`; `EndpointGuardTests` fails on any other.
-- Strings: edit `tools/strings.py`, then `python3 tools/gen_strings.py`. Never edit `Localizable.xcstrings` by hand.
+- Strings: edit `tools/strings/en.json` and every other `tools/strings/<lang>.json` (same keys, same placeholders), then `python3 tools/gen_strings.py`. Never edit `Localizable.xcstrings` by hand.
 - Gate before every push: `scripts/check.sh` (tests, strings, diagram, build).

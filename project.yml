@@ -38,7 +38,7 @@ targets:
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         CFBundleName: Game Ready
         CFBundleDevelopmentRegion: en
-        CFBundleLocalizations: [en, it]
+        CFBundleLocalizations: [en, it, es, fr, de, pt-BR, ja, zh-Hans, ko, hi]
         LSApplicationCategoryType: public.app-category.utilities
         LSMinimumSystemVersion: "15.0"
         NSHumanReadableCopyright: "© 2026 Davide Caputo. MIT licence."

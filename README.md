@@ -53,7 +53,7 @@ All screenshots use demo data (`--screenshots`), never a real network.
 | ☑️ | Checklist | The settings no app can change for you (Location Services, AirDrop, Handoff, browser energy saver, stream quality), detected where macOS allows |
 | 🗂️ | History | Checks and game sessions for 90 days on the Mac, CSV export, Delete All Data |
 | 🔒 | Private | No accounts, analytics or update checks. Only test traffic leaves the Mac |
-| 🌍 | Languages | English and Italian |
+| 🌍 | Languages | English, Italian, Spanish, French, German, Portuguese (Brazil), Japanese, Chinese (Simplified), Korean and Hindi. Follows the Mac's language |
 
 ---
 
@@ -167,7 +167,7 @@ MacOS-Game-Mode/
 ├── Packages/GameReadyCore/ # 🧠 rules + tests, no I/O
 ├── docs/                   # 📚 decisions, design, testing, screenshots, diagram
 ├── scripts/                # 🛠️ build.sh, check.sh
-├── tools/                  # 🔧 gen_strings.py + strings.py, gen_diagram.py, gen_icon.sh
+├── tools/                  # 🔧 strings/<lang>.json + gen_strings.py, gen_diagram.py, gen_icon.sh
 └── project.yml             # ⚙️ XcodeGen project (the .xcodeproj is generated)
 ```
 
