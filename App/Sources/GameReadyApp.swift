@@ -48,6 +48,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     /// Used for testing and for scripting; it never touches Game Mode.
     func applicationDidFinishLaunching(_ notification: Notification) {
         let args = CommandLine.arguments
+        if let i = args.firstIndex(of: "--icon"), i + 1 < args.count {
+            MainActor.assumeIsolated { Screenshots.icon(to: URL(fileURLWithPath: args[i + 1])) }
+            exit(0)
+        }
+        if let i = args.firstIndex(of: "--screenshots"), i + 1 < args.count {
+            MainActor.assumeIsolated { Screenshots.render(to: URL(fileURLWithPath: args[i + 1])) }
+            exit(0)
+        }
         guard args.contains("--check") else { return }
         MainActor.assumeIsolated {
             NSApp.setActivationPolicy(.prohibited)
@@ -69,7 +77,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
         MainActor.assumeIsolated {
-            guard let model, model.gameMode.isOn else { return .terminateNow }
+            // Also clean up a Game Mode left on by a crash, or the root guard would outlive us.
+            guard let model, model.gameMode.isOn || model.gameMode.leftOn else { return .terminateNow }
             Task { @MainActor in
                 await model.toggleGameMode()
                 sender.reply(toApplicationShouldTerminate: true)

@@ -46,6 +46,7 @@ final class AppModel {
         running = true
         stepsDone = 0
         results = []
+        verdict = nil   // never show the previous verdict next to new partial results
         defer { running = false; step = nil }
 
         // Connection + Wi-Fi
@@ -167,6 +168,34 @@ final class AppModel {
         } else {
             NSWorkspace.shared.open(url)
         }
+    }
+
+    // MARK: - Demo data (screenshots only; never real measurements)
+
+    func loadDemo() {
+        results = [
+            CheckResult(id: .connection, grade: .amber, findings: [.wifi6GHz]),
+            CheckResult(id: .wifi, grade: .green, findings: [.wifiStrong], details: ["rssi": "-52 dBm", "channel": "37 (160 MHz)", "rate": "2402 Mbps"]),
+            CheckResult(id: .hop, grade: .green, findings: [.hopSteady], details: ["avg": "3.9 ms", "max": "7.2 ms", "loss": "0.0%"]),
+            CheckResult(id: .internet, grade: .green, findings: [.internetGood]),
+            CheckResult(id: .udp, grade: .green, findings: [.udpClean]),
+            CheckResult(id: .ipv6, grade: .green, findings: [.ipv6Ready]),
+            CheckResult(id: .speed, grade: .green, findings: [.speedGood], details: ["down": "142 Mbps", "up": "138 Mbps", "rise": "+6 ms"]),
+            CheckResult(id: .lineFree, grade: .green, findings: [.lineQuiet]),
+            CheckResult(id: .mac, grade: .amber, findings: [.awdlOn]),
+            CheckResult(id: .apps, grade: .green, findings: [.appsQuiet]),
+            CheckResult(id: .checklist, grade: .green, findings: [.checklistDone]),
+        ]
+        verdict = Verdict(results: results)
+        lastCheck = Date(timeIntervalSince1970: 1_790_000_000)
+        let t = Date(timeIntervalSince1970: 1_790_003_600)
+        entries = [
+            .session(SessionSummary(start: t.addingTimeInterval(-3_000), end: t, events: [
+                LiveEvent(at: t.addingTimeInterval(-2_400), kind: .spike, layer: .internet, value: "62 ms"),
+                LiveEvent(at: t.addingTimeInterval(-900), kind: .awdlBack, layer: .macWiFi)])),
+            .check(CheckRecord(at: t.addingTimeInterval(-3_100), verdict: .warning, results: results)),
+            .check(CheckRecord(at: t.addingTimeInterval(-90_000), verdict: .ready, results: [])),
+        ]
     }
 
     // MARK: - History

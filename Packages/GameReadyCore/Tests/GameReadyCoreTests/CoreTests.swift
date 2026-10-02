@@ -411,7 +411,7 @@ import Testing
     @Test func restoresEverythingItChanges() {
         let s = GuardScript.source
         #expect(s.contains("ifconfig awdl0 up"))
-        #expect(s.contains("pmset -a lowpowermode 1"))
+        #expect(s.contains("pmset -b lowpowermode 1") && s.contains("pmset -c lowpowermode 1"))
         #expect(s.contains("tmutil enable"))
         #expect(s.contains("trap restore EXIT"))
     }
@@ -487,5 +487,25 @@ import Testing
     @Test func noNegativeRiseInDetails() {
         let m = SpeedMeasurement(downMbps: 100, upMbps: 100, idleMedianMs: 12, loadedDownMedianMs: 11.6, loadedUpMedianMs: 11)
         #expect(Grader().speed(m).details["rise"] == "+0 ms")
+    }
+}
+
+@Suite struct GuardScriptReviewTests {
+    let s = GuardScript.source
+
+    @Test func loopRevalidatesTheFlagEveryTime() {
+        // A flag swapped for a symlink (or re-owned) after start must stop the guard.
+        #expect(s.contains(#"while flag_ok; do"#))
+        #expect(s.contains(#"[[ -f "$FLAG" && ! -L "$FLAG" ]]"#))
+    }
+
+    @Test func restoresAirDropOnlyIfItWasUp() {
+        #expect(s.contains("awdl_was_up"))
+        #expect(s.contains(#"[[ "$awdl_was_up" == "1" ]] && ifconfig awdl0 up"#))
+    }
+
+    @Test func lowPowerIsPerPowerSource() {
+        #expect(!s.contains("pmset -a lowpowermode"))
+        #expect(s.contains("pmset -b lowpowermode") && s.contains("pmset -c lowpowermode"))
     }
 }

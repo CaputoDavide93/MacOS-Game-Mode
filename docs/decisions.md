@@ -71,3 +71,11 @@ The first fallback tried (a UK-only mirror) didn't answer over HTTPS, and plain 
 need an App Transport Security exception. Hetzner's public mirror serves a 1 GB file over
 HTTPS and is reachable worldwide, so it is the download fallback when Cloudflare rate-limits.
 Upload has no fallback: if Cloudflare refuses, upload is "couldn't measure" (never a pass).
+
+## D13 — The guard re-checks its flag every loop, and restores only what it changed (2026-10-02)
+Supersedes part of D8. A review found that validating the flag once let another process
+swap it for a link to a permanent file after start, so "off" would never stop the guard.
+The loop now re-checks that the flag is a regular file, not a link, owned by the same user,
+every 5 s, and the guard exits after 12 hours regardless. On exit it restores only what it
+changed: the AirDrop radio only if it was up, Low Power Mode per power source (`pmset -b`
+and `-c`, never `-a`), Time Machine only if it was on.

@@ -103,10 +103,14 @@ struct VerdictCard: View {
     }
     private var symbol: String { grade.map(Theme.symbol) ?? "gamecontroller" }
     private var color: Color { grade.map(Theme.color) ?? Theme.primary }
-    private var title: String { model.verdict.map { Copy.title($0.level) } ?? L("verdict.none.title") }
+    private var title: String {
+        if model.running { return L("ui.checking") }
+        return model.verdict.map { Copy.title($0.level) } ?? L("verdict.none.title")
+    }
 
     /// The headline reason: the worst problem's first finding, else the level's subtitle.
     private var reason: String {
+        if model.running, let step = model.step { return Copy.step(step) }
         guard let v = model.verdict else { return L("verdict.none.subtitle") }
         if let first = v.problems.first?.findings.first { return Copy.sentence(first) }
         return Copy.subtitle(v.level)
@@ -119,15 +123,18 @@ struct GameModeRow: View {
     var body: some View {
         Card {
             VStack(alignment: .leading, spacing: 8) {
-                Toggle(isOn: Binding(get: { model.gameMode.isOn },
-                                     set: { _ in Task { await model.toggleGameMode() } })) {
+                HStack {
                     Label(L("ui.gameMode"), systemImage: "bolt.shield")
                         .font(.headline).foregroundStyle(Theme.text)
+                    Spacer()
+                    Toggle(L("ui.gameMode"), isOn: Binding(get: { model.gameMode.isOn },
+                                                           set: { _ in Task { await model.toggleGameMode() } }))
+                        .labelsHidden()
+                        .toggleStyle(.switch)
+                        .tint(Theme.primary)
+                        .disabled(busy)
+                        .keyboardShortcut("g", modifiers: .command)
                 }
-                .toggleStyle(.switch)
-                .tint(Theme.primary)
-                .disabled(busy)
-                .keyboardShortcut("g", modifiers: .command)
                 Text(statusText).font(.callout).foregroundStyle(statusColor)
                     .fixedSize(horizontal: false, vertical: true)
             }
