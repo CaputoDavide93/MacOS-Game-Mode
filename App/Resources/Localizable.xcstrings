@@ -1922,6 +1922,23 @@
         }
       }
     },
+    "ui.changes.unreadablePlan": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The undo plan from an earlier session can't be read, so nothing was changed. It's kept in Application Support/Game Ready/restore-plan.json."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Il piano di ripristino di una sessione precedente non è leggibile, quindi non è stato cambiato nulla. È conservato in Application Support/Game Ready/restore-plan.json."
+          }
+        }
+      }
+    },
     "ui.checkAgain": {
       "extractionState": "manual",
       "localizations": {

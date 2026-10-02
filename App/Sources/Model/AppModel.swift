@@ -45,8 +45,11 @@ final class AppModel {
         Task { await retryPendingRestore() }
     }
 
+    /// Holds the same lock as the Game Mode switch, so a retry can't interleave with a new session.
     func retryPendingRestore() async {
         guard !gameMode.isOn, !gameMode.leftOn, !switching, changes.hasPendingRestore else { return }
+        switching = true
+        defer { switching = false }
         await changes.restore()
     }
 

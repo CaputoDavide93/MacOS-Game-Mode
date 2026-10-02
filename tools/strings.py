@@ -202,5 +202,6 @@ S = {
     "ui.xcloud.restorePending": ("Your Better xCloud settings will be put back next time xbox.com is open.", "Le tue impostazioni di Better xCloud verranno ripristinate la prossima volta che apri xbox.com."),
     "ui.changes.cannotRead": ("Couldn't read the current %@ setting, so nothing was changed.", "Impossibile leggere l'impostazione %@ attuale, quindi non è stato cambiato nulla."),
     "ui.changes.cannotSave": ("Couldn't save the undo plan, so nothing was changed.", "Impossibile salvare il piano di ripristino, quindi non è stato cambiato nulla."),
+    "ui.changes.unreadablePlan": ("The undo plan from an earlier session can't be read, so nothing was changed. It's kept in Application Support/Game Ready/restore-plan.json.", "Il piano di ripristino di una sessione precedente non è leggibile, quindi non è stato cambiato nulla. È conservato in Application Support/Game Ready/restore-plan.json."),
     "speed.tooSoon": ("Ran less than 2 minutes ago", "Eseguito meno di 2 minuti fa"),
 }

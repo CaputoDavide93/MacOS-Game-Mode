@@ -23,11 +23,12 @@ final class SessionChanges {
     // MARK: - Apply
 
     enum ApplyError: LocalizedError {
-        case cannotRead(String), cannotSave
+        case cannotRead(String), cannotSave, unreadablePlan
         var errorDescription: String? {
             switch self {
             case .cannotRead(let key): return String(format: L("ui.changes.cannotRead"), key)
             case .cannotSave: return L("ui.changes.cannotSave")
+            case .unreadablePlan: return L("ui.changes.unreadablePlan")
             }
         }
     }
@@ -35,7 +36,9 @@ final class SessionChanges {
     /// Snapshots and changes the sharing settings, and the Better xCloud preset if asked.
     /// Nothing changes unless every original was read and the plan is safely on disk.
     func apply(betterXcloud: Bool, browser: Browser) async throws {
-        var plan = loadPlan() ?? RestorePlan()
+        // An existing plan that can't be read holds originals we'd otherwise overwrite: stop.
+        guard let existing = try? loadPlanStrict() else { throw ApplyError.unreadablePlan }
+        var plan = existing ?? RestorePlan()
         for setting in SharingSetting.all where plan.sharing[setting] == nil {
             switch await read(setting) {
             case .value(let v): plan.sharing[setting] = .some(v)
@@ -162,9 +165,13 @@ final class SessionChanges {
         }
     }
 
-    private func loadPlan() -> RestorePlan? {
-        guard let data = try? Data(contentsOf: Self.planURL) else { return nil }
-        return try? JSONDecoder().decode(RestorePlan.self, from: data)
+    private func loadPlan() -> RestorePlan? { (try? loadPlanStrict()) ?? nil }
+
+    /// nil = no plan on disk. Throws when a plan exists but can't be read or decoded.
+    private func loadPlanStrict() throws -> RestorePlan? {
+        guard FileManager.default.fileExists(atPath: Self.planURL.path) else { return nil }
+        let data = try Data(contentsOf: Self.planURL)
+        return try JSONDecoder().decode(RestorePlan.self, from: data)
     }
 
     private func save(_ plan: RestorePlan) throws {
