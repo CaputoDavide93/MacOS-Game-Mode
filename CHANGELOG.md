@@ -4,6 +4,10 @@ All notable changes to this project are documented here. Format: [Keep a Changel
 
 ## [Unreleased]
 
+### Fixed
+- While a check ran, Basic still showed a greyed-out "Check now" (or "Fix & Play"); the button
+  now stays hidden until the check finishes. Advanced's button reads "Checking…".
+
 ## [0.3.0] - 2026-10-02
 
 ### Added

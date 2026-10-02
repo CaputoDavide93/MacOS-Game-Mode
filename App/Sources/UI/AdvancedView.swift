@@ -137,7 +137,8 @@ struct OverviewPage: View {
     private var actions: some View {
         HStack(spacing: 10) {
             Button { Task { await model.runCheck() } } label: {
-                Label(model.verdict == nil ? L("ui.checkNow") : L("ui.checkAgain"), systemImage: "arrow.clockwise")
+                Label(model.running ? L("basic.checking") : model.verdict == nil ? L("ui.checkNow") : L("ui.checkAgain"),
+                      systemImage: "arrow.clockwise")
             }
             .controlSize(.large).disabled(model.running).keyboardShortcut("r", modifiers: .command)
             Spacer()

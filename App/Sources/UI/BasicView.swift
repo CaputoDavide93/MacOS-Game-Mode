@@ -26,7 +26,12 @@ struct BasicView: View {
             middle
                 .animation(reduceMotion ? nil : .easeOut(duration: 0.2), value: model.basicState)
 
+            // Hidden (space kept) while a check runs: the progress bar is the state, and a greyed
+            // "Check now" or "Fix & Play" read as the next step.
             primaryButton
+                .opacity(model.running ? 0 : 1)
+                .disabled(model.running)
+                .accessibilityHidden(model.running)
             if let error = model.changesError {
                 Text(L("ui.gameMode.failed") + " " + error).font(.callout).foregroundStyle(Theme.bad)
                     .multilineTextAlignment(.center).padding(.horizontal, 24)
