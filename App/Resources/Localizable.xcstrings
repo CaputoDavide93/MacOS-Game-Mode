@@ -1,0 +1,2760 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "check.apps": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Background apps"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "App in background"
+          }
+        }
+      }
+    },
+    "check.checklist": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checklist"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Checklist"
+          }
+        }
+      }
+    },
+    "check.connection": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connection"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Connessione"
+          }
+        }
+      }
+    },
+    "check.hop": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mac to router"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Mac → router"
+          }
+        }
+      }
+    },
+    "check.internet": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Internet latency"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Latenza internet"
+          }
+        }
+      }
+    },
+    "check.ipv6": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "IPv6"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "IPv6"
+          }
+        }
+      }
+    },
+    "check.lineFree": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Line free"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Linea libera"
+          }
+        }
+      }
+    },
+    "check.mac": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This Mac"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Questo Mac"
+          }
+        }
+      }
+    },
+    "check.speed": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speed under load"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Velocità sotto carico"
+          }
+        }
+      }
+    },
+    "check.udp": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Game traffic (UDP)"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Traffico di gioco (UDP)"
+          }
+        }
+      }
+    },
+    "check.wifi": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wi-Fi signal"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Segnale Wi-Fi"
+          }
+        }
+      }
+    },
+    "checklist.airDrop.help": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AirDrop shares the Wi-Fi radio and pauses it to look for nearby devices."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "AirDrop condivide la radio Wi-Fi e la ferma per cercare dispositivi vicini."
+          }
+        }
+      }
+    },
+    "checklist.airDrop.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AirDrop set to No One"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "AirDrop impostato su Nessuno"
+          }
+        }
+      }
+    },
+    "checklist.browserEnergySaver.help": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In Chrome: Settings → Performance → Energy Saver. It lowers the frame rate."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "In Chrome: Impostazioni → Prestazioni → Risparmio energetico. Riduce i fotogrammi."
+          }
+        }
+      }
+    },
+    "checklist.browserEnergySaver.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Browser energy saver off"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Risparmio energetico del browser disattivato"
+          }
+        }
+      }
+    },
+    "checklist.controllerUSB.help": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Less input delay than Bluetooth, and Bluetooth shares the Wi-Fi radio."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Meno ritardo del Bluetooth, che condivide la radio Wi-Fi."
+          }
+        }
+      }
+    },
+    "checklist.controllerUSB.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Controller on a USB cable"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Controller collegato via USB"
+          }
+        }
+      }
+    },
+    "checklist.handoff.help": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Handoff uses the same radio as AirDrop."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Handoff usa la stessa radio di AirDrop."
+          }
+        }
+      }
+    },
+    "checklist.handoff.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Handoff off"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Handoff disattivato"
+          }
+        }
+      }
+    },
+    "checklist.locationServices.help": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Location makes the Wi-Fi scan for networks, which pauses it. Or switch off just System Services → Networking & Wireless."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "La localizzazione fa cercare reti al Wi-Fi, che si ferma. In alternativa disattiva solo Servizi di sistema → Rete e wireless."
+          }
+        }
+      }
+    },
+    "checklist.locationServices.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Location Services off while gaming"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Localizzazione disattivata mentre giochi"
+          }
+        }
+      }
+    },
+    "checklist.streamIPv6.help": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "If your provider uses carrier-grade NAT, IPv6 skips it."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Se il provider usa il CGNAT, IPv6 lo evita."
+          }
+        }
+      }
+    },
+    "checklist.streamIPv6.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prefer IPv6 if offered"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Preferisci IPv6 se disponibile"
+          }
+        }
+      }
+    },
+    "checklist.streamQuality.help": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In the game service's settings: the highest resolution and bitrate your line allows."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Nelle impostazioni del servizio di gioco: la risoluzione e il bitrate più alti che la linea permette."
+          }
+        }
+      }
+    },
+    "checklist.streamQuality.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stream quality set to the highest"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Qualità dello streaming al massimo"
+          }
+        }
+      }
+    },
+    "checklist.universalControl.help": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It keeps the AirDrop radio busy too."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Anche questo tiene occupata la radio di AirDrop."
+          }
+        }
+      }
+    },
+    "checklist.universalControl.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Universal Control off"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Controllo universale disattivato"
+          }
+        }
+      }
+    },
+    "detail.avg": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Average"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Media"
+          }
+        }
+      }
+    },
+    "detail.battery": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Battery"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Batteria"
+          }
+        }
+      }
+    },
+    "detail.channel": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Channel"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Canale"
+          }
+        }
+      }
+    },
+    "detail.cpu": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CPU"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "CPU"
+          }
+        }
+      }
+    },
+    "detail.down": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Download"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Download"
+          }
+        }
+      }
+    },
+    "detail.loss": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lost"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Persi"
+          }
+        }
+      }
+    },
+    "detail.max": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Worst"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Peggiore"
+          }
+        }
+      }
+    },
+    "detail.now": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Now"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Ora"
+          }
+        }
+      }
+    },
+    "detail.open": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Still open"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Ancora da fare"
+          }
+        }
+      }
+    },
+    "detail.rate": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Link rate"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Velocità del collegamento"
+          }
+        }
+      }
+    },
+    "detail.rise": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Latency under load"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Latenza sotto carico"
+          }
+        }
+      }
+    },
+    "detail.rssi": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Signal"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Segnale"
+          }
+        }
+      }
+    },
+    "detail.running": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Running"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "In esecuzione"
+          }
+        }
+      }
+    },
+    "detail.skipped": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skipped"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Saltato"
+          }
+        }
+      }
+    },
+    "detail.thermal": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Temperature"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Temperatura"
+          }
+        }
+      }
+    },
+    "detail.up": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Upload"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Upload"
+          }
+        }
+      }
+    },
+    "detail.usual": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Usual"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Di solito"
+          }
+        }
+      }
+    },
+    "event.awdlBack": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AirDrop radio came back"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "La radio di AirDrop si è riattivata"
+          }
+        }
+      }
+    },
+    "event.cpuBusy": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mac busy"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Mac occupato"
+          }
+        }
+      }
+    },
+    "event.linkChanged": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wi-Fi changed channel"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Il Wi-Fi ha cambiato canale"
+          }
+        }
+      }
+    },
+    "event.loss": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Packet lost"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Pacchetto perso"
+          }
+        }
+      }
+    },
+    "event.noisyAppStarted": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A background app started"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "È partita un'app in background"
+          }
+        }
+      }
+    },
+    "event.spike": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Latency spike"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Picco di latenza"
+          }
+        }
+      }
+    },
+    "event.thermalHigh": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mac hot"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Mac caldo"
+          }
+        }
+      }
+    },
+    "finding.appsNoisy": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Some apps can disturb the stream. Game Mode quits them."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Alcune app possono disturbare lo streaming. La Modalità gioco le chiude."
+          }
+        }
+      }
+    },
+    "finding.appsQuiet": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No background apps that get in the way."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Nessuna app in background che disturba."
+          }
+        }
+      }
+    },
+    "finding.awdlOn": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AirDrop and Handoff are on. They pause the Wi-Fi now and then. Game Mode switches them off."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "AirDrop e Handoff sono attivi e fermano il Wi-Fi ogni tanto. La Modalità gioco li spegne."
+          }
+        }
+      }
+    },
+    "finding.batteryLow": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The battery is getting low. Plug in."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "La batteria si sta scaricando. Collega l'alimentatore."
+          }
+        }
+      }
+    },
+    "finding.checklistDone": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Every item on the checklist is done."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Tutti i punti della checklist sono fatti."
+          }
+        }
+      }
+    },
+    "finding.checklistOpen": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A few settings on the checklist are still open."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Alcune impostazioni della checklist sono ancora da fare."
+          }
+        }
+      }
+    },
+    "finding.cpuBusy": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your Mac is busy with something else."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Il Mac è occupato con altro."
+          }
+        }
+      }
+    },
+    "finding.ethernet": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wired with a cable. The steadiest way to play."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Collegato via cavo. Il modo più stabile per giocare."
+          }
+        }
+      }
+    },
+    "finding.hopLoss": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Packets are getting lost between your Mac and the router."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Si perdono pacchetti tra il Mac e il router."
+          }
+        }
+      }
+    },
+    "finding.hopPausing": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your Mac's Wi-Fi keeps pausing. Turn on Game Mode, or plug in a cable."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Il Wi-Fi del Mac continua a fermarsi. Attiva la Modalità gioco o usa un cavo."
+          }
+        }
+      }
+    },
+    "finding.hopSpiky": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your Mac's Wi-Fi has small pauses. Game Mode usually fixes this."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Il Wi-Fi del Mac ha piccole pause. Di solito la Modalità gioco le risolve."
+          }
+        }
+      }
+    },
+    "finding.hopSteady": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your Mac's link to the router is steady."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Il collegamento del Mac al router è stabile."
+          }
+        }
+      }
+    },
+    "finding.internetGood": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Low and steady latency."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Latenza bassa e stabile."
+          }
+        }
+      }
+    },
+    "finding.internetLoss": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Packets are getting lost on the internet side."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Si perdono pacchetti lato internet."
+          }
+        }
+      }
+    },
+    "finding.internetPoor": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Latency is high or jumping around. Expect lag."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "La latenza è alta o instabile. Possibili ritardi."
+          }
+        }
+      }
+    },
+    "finding.internetSlowish": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Latency is a little high or uneven."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "La latenza è un po' alta o irregolare."
+          }
+        }
+      }
+    },
+    "finding.ipv6Missing": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No IPv6. Not a problem, just one route fewer."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Niente IPv6. Non è un problema, solo un percorso in meno."
+          }
+        }
+      }
+    },
+    "finding.ipv6Ready": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "IPv6 works, so games can use the more direct route."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "IPv6 funziona: i giochi possono usare il percorso più diretto."
+          }
+        }
+      }
+    },
+    "finding.lineBusy": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Something else is using the line right now. Downloads and updates cause lag."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Qualcos'altro sta usando la linea. Download e aggiornamenti causano ritardi."
+          }
+        }
+      }
+    },
+    "finding.lineMaybeBusy": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Someone else may be using the line."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Qualcun altro potrebbe usare la linea."
+          }
+        }
+      }
+    },
+    "finding.lineQuiet": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nothing else seems to be using the line."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Nient'altro sembra usare la linea."
+          }
+        }
+      }
+    },
+    "finding.lowPowerOn": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Low Power Mode is on. It slows the Mac down."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "La modalità Risparmio energetico è attiva e rallenta il Mac."
+          }
+        }
+      }
+    },
+    "finding.macReady": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ready: on power, cool and not busy."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Pronto: in carica, fresco e non occupato."
+          }
+        }
+      }
+    },
+    "finding.notConnected": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not connected to a network."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Non connesso a una rete."
+          }
+        }
+      }
+    },
+    "finding.notMeasured": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn't measure this."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Impossibile misurarlo."
+          }
+        }
+      }
+    },
+    "finding.onBattery": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Running on battery. Plug in for steadier performance."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Funziona a batteria. Collega l'alimentatore per prestazioni stabili."
+          }
+        }
+      }
+    },
+    "finding.speedBloatBad": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Latency jumps when the line is busy. Turn on Smart Queues (SQM) on the router."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "La latenza schizza quando la linea è occupata. Attiva Smart Queues (SQM) sul router."
+          }
+        }
+      }
+    },
+    "finding.speedBloatMild": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Latency rises when the line is busy. Smart Queues (SQM) on the router helps."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "La latenza sale quando la linea è occupata. Smart Queues (SQM) sul router aiuta."
+          }
+        }
+      }
+    },
+    "finding.speedGood": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plenty of speed, and latency stays low under load."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Velocità abbondante e latenza bassa anche sotto carico."
+          }
+        }
+      }
+    },
+    "finding.speedRateLimited": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The speed test server asked us to wait. Try again in a few minutes."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Il server del test ha chiesto di attendere. Riprova tra qualche minuto."
+          }
+        }
+      }
+    },
+    "finding.speedSlow": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speed is on the low side for high quality."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "La velocità è bassa per l'alta qualità."
+          }
+        }
+      }
+    },
+    "finding.speedTooSlow": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Too slow for smooth streaming. Lower the stream quality."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Troppo lenta per uno streaming fluido. Abbassa la qualità."
+          }
+        }
+      }
+    },
+    "finding.thermalHigh": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your Mac is hot and may slow down."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Il Mac è caldo e potrebbe rallentare."
+          }
+        }
+      }
+    },
+    "finding.timeMachineRunning": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A Time Machine backup is running. Game Mode pauses it."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "È in corso un backup di Time Machine. La Modalità gioco lo mette in pausa."
+          }
+        }
+      }
+    },
+    "finding.udpClean": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Game traffic gets through without loss."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Il traffico di gioco passa senza perdite."
+          }
+        }
+      }
+    },
+    "finding.udpLossy": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Game traffic is getting lost. Expect stutter."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Il traffico di gioco si perde. Possibili scatti."
+          }
+        }
+      }
+    },
+    "finding.udpSlow": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Game traffic is slow to come back."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Il traffico di gioco torna lentamente."
+          }
+        }
+      }
+    },
+    "finding.udpSomeLoss": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A little game traffic is getting lost."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Una piccola parte del traffico di gioco si perde."
+          }
+        }
+      }
+    },
+    "finding.wifi24GHz": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wi-Fi on 2.4 GHz, which is crowded and slow. Join the 5 or 6 GHz network, or plug in a cable."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Wi-Fi a 2,4 GHz, affollato e lento. Usa la rete a 5 o 6 GHz, oppure un cavo."
+          }
+        }
+      }
+    },
+    "finding.wifi5GHz": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wi-Fi on 5 GHz. Fine, though a cable is steadier."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Wi-Fi a 5 GHz. Va bene, ma il cavo è più stabile."
+          }
+        }
+      }
+    },
+    "finding.wifi6GHz": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wi-Fi on 6 GHz. Good, though a cable is steadier."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Wi-Fi a 6 GHz. Bene, ma il cavo è più stabile."
+          }
+        }
+      }
+    },
+    "finding.wifiPoor": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The signal is weak. Move closer to the router or use a cable."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Il segnale è debole. Avvicinati al router o usa un cavo."
+          }
+        }
+      }
+    },
+    "finding.wifiStrong": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Strong signal and a fast link."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Segnale forte e collegamento veloce."
+          }
+        }
+      }
+    },
+    "finding.wifiUnknown": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn't read the Wi-Fi details."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Impossibile leggere i dettagli del Wi-Fi."
+          }
+        }
+      }
+    },
+    "finding.wifiWeak": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The signal is a little weak. Moving closer to the router helps."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Il segnale è un po' debole. Avvicinarsi al router aiuta."
+          }
+        }
+      }
+    },
+    "grade.amber": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "could be better"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "migliorabile"
+          }
+        }
+      }
+    },
+    "grade.green": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "good"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "bene"
+          }
+        }
+      }
+    },
+    "grade.red": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "needs attention"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "da sistemare"
+          }
+        }
+      }
+    },
+    "grade.unknown": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "not measured"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "non misurato"
+          }
+        }
+      }
+    },
+    "layer.internet": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Internet"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Internet"
+          }
+        }
+      }
+    },
+    "layer.mac": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This Mac"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Questo Mac"
+          }
+        }
+      }
+    },
+    "layer.macWiFi": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mac's Wi-Fi"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Wi-Fi del Mac"
+          }
+        }
+      }
+    },
+    "speed.tooSoon": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ran less than 2 minutes ago"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Eseguito meno di 2 minuti fa"
+          }
+        }
+      }
+    },
+    "step.connection": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Looking at the connection"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Controllo la connessione"
+          }
+        }
+      }
+    },
+    "step.hop": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Testing the Wi-Fi hop"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Provo il collegamento al router"
+          }
+        }
+      }
+    },
+    "step.internet": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Measuring internet latency"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Misuro la latenza internet"
+          }
+        }
+      }
+    },
+    "step.mac": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checking this Mac"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Controllo questo Mac"
+          }
+        }
+      }
+    },
+    "step.speed": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Running the speed test"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Eseguo il test di velocità"
+          }
+        }
+      }
+    },
+    "step.udp": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Testing game traffic"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Provo il traffico di gioco"
+          }
+        }
+      }
+    },
+    "ui.cancel": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Annulla"
+          }
+        }
+      }
+    },
+    "ui.checkAgain": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check again"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Controlla di nuovo"
+          }
+        }
+      }
+    },
+    "ui.checkNow": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check now"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Controlla ora"
+          }
+        }
+      }
+    },
+    "ui.checking": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checking…"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Controllo in corso…"
+          }
+        }
+      }
+    },
+    "ui.details": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Details"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Dettagli"
+          }
+        }
+      }
+    },
+    "ui.detected": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Detected"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Rilevato"
+          }
+        }
+      }
+    },
+    "ui.gameMode": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Game Mode"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Modalità gioco"
+          }
+        }
+      }
+    },
+    "ui.gameMode.failed": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Game Mode couldn't start."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Impossibile attivare la Modalità gioco."
+          }
+        }
+      }
+    },
+    "ui.gameMode.help": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Switches off AirDrop's radio, keeps the Mac awake, pauses Time Machine and quits apps that get in the way. Asks for your password once."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Spegne la radio di AirDrop, tiene sveglio il Mac, mette in pausa Time Machine e chiude le app che disturbano. Chiede la password una volta."
+          }
+        }
+      }
+    },
+    "ui.gameMode.leftOn": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Game Mode was left on. Turn it off?"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "La Modalità gioco è rimasta attiva. Vuoi disattivarla?"
+          }
+        }
+      }
+    },
+    "ui.gameMode.starting": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turning on…"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Attivazione…"
+          }
+        }
+      }
+    },
+    "ui.gameMode.stopping": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turning off…"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Disattivazione…"
+          }
+        }
+      }
+    },
+    "ui.gameMode.turnOff": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turn off"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Disattiva"
+          }
+        }
+      }
+    },
+    "ui.history.delete": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete All Data…"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Elimina tutti i dati…"
+          }
+        }
+      }
+    },
+    "ui.history.deleteButton": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Elimina"
+          }
+        }
+      }
+    },
+    "ui.history.deleteConfirm": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete every saved check and session? This can't be undone."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Eliminare tutti i controlli e le sessioni salvati? Non si può annullare."
+          }
+        }
+      }
+    },
+    "ui.history.empty": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No checks yet. Your checks and game sessions appear here."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Nessun controllo ancora. Qui compariranno controlli e sessioni di gioco."
+          }
+        }
+      }
+    },
+    "ui.history.export": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Export CSV…"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Esporta CSV…"
+          }
+        }
+      }
+    },
+    "ui.lastCheck": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Last checked"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Ultimo controllo"
+          }
+        }
+      }
+    },
+    "ui.live.noEvents": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No hiccups so far."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Nessun intoppo finora."
+          }
+        }
+      }
+    },
+    "ui.live.off": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turn on Game Mode to watch the connection while you play."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Attiva la Modalità gioco per controllare la connessione mentre giochi."
+          }
+        }
+      }
+    },
+    "ui.live.router": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Router"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Router"
+          }
+        }
+      }
+    },
+    "ui.live.server": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Game server"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Server di gioco"
+          }
+        }
+      }
+    },
+    "ui.live.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Live"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "In diretta"
+          }
+        }
+      }
+    },
+    "ui.openApp": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Game Ready"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Apri Game Ready"
+          }
+        }
+      }
+    },
+    "ui.openSettings": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Settings"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Apri Impostazioni"
+          }
+        }
+      }
+    },
+    "ui.play": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Play"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Gioca"
+          }
+        }
+      }
+    },
+    "ui.playAnyway": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Play anyway"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Gioca comunque"
+          }
+        }
+      }
+    },
+    "ui.quit": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quit"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Esci"
+          }
+        }
+      }
+    },
+    "ui.session": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Game session"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Sessione di gioco"
+          }
+        }
+      }
+    },
+    "ui.session.calm": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No hiccups."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Nessun intoppo."
+          }
+        }
+      }
+    },
+    "ui.session.hiccups": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld hiccups"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%lld intoppi"
+          }
+        }
+      }
+    },
+    "ui.settings.about": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "About"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Informazioni"
+          }
+        }
+      }
+    },
+    "ui.settings.browser": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Browser for Play"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Browser per Gioca"
+          }
+        }
+      }
+    },
+    "ui.settings.privacy": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nothing leaves your Mac except the test traffic to the speed-test and latency servers. No accounts, no analytics."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Dal Mac esce solo il traffico di test verso i server di velocità e latenza. Nessun account, nessuna statistica."
+          }
+        }
+      }
+    },
+    "ui.settings.quitApps": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Game Mode quits these apps"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "La Modalità gioco chiude queste app"
+          }
+        }
+      }
+    },
+    "ui.settings.speed": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Include a speed test in each check"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Includi un test di velocità in ogni controllo"
+          }
+        }
+      }
+    },
+    "ui.settings.speed.help": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It fills your whole internet line for about 20 seconds."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Occupa tutta la linea internet per circa 20 secondi."
+          }
+        }
+      }
+    },
+    "ui.settings.why": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cloud gaming lags for many reasons: the Mac's own Wi-Fi, the household line, or the game's servers. Game Ready tells you which one, before you start and while you play."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Il cloud gaming rallenta per tanti motivi: il Wi-Fi del Mac, la linea di casa o i server del gioco. Game Ready ti dice quale, prima di iniziare e mentre giochi."
+          }
+        }
+      }
+    },
+    "ui.tab.check": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Controllo"
+          }
+        }
+      }
+    },
+    "ui.tab.checklist": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checklist"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Checklist"
+          }
+        }
+      }
+    },
+    "ui.tab.history": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "History"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Cronologia"
+          }
+        }
+      }
+    },
+    "verdict.incomplete.subtitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Part of the check didn't run. Try again."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Una parte del controllo non è stata eseguita. Riprova."
+          }
+        }
+      }
+    },
+    "verdict.incomplete.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn't finish the check"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Controllo non completato"
+          }
+        }
+      }
+    },
+    "verdict.none.subtitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "About a minute. It tests your Mac, Wi-Fi and internet."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Circa un minuto. Controlla Mac, Wi-Fi e internet."
+          }
+        }
+      }
+    },
+    "verdict.none.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check before you play"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Controlla prima di giocare"
+          }
+        }
+      }
+    },
+    "verdict.notReady.subtitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Something will cause lag. See why below."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Qualcosa causerà ritardi. Vedi sotto."
+          }
+        }
+      }
+    },
+    "verdict.notReady.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not ready"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Non pronto"
+          }
+        }
+      }
+    },
+    "verdict.ready.subtitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Everything looks good."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "È tutto a posto."
+          }
+        }
+      }
+    },
+    "verdict.ready.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ready to play"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Pronto per giocare"
+          }
+        }
+      }
+    },
+    "verdict.warning.subtitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can play. One thing could be better."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Puoi giocare. Una cosa potrebbe andare meglio."
+          }
+        }
+      }
+    },
+    "verdict.warning.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ready, with a warning"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Pronto, con un avviso"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}
