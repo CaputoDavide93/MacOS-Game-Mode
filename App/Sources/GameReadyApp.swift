@@ -48,10 +48,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     /// Used for testing and for scripting; it never touches Game Mode.
     func applicationDidFinishLaunching(_ notification: Notification) {
         let args = CommandLine.arguments
-        if let i = args.firstIndex(of: "--icon"), i + 1 < args.count {
-            MainActor.assumeIsolated { Screenshots.icon(to: URL(fileURLWithPath: args[i + 1])) }
-            exit(0)
-        }
         if let i = args.firstIndex(of: "--screenshots"), i + 1 < args.count {
             MainActor.assumeIsolated { Screenshots.render(to: URL(fileURLWithPath: args[i + 1])) }
             exit(0)

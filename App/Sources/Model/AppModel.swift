@@ -33,6 +33,8 @@ final class AppModel {
     private(set) var router: String?
 
     private let grader = Grader()
+    /// Screenshot mode: views must not run real probes that would overwrite the demo data.
+    private(set) var isDemo = false
     /// A one-run override (command line); nil uses the saved setting.
     var speedTestOverride: Bool?
     private var includeSpeed: Bool { speedTestOverride ?? settings.runSpeedTest }
@@ -238,6 +240,11 @@ final class AppModel {
         ]
         verdict = Verdict(results: results)
         lastCheck = Date(timeIntervalSince1970: 1_790_000_000)
+        live.loadDemo(at: Date(timeIntervalSince1970: 1_790_003_600))
+        changes.loadDemo()
+        checklist.loadDemo()
+        gameMode.loadDemoOn()
+        isDemo = true
         let t = Date(timeIntervalSince1970: 1_790_003_600)
         entries = [
             .session(SessionSummary(start: t.addingTimeInterval(-3_000), end: t, events: [

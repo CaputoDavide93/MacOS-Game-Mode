@@ -52,6 +52,16 @@ final class LiveMonitor {
         }
     }
 
+    /// Screenshots only: a running session with made-up readings.
+    func loadDemo(at t: Date) {
+        running = true
+        startedAt = t.addingTimeInterval(-1_800)
+        lastRouterMs = 3
+        lastServerMs = 18
+        events = [LiveEvent(at: t.addingTimeInterval(-1_200), kind: .spike, layer: .internet, value: "62 ms"),
+                  LiveEvent(at: t.addingTimeInterval(-300), kind: .awdlBack, layer: .macWiFi)]
+    }
+
     /// Stops and returns the session summary.
     @discardableResult
     func stop() -> SessionSummary? {

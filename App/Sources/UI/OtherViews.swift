@@ -59,7 +59,8 @@ struct ChecklistView: View {
                                     .fixedSize(horizontal: false, vertical: true)
                                 if let url = item.settingsURL {
                                     Button(L("ui.openSettings")) { NSWorkspace.shared.open(url) }
-                                        .buttonStyle(.link)
+                                        .buttonStyle(.plain)
+                                        .foregroundStyle(Theme.primary)
                                         .frame(minHeight: 28)
                                 }
                             }
@@ -71,6 +72,7 @@ struct ChecklistView: View {
         }
         .background(Theme.surface)
         .task {
+            guard !model.isDemo else { return }
             await model.checklist.detect()
             if model.settings.platform.usesBetterXcloud {
                 await model.changes.refreshXcloud(browser: model.settings.browser)
@@ -287,7 +289,8 @@ struct XcloudCard: View {
                             model.checklist.applyBetterXcloud(model.changes.xcloudSettings)
                         }
                     }
-                    .buttonStyle(.link)
+                    .buttonStyle(.plain)
+                    .foregroundStyle(Theme.primary)
                 }
                 Text(L("ui.xcloud.\(key)")).font(.callout).foregroundStyle(Theme.textVariant)
                     .fixedSize(horizontal: false, vertical: true)

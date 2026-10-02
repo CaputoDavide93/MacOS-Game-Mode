@@ -136,6 +136,12 @@ final class SessionChanges {
         }
     }
 
+    /// Screenshots only.
+    func loadDemo() {
+        xcloud = .applied
+        xcloudSettings = BetterXcloud.preset
+    }
+
     // MARK: - Helpers
 
     private func status(for outcome: BrowserBridge.Outcome) -> XcloudStatus {

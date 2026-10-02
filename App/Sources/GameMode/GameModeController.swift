@@ -22,6 +22,9 @@ final class GameModeController {
 
     var isOn: Bool { phase == .on || phase == .starting }
 
+    /// Screenshots only: shows Game Mode as on without touching the system.
+    func loadDemoOn() { phase = .on }
+
     /// A flag left behind by a crash or a kill: offer to turn Game Mode off.
     var leftOn: Bool { FileManager.default.fileExists(atPath: Self.flagURL.path) && phase == .off }
 

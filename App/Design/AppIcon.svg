@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bodyGradient" x1="0" y1="100" x2="0" y2="924" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2F6F69"/>
+      <stop offset="1" stop-color="#1F4F4B"/>
+    </linearGradient>
+    <linearGradient id="innerHighlight" x1="0" y1="100" x2="0" y2="570" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F7F4EE" stop-opacity=".16"/>
+      <stop offset="1" stop-color="#F7F4EE" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="bodyShadow" x="0" y="0" width="1024" height="1024" filterUnits="userSpaceOnUse">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="14" result="blur"/>
+      <feOffset in="blur" dy="18" result="offsetBlur"/>
+      <feFlood flood-color="#1F4F4B" flood-opacity=".48" result="shadowColor"/>
+      <feComposite in="shadowColor" in2="offsetBlur" operator="in" result="shadow"/>
+      <feMerge>
+        <feMergeNode in="shadow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <path id="bodyShape" d="M285 100H739C841 100 924 183 924 285V739C924 841 841 924 739 924H285C183 924 100 841 100 739V285C100 183 183 100 285 100Z"/>
+  </defs>
+
+  <g filter="url(#bodyShadow)">
+    <use xlink:href="#bodyShape" fill="url(#bodyGradient)"/>
+  </g>
+  <use xlink:href="#bodyShape" fill="url(#innerHighlight)"/>
+
+  <path d="M326 397C344 365 378 348 420 348H604C646 348 680 365 698 397C712 421 720 450 731 482L760 574C775 622 754 664 719 676C687 687 662 670 640 643L602 596H422L384 643C362 670 337 687 305 676C270 664 249 622 264 574L293 482C304 450 312 421 326 397Z" fill="#F7F4EE"/>
+
+  <path d="M365 451H397V483H429V515H397V547H365V515H333V483H365V451Z" fill="#1F4F4B"/>
+  <circle cx="640" cy="466" r="21" fill="#1F4F4B"/>
+  <circle cx="691" cy="517" r="21" fill="#1F4F4B"/>
+  <circle cx="589" cy="517" r="21" fill="#1F4F4B"/>
+  <circle cx="640" cy="568" r="21" fill="#1F4F4B"/>
+
+  <circle cx="742" cy="680" r="112" fill="#1F4F4B"/>
+  <circle cx="742" cy="680" r="96" fill="#7DD3A0"/>
+  <path d="M694 682L728 716L794 646" fill="none" stroke="#0F1826" stroke-width="34" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

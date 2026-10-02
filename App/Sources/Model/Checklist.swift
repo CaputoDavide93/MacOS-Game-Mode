@@ -42,6 +42,13 @@ final class Checklist {
         defaults.set(value, forKey: "checklist.\(item.rawValue)")
     }
 
+    /// Screenshots only: a believable half-done list, not saved.
+    func loadDemo() {
+        for item in Item.allCases { done[item] = [.airDrop, .handoff, .streamQuality, .streamIPv6].contains(item) }
+        source[.airDrop] = .detected; source[.handoff] = .detected
+        source[.streamQuality] = .detected; source[.streamIPv6] = .detected
+    }
+
     var states: [ChecklistItemState] { Item.allCases.map { ChecklistItemState(key: $0.rawValue, done: done[$0] ?? false) } }
 
     /// Reads what macOS exposes without special permissions. Anything unreadable stays manual.

@@ -18,10 +18,24 @@ Cloud gaming (Xbox Cloud Gaming, GeForce NOW) lags for very different reasons: t
 Wi-Fi pausing for AirDrop, the household line filling up, or the game's servers. They all look
 the same on screen. Game Ready measures each layer separately and gives one plain answer.
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/check-dark.png">
-  <img src="docs/assets/screenshots/check-light.png" width="380" alt="The Check screen: a verdict card reading Ready, with a warning, the Check again button, the Game Mode switch, Play anyway, and the first results.">
-</picture>
+<p align="center"><img src="App/Design/AppIcon.svg" width="128" alt="Game Ready icon: a game controller with a green tick."></p>
+
+---
+
+## 📸 Screenshots
+
+<table>
+  <tr>
+    <td align="center" width="50%"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/check-dark.png"><img src="docs/assets/screenshots/check-light.png" alt="Check: the verdict, Check again, the Game Mode switch, Play, and each result."></picture><br><sub>Check</sub></td>
+    <td align="center" width="50%"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/checklist-dark.png"><img src="docs/assets/screenshots/checklist-light.png" alt="Checklist: the Better xCloud card and the settings to switch off, some detected."></picture><br><sub>Checklist</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/history-dark.png"><img src="docs/assets/screenshots/history-light.png" alt="History: a game session with two labelled hiccups, and past checks."></picture><br><sub>History</sub></td>
+    <td align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/menubar-dark.png"><img src="docs/assets/screenshots/menubar-light.png" alt="Menu bar: live router and game-server ping, the Game Mode switch, recent hiccups."></picture><br><sub>Menu bar, during a game</sub><br><br><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/screenshots/settings-dark.png"><img src="docs/assets/screenshots/settings-light.png" width="80%" alt="Settings: gaming service, browser, speed test, Better xCloud tuning, apps to quit."></picture><br><sub>Settings</sub></td>
+  </tr>
+</table>
+
+All screenshots use demo data (`--screenshots`), never a real network.
 
 ---
 
@@ -134,11 +148,12 @@ Thresholds live in `Thresholds.swift`.
 MacOS-Game-Mode/
 ├── App/
 │   ├── Sources/            # 📱 probes, Game Mode, models, SwiftUI screens
-│   └── Resources/          # 🌍 Localizable.xcstrings (generated), app icon
+│   ├── Resources/          # 🌍 Localizable.xcstrings (generated), icon sizes (generated)
+│   └── Design/             # 🎨 AppIcon.svg, the icon's source
 ├── Packages/GameReadyCore/ # 🧠 rules + tests, no I/O
 ├── docs/                   # 📚 decisions, design, testing, screenshots, diagram
 ├── scripts/                # 🛠️ build.sh, check.sh
-├── tools/                  # 🔧 gen_strings.py + strings.py, gen_diagram.py
+├── tools/                  # 🔧 gen_strings.py + strings.py, gen_diagram.py, gen_icon.sh
 └── project.yml             # ⚙️ XcodeGen project (the .xcodeproj is generated)
 ```
 

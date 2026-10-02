@@ -18,4 +18,5 @@ All notable changes to this project are documented here. Format: [Keep a Changel
 - Better xCloud: read its settings to tick the checklist; opt-in tuning during Game Mode, undone on "off".
 - English and Italian.
 - A game server that never answers, or a Wi-Fi link with no rate, counts as "couldn't measure", never a pass.
-- `--check` (JSON results), `--screenshots <dir>` and `--icon <dir>` command-line modes.
+- `--check` (JSON results) and `--screenshots <dir>` command-line modes.
+- App icon drawn as SVG (`App/Design/AppIcon.svg`), rendered by `tools/gen_icon.sh`.
