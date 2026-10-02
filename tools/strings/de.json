@@ -141,7 +141,7 @@
   "fix.betterXcloud": "Better xCloud anpassen",
   "fix.betterXcloud.detail": "Höchste Bitrate, H.264-Profil „High“, IPv6 bevorzugen. Deine eigenen Einstellungen kommen danach zurück.",
   "fix.gameMode": "Spielmodus einschalten",
-  "fix.gameMode.detail": "Schaltet AirDrop, Handoff und Universelle Steuerung aus, die das WLAN unterbrechen, und hält den Mac wach. Fragt einmal nach deinem Passwort.",
+  "fix.gameMode.detail": "Dein WLAN bleibt an. AirDrop, Handoff und Universelle Steuerung sind aus, bis du fertig bist, damit sie es nicht stocken lassen. Hält den Mac wach; fragt einmal nach deinem Passwort.",
   "fix.quitApps": "%@ schließen",
   "fix.quitApps.detail": "Im Hintergrund geöffnete Apps nutzen das WLAN oder die Leitung. Du wirst gebeten, alles Offene zu sichern.",
   "grade.amber": "geht besser",

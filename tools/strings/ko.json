@@ -141,7 +141,7 @@
   "fix.betterXcloud": "Better xCloud 조정",
   "fix.betterXcloud.detail": "최고 비트레이트, H.264 높은 프로파일, IPv6 우선 사용. 이후 원래 설정으로 돌아갑니다.",
   "fix.gameMode": "게임 모드 켜기",
-  "fix.gameMode.detail": "Wi-Fi를 잠시 멈추게 하는 AirDrop, Handoff 및 유니버설 컨트롤을 끄고, Mac을 깨어 있는 상태로 유지합니다. 암호는 한 번만 묻습니다.",
+  "fix.gameMode.detail": "Wi-Fi는 켜진 상태로 유지됩니다. AirDrop, Handoff 및 유니버설 컨트롤을 끝날 때까지 꺼서 Wi-Fi가 끊기지 않게 합니다. Mac을 깨어 있게 하며 암호는 한 번만 묻습니다.",
   "fix.quitApps": "%@ 종료",
   "fix.quitApps.detail": "백그라운드에 열려 있는 앱은 Wi-Fi나 회선을 사용합니다. 열려 있는 항목을 저장하라는 메시지가 표시됩니다.",
   "grade.amber": "개선 가능",

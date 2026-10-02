@@ -141,7 +141,7 @@
   "fix.betterXcloud": "Better xCloudを調整",
   "fix.betterXcloud.detail": "最高ビットレート、H.264 Highプロファイル、IPv6優先。終了後は元の設定に戻ります。",
   "fix.gameMode": "ゲームモードをオンにする",
-  "fix.gameMode.detail": "Wi-Fiを一時停止させるAirDrop、Handoff、ユニバーサルコントロールをオフにし、Macをスリープさせません。パスワードの入力は一度だけです。",
+  "fix.gameMode.detail": "Wi-Fiはオンのままです。AirDrop、Handoff、ユニバーサルコントロールを終了までオフにし、Wi-Fiが途切れないようにします。Macをスリープさせず、パスワードの入力は一度だけです。",
   "fix.quitApps": "%@を終了",
   "fix.quitApps.detail": "バックグラウンドで開いたままのアプリはWi-Fiや回線を使用します。開いている項目は保存するよう求められます。",
   "grade.amber": "改善の余地あり",

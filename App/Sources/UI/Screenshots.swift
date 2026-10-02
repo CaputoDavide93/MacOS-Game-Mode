@@ -7,7 +7,7 @@ import SwiftUI
 enum Screenshots {
     static func render(to dir: URL) {
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
-        let basicSize = CGSize(width: 520, height: 640), advSize = CGSize(width: 900, height: 640)
+        let basicSize = CGSize(width: 520, height: 680), advSize = CGSize(width: 900, height: 640)
         for (name, dark) in [("light", false), ("dark", true)] {
             // Basic, before Fix & Play: Game Mode off, so there are fixes to make.
             let before = AppModel(demo: true); before.loadDemo(gameModeOn: false)

@@ -141,7 +141,7 @@
   "fix.betterXcloud": "Régler Better xCloud",
   "fix.betterXcloud.detail": "Débit maximal, profil H.264 élevé, Préférer IPv6. Vos propres réglages reviennent ensuite.",
   "fix.gameMode": "Activer le mode Jeu",
-  "fix.gameMode.detail": "Désactive AirDrop, Handoff et Contrôle universel, qui mettent le Wi-Fi en pause, et garde le Mac éveillé. Votre mot de passe n’est demandé qu’une fois.",
+  "fix.gameMode.detail": "Le Wi-Fi reste activé. AirDrop, Handoff et Contrôle universel sont désactivés jusqu’à la fin, pour qu’ils ne le fassent plus saccader. Garde le Mac éveillé ; votre mot de passe n’est demandé qu’une fois.",
   "fix.quitApps": "Quitter %@",
   "fix.quitApps.detail": "Les apps restées ouvertes en arrière-plan utilisent le Wi-Fi ou la ligne. Vous serez invité à enregistrer ce qui est ouvert.",
   "grade.amber": "à améliorer",

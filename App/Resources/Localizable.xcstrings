@@ -9237,61 +9237,61 @@
         "de": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "Schaltet AirDrop, Handoff und Universelle Steuerung aus, die das WLAN unterbrechen, und hält den Mac wach. Fragt einmal nach deinem Passwort."
+            "value": "Dein WLAN bleibt an. AirDrop, Handoff und Universelle Steuerung sind aus, bis du fertig bist, damit sie es nicht stocken lassen. Hält den Mac wach; fragt einmal nach deinem Passwort."
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Switches off AirDrop, Handoff and Universal Control, which pause the Wi-Fi, and keeps the Mac awake. Asks for your password once."
+            "value": "Your Wi-Fi stays on. AirDrop, Handoff and Universal Control go off until you finish, so they can't make it stutter. Keeps the Mac awake; asks for your password once."
           }
         },
         "es": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "Desactiva AirDrop, Handoff y Control Universal, que pausan el Wi-Fi, y mantiene el Mac activo. Pide tu contraseña una vez."
+            "value": "El Wi-Fi sigue encendido. AirDrop, Handoff y Control Universal se desactivan hasta que termines, para que no lo hagan ir a tirones. Mantiene el Mac activo; pide tu contraseña una vez."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "Désactive AirDrop, Handoff et Contrôle universel, qui mettent le Wi-Fi en pause, et garde le Mac éveillé. Votre mot de passe n’est demandé qu’une fois."
+            "value": "Le Wi-Fi reste activé. AirDrop, Handoff et Contrôle universel sont désactivés jusqu’à la fin, pour qu’ils ne le fassent plus saccader. Garde le Mac éveillé ; votre mot de passe n’est demandé qu’une fois."
           }
         },
         "hi": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "AirDrop, Handoff और यूनिवर्सल कंट्रोल बंद करता है, जो Wi-Fi को रोक देते हैं, और Mac को जगाए रखता है। आपका पासवर्ड एक बार माँगता है।"
+            "value": "आपका Wi-Fi चालू रहता है। AirDrop, Handoff और यूनिवर्सल कंट्रोल आपके खत्म करने तक बंद रहते हैं, ताकि वे इसे अटकाएँ नहीं। Mac को जगाए रखता है; आपका पासवर्ड एक बार माँगता है।"
           }
         },
         "it": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "Spegne AirDrop, Handoff e Controllo universale, che mettono in pausa il Wi-Fi, e tiene sveglio il Mac. Chiede la password una volta."
+            "value": "Il Wi-Fi resta acceso. AirDrop, Handoff e Controllo universale si spengono finché non hai finito, così non lo fanno andare a scatti. Tiene sveglio il Mac; chiede la password una volta."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "Wi-Fiを一時停止させるAirDrop、Handoff、ユニバーサルコントロールをオフにし、Macをスリープさせません。パスワードの入力は一度だけです。"
+            "value": "Wi-Fiはオンのままです。AirDrop、Handoff、ユニバーサルコントロールを終了までオフにし、Wi-Fiが途切れないようにします。Macをスリープさせず、パスワードの入力は一度だけです。"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "Wi-Fi를 잠시 멈추게 하는 AirDrop, Handoff 및 유니버설 컨트롤을 끄고, Mac을 깨어 있는 상태로 유지합니다. 암호는 한 번만 묻습니다."
+            "value": "Wi-Fi는 켜진 상태로 유지됩니다. AirDrop, Handoff 및 유니버설 컨트롤을 끝날 때까지 꺼서 Wi-Fi가 끊기지 않게 합니다. Mac을 깨어 있게 하며 암호는 한 번만 묻습니다."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "Desativa AirDrop, Handoff e Controle Universal, que pausam o Wi-Fi, e mantém o Mac acordado. Pede sua senha uma vez."
+            "value": "Seu Wi-Fi continua ligado. AirDrop, Handoff e Controle Universal ficam desativados até você terminar, para não o fazerem travar. Mantém o Mac acordado; pede sua senha uma vez."
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "关闭会让无线局域网暂停的隔空投送、接力和通用控制，并让 Mac 保持唤醒。只需输入一次密码。"
+            "value": "无线局域网保持开启。隔空投送、接力和通用控制会在你结束前关闭，避免它们让网络卡顿。让 Mac 保持唤醒；只需输入一次密码。"
           }
         }
       }

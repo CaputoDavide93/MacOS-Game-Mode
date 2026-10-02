@@ -16,7 +16,7 @@ struct GameReadyApp: App {
         }
         .windowResizability(.contentMinSize)
         .windowToolbarStyle(.unified(showsTitle: false))
-        .defaultSize(width: 520, height: 640)
+        .defaultSize(width: 520, height: 680)
 
         Settings {
             SettingsView().environment(model)

@@ -7,6 +7,8 @@ All notable changes to this project are documented here. Format: [Keep a Changel
 ### Fixed
 - While a check ran, Basic still showed a greyed-out "Check now" (or "Fix & Play"); the button
   now stays hidden until the check finishes. Advanced's button reads "Checking…".
+- "Turn on Game Mode" read as if it switched the Wi-Fi off. It now says the Wi-Fi stays on and
+  only AirDrop, Handoff and Universal Control go off. Basic's window is a little taller so it fits.
 
 ## [0.3.0] - 2026-10-02
 

@@ -10,8 +10,8 @@ struct BasicView: View {
     var body: some View {
         // Scrolls when large text or a long translation doesn't fit the window.
         ScrollView {
-        VStack(spacing: 20) {
-            Spacer(minLength: 8)
+        VStack(spacing: 16) {
+            Spacer(minLength: 16)
             StatusOrb(grade: orbGrade, symbol: orbSymbol, busy: model.running)
             VStack(spacing: 6) {
                 Text(title).font(.system(size: 34, weight: .heavy)).tracking(-0.6).multilineTextAlignment(.center)
@@ -209,9 +209,9 @@ struct StatusOrb: View {
     var body: some View {
         let c = color
         ZStack {
-            Circle().fill(c.opacity(0.13)).frame(width: 170, height: 170)
-            Circle().fill(c).frame(width: 114, height: 114).shadow(color: c.opacity(0.4), radius: 16)
-            Image(systemName: symbol).font(.system(size: 48, weight: .black)).foregroundStyle(.white)
+            Circle().fill(c.opacity(0.13)).frame(width: 144, height: 144)
+            Circle().fill(c).frame(width: 96, height: 96).shadow(color: c.opacity(0.4), radius: 14)
+            Image(systemName: symbol).font(.system(size: 40, weight: .black)).foregroundStyle(.white)
                 .symbolEffect(.pulse, isActive: busy && !reduceMotion)
         }
         .accessibilityHidden(true)

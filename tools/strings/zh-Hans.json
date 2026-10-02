@@ -141,7 +141,7 @@
   "fix.betterXcloud": "调整 Better xCloud",
   "fix.betterXcloud.detail": "最高码率、H.264 High 配置、优先使用 IPv6。之后会恢复你自己的设置。",
   "fix.gameMode": "打开游戏模式",
-  "fix.gameMode.detail": "关闭会让无线局域网暂停的隔空投送、接力和通用控制，并让 Mac 保持唤醒。只需输入一次密码。",
+  "fix.gameMode.detail": "无线局域网保持开启。隔空投送、接力和通用控制会在你结束前关闭，避免它们让网络卡顿。让 Mac 保持唤醒；只需输入一次密码。",
   "fix.quitApps": "退出 %@",
   "fix.quitApps.detail": "在后台保持打开的 App 会占用无线局域网或线路。系统会提示你存储所有打开的内容。",
   "grade.amber": "有待改善",
