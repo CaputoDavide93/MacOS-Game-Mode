@@ -23,6 +23,8 @@ jobs:
         run: |
           brew install xcodegen
           scripts/build.sh
+          built=$(defaults read "$PWD/build/dd/Build/Products/Release/Game Ready.app/Contents/Info" CFBundleShortVersionString)
+          [ "$built" = "${GITHUB_REF_NAME#v}" ] || { echo "app reports $built, tag is $GITHUB_REF_NAME"; exit 1; }
           cd dist && shasum -a 256 Game-Ready.zip | tee Game-Ready.zip.sha256
       - name: Release notes from CHANGELOG.md
         run: |
