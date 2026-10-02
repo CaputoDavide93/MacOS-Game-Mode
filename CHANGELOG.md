@@ -4,6 +4,8 @@ All notable changes to this project are documented here. Format: [Keep a Changel
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-10-02
+
 ### Added
 - Basic and Advanced views. Basic: one status and **Fix & Play**, which applies every fix and opens the game. Advanced: sidebar, readiness score, monospaced readouts, grouped results.
 
@@ -50,7 +52,8 @@ All notable changes to this project are documented here. Format: [Keep a Changel
 - `--check` (JSON results) and `--screenshots <dir>` command-line modes.
 - App icon drawn as SVG (`App/Design/AppIcon.svg`), rendered by `tools/gen_icon.sh`.
 
-[Unreleased]: https://github.com/CaputoDavide93/MacOS-Game-Mode/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/CaputoDavide93/MacOS-Game-Mode/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/CaputoDavide93/MacOS-Game-Mode/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/CaputoDavide93/MacOS-Game-Mode/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/CaputoDavide93/MacOS-Game-Mode/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/CaputoDavide93/MacOS-Game-Mode/releases/tag/v0.1.0
