@@ -66,7 +66,8 @@ scripts/build.sh                      # → build/…/Game Ready.app and dist/Ga
 open "build/dd/Build/Products/Release/Game Ready.app"
 ```
 
-The build is ad-hoc signed. On another Mac, right-click the app → **Open** the first time.
+The build is ad-hoc signed, not notarised. On another Mac, the first launch is blocked: open
+**System Settings → Privacy & Security** and choose **Open Anyway** (macOS 15 and later).
 
 ---
 
@@ -139,7 +140,7 @@ What's covered automatically and what has been verified on a real Mac: [docs/tes
 
 Game Mode runs one script as root, after the macOS password prompt. The script is compiled
 into the app, accepts only the app's own flag file, records what it changes and puts it back.
-Details and how to report a problem: [SECURITY.md](SECURITY.md).
+Details and how to report a problem: [SECURITY.md](SECURITY.md). Every privacy promise and its limits: [docs/privacy.md](docs/privacy.md).
 
 ---
 

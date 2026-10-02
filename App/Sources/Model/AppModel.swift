@@ -22,7 +22,11 @@ final class AppModel {
     private(set) var running = false
     private(set) var step: Step?
     private(set) var stepsDone = 0
-    private(set) var lastSpeedTest: Date?
+    /// Persisted, so relaunching the app doesn't bypass the 2-minute gap (D6).
+    private(set) var lastSpeedTest: Date? {
+        get { UserDefaults.standard.object(forKey: "lastSpeedTest") as? Date }
+        set { UserDefaults.standard.set(newValue, forKey: "lastSpeedTest") }
+    }
     private(set) var entries: [HistoryEntry] = []
     private(set) var lastSession: SessionSummary?
     private(set) var router: String?

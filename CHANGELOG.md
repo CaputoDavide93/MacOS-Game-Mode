@@ -14,4 +14,5 @@ All notable changes to this project are documented here. Format: [Keep a Changel
   the internet, or the Mac.
 - History of checks and sessions (90 days), CSV export, Delete All Data.
 - English and Italian.
+- A game server that never answers, or a Wi-Fi link with no rate, counts as "couldn't measure", never a pass.
 - `--check` (JSON results), `--screenshots <dir>` and `--icon <dir>` command-line modes.

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Builds "Game Ready.app" for Apple silicon and zips it into dist/.
-#   scripts/build.sh            # ad-hoc signed (runs on this Mac; others: right-click → Open)
+#   scripts/build.sh            # ad-hoc signed (other Macs: System Settings → Privacy & Security → Open Anyway)
 #   SIGN_ID="Developer ID Application: …" scripts/build.sh   # signed for distribution
 set -euo pipefail
 cd "$(dirname "$0")/.."

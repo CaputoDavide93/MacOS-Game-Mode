@@ -19,6 +19,7 @@ PATH=/usr/bin:/bin:/usr/sbin:/sbin
 FLAG="${1:-}"
 STATE_DIR=/var/run/game-ready
 PIDFILE="$STATE_DIR/guard.pid"
+LOCK="$STATE_DIR/lock"
 MAX_SECONDS=$((12 * 3600))   # safety net: never run longer than a long gaming day
 
 [[ $EUID -eq 0 ]] || { echo "must run as root" >&2; exit 1; }
@@ -32,8 +33,13 @@ flag_ok() {
 flag_ok || { echo "flag missing, a link, or not owned by $owner" >&2; exit 3; }
 
 mkdir -p "$STATE_DIR" && chmod 755 "$STATE_DIR"
-if [[ -f "$PIDFILE" && ! -L "$PIDFILE" ]] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null; then
-  echo "already running"; exit 0
+# One guard at a time: mkdir is atomic, so two starts can't both capture settings.
+if ! mkdir "$LOCK" 2>/dev/null; then
+  if [[ -f "$PIDFILE" && ! -L "$PIDFILE" ]] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null; then
+    echo "already running"; exit 0
+  fi
+  rm -rf "$LOCK"                      # stale lock from a guard that died
+  mkdir "$LOCK" 2>/dev/null || { echo "could not take the lock" >&2; exit 5; }
 fi
 
 # Remember exactly what we change, so "off" puts back what was there and nothing else.
@@ -53,6 +59,7 @@ restore() {
   [[ "$lp_ac" == "1" ]] && pmset -c lowpowermode 1
   [[ "$tm_was" == "1" ]] && tmutil enable 2>/dev/null
   rm -f "$PIDFILE"
+  rmdir "$LOCK" 2>/dev/null
 }
 
 # Detach: the administrator prompt returns at once, the loop carries on.

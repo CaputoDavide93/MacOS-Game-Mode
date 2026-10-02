@@ -79,3 +79,10 @@ The loop now re-checks that the flag is a regular file, not a link, owned by the
 every 5 s, and the guard exits after 12 hours regardless. On exit it restores only what it
 changed: the AirDrop radio only if it was up, Low Power Mode per power source (`pmset -b`
 and `-c`, never `-a`), Time Machine only if it was on.
+
+## D14 — Silence from a target is "couldn't measure", not a pass (2026-10-02)
+A review found the internet check passed on Cloudflare alone when the game server never
+answered, and a strong Wi-Fi signal passed with no link rate. A target or reading that
+returns nothing now grades `unknown`; for an essential check that makes the verdict
+incomplete (D4). The guard also takes an atomic `mkdir` lock before it reads any setting,
+so two starts can't both capture and later restore different values.

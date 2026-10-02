@@ -37,6 +37,8 @@ public struct Grader: Sendable {
         if rssi < t.wifiRSSIGreen || (rate.map { $0 < t.wifiRateGreenMbps } ?? false) {
             return CheckResult(id: .wifi, grade: .amber, findings: [.wifiWeak], details: details)
         }
+        // Strong signal but no link rate: can't vouch for the link.
+        if rate == nil { return CheckResult(id: .wifi, grade: .unknown, findings: [.wifiUnknown], details: details) }
         return CheckResult(id: .wifi, grade: .green, findings: [.wifiStrong], details: details)
     }
 
@@ -57,6 +59,12 @@ public struct Grader: Sendable {
         var details = [String: String]()
         var grade = Grade.green
         var findings = [Finding]()
+        // A target that never answered (e.g. the game server) can't be vouched for.
+        for (name, _) in targets.filter({ $0.value.isEmpty }).sorted(by: { $0.key < $1.key }) {
+            details[name] = "no replies"
+            grade = .unknown
+            if !findings.contains(.notMeasured) { findings.append(.notMeasured) }
+        }
         for (name, s) in measured.sorted(by: { $0.key < $1.key }) {
             details[name] = "\(ms(s.avgMs)) avg, \(ms(s.jitterMs)) jitter, " + String(format: "%.1f%% loss", s.lossPercent)
             let avg = s.avgMs ?? .infinity, jitter = s.jitterMs ?? .infinity

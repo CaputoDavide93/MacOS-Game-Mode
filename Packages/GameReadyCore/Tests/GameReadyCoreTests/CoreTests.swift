@@ -509,3 +509,31 @@ import Testing
         #expect(s.contains("pmset -b lowpowermode") && s.contains("pmset -c lowpowermode"))
     }
 }
+
+@Suite struct ReviewThreeTests {
+    let g = Grader()
+
+    @Test func unreachableGameServerIsNotAPass() {
+        let cf = PingStats(samples: Array(repeating: 12.0, count: 50))
+        let dead = PingStats(samples: Array(repeating: nil, count: 50))
+        let r = g.internet(["Cloudflare": cf, "Game server": dead])
+        #expect(r.grade != .green)
+        #expect(r.findings.contains(.notMeasured))
+        // ...and as an essential check it makes the verdict incomplete, not ready.
+        let all = Verdict.essential.filter { $0 != .internet }.map { CheckResult(id: $0, grade: .green, findings: []) } + [r]
+        #expect(Verdict(results: all).level == .incomplete)
+    }
+
+    @Test func missingLinkRateIsNotAPass() {
+        #expect(g.wifi(WiFiLink(band: .ghz6, rssi: -50, txRateMbps: nil), kind: .wifi).grade != .green)
+    }
+
+    @Test func guardTakesAnAtomicLockBeforeTouchingSettings() {
+        let s = GuardScript.source
+        guard let lock = s.range(of: #"mkdir "$LOCK""#), let capture = s.range(of: "awdl_was_up=") else {
+            Issue.record("no atomic lock"); return
+        }
+        #expect(lock.lowerBound < capture.lowerBound)
+        #expect(s.contains(#"rmdir "$LOCK""#))
+    }
+}
