@@ -175,7 +175,7 @@ MacOS-Game-Mode/
 ├── Packages/GameReadyCore/ # 🧠 rules + tests, no I/O
 ├── docs/                   # 📚 decisions, design, testing, screenshots, diagram
 ├── scripts/                # 🛠️ build.sh, check.sh
-├── tools/                  # 🔧 strings/<lang>.json + gen_strings.py, gen_diagram.py, gen_icon.sh
+├── tools/                  # 🔧 strings/<lang>.json + gen_strings.py, gen_diagram.py, gen-icon.sh
 └── project.yml             # ⚙️ XcodeGen project (the .xcodeproj is generated)
 ```
 

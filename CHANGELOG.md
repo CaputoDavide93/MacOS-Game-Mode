@@ -4,6 +4,9 @@ All notable changes to this project are documented here. Format: [Keep a Changel
 
 ## [Unreleased]
 
+### Changed
+- `tools/gen_icon.sh` is now `tools/gen-icon.sh`, the house name for shell scripts.
+
 ### Fixed
 - While a check ran, Basic still showed a greyed-out "Check now" (or "Fix & Play"); the button
   now stays hidden until the check finishes. Advanced's button reads "Checking…".
