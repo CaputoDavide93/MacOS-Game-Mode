@@ -171,12 +171,22 @@ MacOS-Game-Mode/
 ├── App/
 │   ├── Sources/            # 📱 probes, Game Mode, models, SwiftUI screens
 │   ├── Resources/          # 🌍 Localizable.xcstrings (generated), icon sizes (generated)
-│   └── Design/             # 🎨 AppIcon.svg, the icon's source
+│   ├── Design/             # 🎨 AppIcon.svg, the icon's source
+│   └── Info.plist, GameReady.entitlements
 ├── Packages/GameReadyCore/ # 🧠 rules + tests, no I/O
-├── docs/                   # 📚 decisions, design, testing, screenshots, diagram
+├── docs/                   # 📚 decisions, design, privacy, testing, screenshots, diagram
 ├── scripts/                # 🛠️ build.sh, check.sh
 ├── tools/                  # 🔧 strings/<lang>.json + gen_strings.py, gen_diagram.py, gen-icon.sh
-└── project.yml             # ⚙️ XcodeGen project (the .xcodeproj is generated)
+├── .github/workflows/      # 🤖 ci.yml, release.yml
+├── project.yml             # ⚙️ XcodeGen project (the .xcodeproj is generated)
+├── .env.example            # 🔑 optional SIGN_ID for a signed build
+├── .gitignore
+├── AGENTS.md               # 🤖 rules for coding agents
+├── CLAUDE.md               # 🤖 imports AGENTS.md for Claude Code
+├── CHANGELOG.md
+├── SECURITY.md
+├── LICENSE
+└── README.md
 ```
 
 ---
