@@ -5916,6 +5916,71 @@
         }
       }
     },
+    "event.networkChanged": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Netzwerk gewechselt"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Network changed"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Ha cambiado la red"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Le réseau a changé"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "नेटवर्क बदल गया"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Rete cambiata"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ネットワークが変わりました"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "네트워크가 바뀌었습니다"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "A rede mudou"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "网络已更改"
+          }
+        }
+      }
+    },
     "event.noisyAppStarted": {
       "extractionState": "manual",
       "localizations": {
@@ -7407,6 +7472,71 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "可能有其他人正在使用线路。"
+          }
+        }
+      }
+    },
+    "finding.lineNoBaseline": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Noch keine frühere Prüfung zum Vergleichen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No earlier check to compare with yet."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Todavía no hay una comprobación anterior con la que comparar."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Aucune vérification précédente pour comparer pour l’instant."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "तुलना के लिए अभी कोई पिछली जाँच नहीं है।"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Ancora nessun controllo precedente con cui confrontare."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "比較できる以前のチェックはまだありません。"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "아직 비교할 이전 확인 결과가 없습니다."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Ainda não há uma verificação anterior para comparar."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "还没有可供比较的早前检查。"
           }
         }
       }
@@ -10531,6 +10661,136 @@
         }
       }
     },
+    "ui.changes.notApplied": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Einige Freigabe-Einstellungen wurden nicht geändert, AirDrop oder Handoff können den Stream also noch stören."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Some sharing settings didn't change, so AirDrop or Handoff may still disturb the stream."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Algunos ajustes de compartir no han cambiado, así que AirDrop o Handoff aún pueden afectar al streaming."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Certains réglages de partage n’ont pas changé : AirDrop ou Handoff peuvent encore perturber le streaming."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "कुछ शेयरिंग सेटिंग्स नहीं बदलीं, इसलिए AirDrop या Handoff अब भी स्ट्रीम में रुकावट डाल सकते हैं।"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Alcune impostazioni di condivisione non sono cambiate: AirDrop o Handoff potrebbero ancora disturbare lo streaming."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "一部の共有設定が変更されなかったため、AirDrop や Handoff がストリーミングを妨げる可能性があります。"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "일부 공유 설정이 바뀌지 않아 AirDrop 또는 Handoff가 스트리밍을 방해할 수 있습니다."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Alguns ajustes de compartilhamento não mudaram, então o AirDrop ou o Handoff ainda podem atrapalhar o streaming."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "部分共享设置未能更改，AirDrop 或接力可能仍会干扰串流。"
+          }
+        }
+      }
+    },
+    "ui.changes.pending": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Einige Einstellungen konnten noch nicht zurückgesetzt werden. Game Ready versucht es bei der nächsten Prüfung erneut."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Some settings couldn't be put back yet. Game Ready tries again on the next check."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Algunos ajustes aún no se han podido restaurar. Game Ready lo volverá a intentar en la próxima comprobación."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Certains réglages n’ont pas encore pu être rétablis. Game Ready réessaiera à la prochaine vérification."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "कुछ सेटिंग्स अभी पहले जैसी नहीं हो सकीं। Game Ready अगली जाँच पर फिर कोशिश करेगा।"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Alcune impostazioni non sono ancora state ripristinate. Game Ready riprova al prossimo controllo."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "一部の設定はまだ元に戻せていません。次のチェック時に Game Ready が再試行します。"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "일부 설정을 아직 되돌리지 못했습니다. 다음 확인 때 Game Ready가 다시 시도합니다."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Alguns ajustes ainda não puderam ser restaurados. O Game Ready tenta de novo na próxima verificação."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "部分设置暂时未能恢复。Game Ready 会在下次检查时重试。"
+          }
+        }
+      }
+    },
     "ui.changes.unreadablePlan": {
       "extractionState": "manual",
       "localizations": {
@@ -11181,6 +11441,136 @@
         }
       }
     },
+    "ui.gameMode.offIncomplete": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Der Spielmodus ist aus, aber nicht alles wurde zurückgesetzt."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Game Mode is off, but not everything was put back."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "El modo Juego está desactivado, pero no se ha restaurado todo."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Le mode Jeu est désactivé, mais tout n’a pas été rétabli."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "गेम मोड बंद है, लेकिन सब कुछ पहले जैसा नहीं हुआ।"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "La Modalità gioco è disattivata, ma non tutto è stato ripristinato."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ゲームモードはオフですが、一部は元に戻っていません。"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "게임 모드는 꺼졌지만 일부 설정이 되돌려지지 않았습니다."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "O Modo Jogo está desativado, mas nem tudo foi restaurado."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "游戏模式已关闭，但并非所有设置都已恢复。"
+          }
+        }
+      }
+    },
+    "ui.gameMode.restoreNeeded": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Stromsparmodus oder Time Machine sind eventuell noch so, wie der Spielmodus sie hinterlassen hat. Beim Ausschalten wird dein Passwort abgefragt, um sie zurückzusetzen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Low Power Mode or Time Machine may still be as Game Mode left them. Turning off asks for your password to put them back."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Puede que el modo de bajo consumo o Time Machine sigan como los dejó el modo Juego. Al desactivarlo se te pedirá la contraseña para restaurarlos."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Le mode Économie d’énergie ou Time Machine sont peut-être encore tels que le mode Jeu les a laissés. La désactivation demande votre mot de passe pour les rétablir."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "लो पावर मोड या Time Machine शायद अब भी वैसे ही हैं जैसे गेम मोड ने छोड़े थे। बंद करने पर उन्हें पहले जैसा करने के लिए आपका पासवर्ड माँगा जाएगा।"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Modalità basso consumo o Time Machine potrebbero essere ancora come li ha lasciati la Modalità gioco. Disattivandola ti verrà chiesta la password per ripristinarli."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "低電力モードや Time Machine がゲームモードで変更されたままの可能性があります。オフにすると、元に戻すためにパスワードを求められます。"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "저전력 모드나 Time Machine이 게임 모드가 바꾼 상태 그대로일 수 있습니다. 끄면 되돌리기 위해 암호를 묻습니다."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "O Modo Pouca Energia ou o Time Machine podem ainda estar como o Modo Jogo deixou. Ao desativar, sua senha será pedida para restaurá-los."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "低电量模式或时间机器可能仍保持游戏模式更改后的状态。关闭时会要求输入密码以恢复它们。"
+          }
+        }
+      }
+    },
     "ui.gameMode.starting": {
       "extractionState": "manual",
       "localizations": {
@@ -11567,6 +11957,71 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "要删除所有已存储的检查和会话吗？此操作无法撤销。"
+          }
+        }
+      }
+    },
+    "ui.history.deleteFailed": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Der gesicherte Verlauf konnte nicht gelöscht werden."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn't delete the saved history."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "No se ha podido eliminar el historial guardado."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Impossible de supprimer l’historique enregistré."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "सहेजा गया इतिहास डिलीट नहीं हो सका।"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Impossibile eliminare la cronologia salvata."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "保存された履歴を削除できませんでした。"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "저장된 기록을 삭제할 수 없습니다."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Não foi possível apagar o histórico salvo."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "无法删除已存储的历史记录。"
           }
         }
       }

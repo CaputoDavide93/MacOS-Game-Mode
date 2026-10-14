@@ -79,7 +79,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
         MainActor.assumeIsolated {
             // Also clean up a Game Mode left on by a crash, or the root guard would outlive us.
-            guard model.gameMode.isOn || model.gameMode.leftOn || model.switching else { return .terminateNow }
+            guard model.gameMode.isOn || model.gameMode.flagPresent || model.switching else { return .terminateNow }
             Task { @MainActor in
                 await model.shutDown()
                 sender.reply(toApplicationShouldTerminate: true)

@@ -55,9 +55,16 @@ public final class HistoryStore: @unchecked Sendable {
             try line.write(to: fileURL, options: .withoutOverwriting)
             return
         }
-        let handle = try FileHandle(forWritingTo: fileURL)
+        let handle = try FileHandle(forUpdating: fileURL)
         defer { try? handle.close() }
-        try handle.seekToEnd()
+        // A crash mid-write leaves a line without its newline: close it, or the new record
+        // is glued to the fragment and both are lost.
+        let end = try handle.seekToEnd()
+        if end > 0 {
+            try handle.seek(toOffset: end - 1)
+            if handle.readData(ofLength: 1) != Data([0x0A]) { line.insert(0x0A, at: 0) }
+            try handle.seekToEnd()
+        }
         try handle.write(contentsOf: line)
     }
 

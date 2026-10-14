@@ -139,3 +139,22 @@ light, both AA). Prominent buttons and switches are drawn by the app (`FilledBut
 `ReadinessScore`: each check has a weight (connection, hop, internet, UDP 2; Wi-Fi, speed
 1.5; line, Mac 1; IPv6, apps, checklist 0.5). Green counts fully, amber half, red and
 "couldn't measure" nothing. It's a summary for the ring, never used to decide the verdict.
+
+## D21 — The guard keeps a journal, and every end of a session is a full "off" (2026-10-14)
+Supersedes part of D8 and D13. A Codex review found the guard held the original Low Power
+Mode and Time Machine values only in memory: a restart mid-session left them changed for
+good. The guard now writes them to `/var/db/game-ready/originals` (root-owned; `/var/run` is
+cleared on restart) before its first change, adopts that file instead of re-reading if it's
+already there (the values on the Mac are then the changed ones), and deletes it only after
+restoring every lasting setting; if one fails, the file stays and the next "off" retries.
+A dead guard's journal is restored by the same script with `--restore`, which costs a second
+password prompt; it's offered from the "left on" banner, never sprung on quit.
+The lock directory records its owner (pid and a random token) at once, so a start in
+progress is not taken for a dead guard, and only the owner removes it. A dead guard's lock is
+reclaimed under a second `mkdir` lock with a re-check inside, so two starts can't both reclaim
+it. A guard counts as alive only if its pid is a running bash, since a killed guard's pid can
+be reused. The app reads the same pid file: "off" waits up to 15 s for the guard to exit, "on"
+waits for an old guard to finish, and the watchdog ends the session (settings, live watch,
+history) when the guard is gone or the flag is deleted, not just the switch. These paths are
+run, not just read, in `GuardSimulationTests`: the real script minus its root check, with
+stub `pmset`/`tmutil`/`ifconfig`.

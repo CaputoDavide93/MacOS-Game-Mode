@@ -1,14 +1,22 @@
 /// The Game Mode guard, run once per session as root after the administrator prompt.
 /// It lives inside the app binary, not as a file in the bundle, so nothing on disk can be
-/// swapped between the user's approval and the run. See D8 in docs/decisions.md.
+/// swapped between the user's approval and the run. See D8, D13 and D14 in docs/decisions.md.
 public enum GuardScript {
+    /// Exists while a guard holds the session (the app waits for it to go on "off").
+    public static let lockPath = "/var/run/game-ready/lock"
+    /// The running guard's pid, readable by the app to tell a live guard from a dead one.
+    public static let pidPath = "/var/run/game-ready/guard.pid"
+    /// The settings as they were before Game Mode. Outside /var/run so a restart keeps it.
+    public static let journalPath = "/var/db/game-ready/originals"
+
     public static let source = #"""
 #!/bin/bash
 # Game Ready — Game Mode guard. Started once per session as root, after the user approves
 # the administrator prompt. While the flag file exists it keeps the AirDrop/Handoff radio
 # (awdl0) down; when the flag goes it restores exactly what it changed, then exits.
 #
-#   bash -c "$SOURCE" game-mode-guard <flag-file>
+#   bash -c "$SOURCE" game-mode-guard <flag-file>     start a session
+#   bash -c "$SOURCE" game-mode-guard --restore       put back what a dead guard left changed
 #
 # The flag must be gamemode.on inside a user's own Application Support/Game Ready folder,
 # a regular file (not a symlink) owned by that user. It is re-checked on every loop, so a
@@ -20,47 +28,119 @@ FLAG="${1:-}"
 STATE_DIR=/var/run/game-ready
 PIDFILE="$STATE_DIR/guard.pid"
 LOCK="$STATE_DIR/lock"
-MAX_SECONDS=$((12 * 3600))   # safety net: never run longer than a long gaming day
+JOURNAL_DIR=/var/db/game-ready   # survives a restart, unlike /var/run
+JOURNAL="$JOURNAL_DIR/originals"
+MAX_SECONDS=$((12 * 3600))       # safety net: never run longer than a long gaming day
 
 [[ $EUID -eq 0 ]] || { echo "must run as root" >&2; exit 1; }
-[[ "$FLAG" =~ ^/Users/([A-Za-z0-9._-]+)/Library/Application\ Support/Game\ Ready/gamemode\.on$ ]] \
-  || { echo "refusing flag path" >&2; exit 2; }
-owner="${BASH_REMATCH[1]}"
+if [[ "$FLAG" == "--restore" ]]; then
+  MODE=restore
+else
+  MODE=guard
+  [[ "$FLAG" =~ ^/Users/([A-Za-z0-9._-]+)/Library/Application\ Support/Game\ Ready/gamemode\.on$ ]] \
+    || { echo "refusing flag path" >&2; exit 2; }
+  owner="${BASH_REMATCH[1]}"
+fi
 
 flag_ok() {
   [[ -f "$FLAG" && ! -L "$FLAG" ]] && [[ "$(stat -f %Su "$FLAG" 2>/dev/null)" == "$owner" ]]
 }
-flag_ok || { echo "flag missing, a link, or not owned by $owner" >&2; exit 3; }
+[[ $MODE == restore ]] || flag_ok || { echo "flag missing, a link, or not owned by $owner" >&2; exit 3; }
+
+# A pid names a live guard only if that process is bash: a pid left by a killed guard may
+# since belong to something else.
+alive() {
+  local p
+  [[ -f "$1" && ! -L "$1" ]] || return 1
+  p=$(cat "$1" 2>/dev/null)
+  [[ "$p" =~ ^[0-9]+$ ]] && kill -0 "$p" 2>/dev/null && [[ "$(ps -p "$p" -o comm= 2>/dev/null)" == *bash ]]
+}
+age_of() { echo $(( $(date +%s) - $(stat -f %m "$1" 2>/dev/null || echo 0) )); }
 
 mkdir -p "$STATE_DIR" && chmod 755 "$STATE_DIR"
+TOKEN="$$.$RANDOM.$(date +%s)"
 # One guard at a time: mkdir is atomic, so two starts can't both capture settings.
 if ! mkdir "$LOCK" 2>/dev/null; then
-  if [[ -f "$PIDFILE" && ! -L "$PIDFILE" ]] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null; then
-    echo "already running"; exit 0
+  if alive "$PIDFILE" || alive "$LOCK/pid"; then echo "already running"; exit 0; fi
+  # No owner recorded yet: another start is between taking the lock and writing its pid.
+  if [[ ! -f "$LOCK/pid" ]] && (( $(age_of "$LOCK") < 30 )); then echo "another start in progress" >&2; exit 5; fi
+  # Reclaim a dead guard's lock under a second lock, and look again inside it, so two starts
+  # that both saw it stale can't both reclaim it.
+  [[ -d "$LOCK.reclaim" ]] && (( $(age_of "$LOCK.reclaim") >= 30 )) && rmdir "$LOCK.reclaim" 2>/dev/null
+  mkdir "$LOCK.reclaim" 2>/dev/null || { echo "another start in progress" >&2; exit 5; }
+  if alive "$PIDFILE" || alive "$LOCK/pid"; then rmdir "$LOCK.reclaim"; echo "already running"; exit 0; fi
+  if [[ -d "$LOCK" && ! -f "$LOCK/pid" ]] && (( $(age_of "$LOCK") < 30 )); then
+    rmdir "$LOCK.reclaim"; echo "another start in progress" >&2; exit 5   # a fresh start took it meanwhile
   fi
-  rm -rf "$LOCK"                      # stale lock from a guard that died
-  mkdir "$LOCK" 2>/dev/null || { echo "could not take the lock" >&2; exit 5; }
+  rm -rf "$LOCK"
+  mkdir "$LOCK" 2>/dev/null || { rmdir "$LOCK.reclaim"; echo "could not take the lock" >&2; exit 5; }
+  echo $$ > "$LOCK/pid"; echo "$TOKEN" > "$LOCK/owner"
+  rmdir "$LOCK.reclaim"
+fi
+echo $$ > "$LOCK/pid"
+echo "$TOKEN" > "$LOCK/owner"
+# Only the lock's owner lets go of it.
+release() {
+  [[ "$(cat "$LOCK/owner" 2>/dev/null)" == "$TOKEN" ]] || return 0
+  rm -f "$PIDFILE"; rm -rf "$LOCK"
+}
+
+awdl_was_up=0; lp_battery=""; lp_ac=""; tm_was=0
+# key=value lines, checked one by one; the file is never executed.
+read_journal() {
+  local k v
+  while IFS='=' read -r k v; do
+    [[ "$v" =~ ^[01]?$ ]] || continue
+    case "$k" in
+      awdl_was_up) awdl_was_up=${v:-0} ;;
+      lp_battery)  lp_battery=$v ;;
+      lp_ac)       lp_ac=$v ;;
+      tm_was)      tm_was=${v:-0} ;;
+    esac
+  done < "$JOURNAL"
+}
+
+# The journal goes only once every lasting setting is back; otherwise it stays for a retry.
+# (The AirDrop radio isn't one: a restart brings it back by itself.)
+restored_all=1
+restore() {
+  [[ "$awdl_was_up" == "1" ]] && ifconfig awdl0 up 2>/dev/null
+  if [[ "$lp_battery" == "1" ]]; then pmset -b lowpowermode 1 || restored_all=0; fi
+  if [[ "$lp_ac" == "1" ]]; then pmset -c lowpowermode 1 || restored_all=0; fi
+  if [[ "$tm_was" == "1" ]]; then tmutil enable 2>/dev/null || restored_all=0; fi
+  [[ $restored_all == 1 ]] && rm -f "$JOURNAL"
+  release
+}
+
+# A guard that never got to restore (a restart, a kill) left the true originals behind:
+# keep those, not today's values, which are the ones it changed.
+if [[ -f "$JOURNAL" && ! -L "$JOURNAL" ]]; then
+  read_journal
+elif [[ $MODE == restore ]]; then
+  release; echo "nothing to restore"; exit 0
+else
+  # Remember exactly what we change, so "off" puts back what was there and nothing else.
+  if ifconfig awdl0 2>/dev/null | head -1 | grep -q '<UP'; then awdl_was_up=1; fi
+  lp_battery=$(pmset -g custom | awk '/^Battery Power:/{s=1} /^AC Power:/{s=0} s&&$1=="lowpowermode"{print $2; exit}')
+  lp_ac=$(pmset -g custom | awk '/^AC Power:/{s=1} /^Battery Power:/{s=0} s&&$1=="lowpowermode"{print $2; exit}')
+  tm_was=$(defaults read /Library/Preferences/com.apple.TimeMachine AutoBackup 2>/dev/null || echo 0)
+  [[ "$tm_was" == "1" ]] || tm_was=0
+  mkdir -p "$JOURNAL_DIR" && chmod 755 "$JOURNAL_DIR"
+  printf 'awdl_was_up=%s\nlp_battery=%s\nlp_ac=%s\ntm_was=%s\n' "$awdl_was_up" "$lp_battery" "$lp_ac" "$tm_was" > "$JOURNAL.tmp" \
+    && mv -f "$JOURNAL.tmp" "$JOURNAL" \
+    || { echo "could not save the original settings" >&2; release; exit 6; }
 fi
 
-# Remember exactly what we change, so "off" puts back what was there and nothing else.
-if ifconfig awdl0 2>/dev/null | head -1 | grep -q '<UP'; then awdl_was_up=1; else awdl_was_up=0; fi
-lp_battery=$(pmset -g custom | awk '/^Battery Power:/{s=1} /^AC Power:/{s=0} s&&$1=="lowpowermode"{print $2; exit}')
-lp_ac=$(pmset -g custom | awk '/^AC Power:/{s=1} /^Battery Power:/{s=0} s&&$1=="lowpowermode"{print $2; exit}')
-tm_was=$(defaults read /Library/Preferences/com.apple.TimeMachine AutoBackup 2>/dev/null || echo 0)
+if [[ $MODE == restore ]]; then
+  restore
+  [[ $restored_all == 1 ]] || { echo "some settings could not be restored" >&2; exit 7; }
+  echo "restored"; exit 0
+fi
 
 [[ "$lp_battery" == "1" ]] && pmset -b lowpowermode 0
 [[ "$lp_ac" == "1" ]] && pmset -c lowpowermode 0
 if [[ "$tm_was" == "1" ]]; then tmutil stopbackup 2>/dev/null; tmutil disable 2>/dev/null; fi
 ifconfig awdl0 down 2>/dev/null
-
-restore() {
-  [[ "$awdl_was_up" == "1" ]] && ifconfig awdl0 up 2>/dev/null
-  [[ "$lp_battery" == "1" ]] && pmset -b lowpowermode 1
-  [[ "$lp_ac" == "1" ]] && pmset -c lowpowermode 1
-  [[ "$tm_was" == "1" ]] && tmutil enable 2>/dev/null
-  rm -f "$PIDFILE"
-  rmdir "$LOCK" 2>/dev/null
-}
 
 # Detach: the administrator prompt returns at once, the loop carries on.
 (
@@ -74,6 +154,7 @@ restore() {
   done
 ) </dev/null >/dev/null 2>&1 &
 echo $! > "$PIDFILE"   # bash 3.2 (macOS) cannot report a subshell pid from inside, so record it here
+echo $! > "$LOCK/pid"
 disown
 echo "started"
 """#

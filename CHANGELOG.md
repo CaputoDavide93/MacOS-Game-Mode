@@ -8,6 +8,36 @@ All notable changes to this project are documented here. Format: [Keep a Changel
 - `tools/gen_icon.sh` is now `tools/gen-icon.sh`, the house name for shell scripts.
 
 ### Fixed
+- Found in a Codex review of the whole app:
+  - If the Mac restarted (or the guard was killed) during Game Mode, Low Power Mode and Time
+    Machine stayed changed for good. The guard now saves the originals in
+    `/var/db/game-ready/originals` before changing anything; turning off from the "left on"
+    banner puts them back (a second password prompt), and the file stays until they are.
+  - Two Game Mode starts at once could both take the guard's lock. The lock now records its
+    owner, a dead guard's lock is reclaimed by one start only, and a pid since reused by
+    another program no longer counts as a running guard.
+  - "Off" reported done before the guard had finished restoring, and a quick "on" could meet the
+    old guard on its way out. "Off" now waits up to 15 s for the guard to exit, and "on" waits
+    for an old guard to finish first.
+  - When the guard stopped after 12 hours, or another window turned Game Mode off, the app kept
+    saying "on" and skipped restoring AirDrop, Handoff, Universal Control and Better xCloud.
+    Every end of a session now runs the full "off".
+  - A failed password prompt or guard start was never shown; cancelling the prompt stays quiet.
+  - A sharing setting that didn't change, or didn't come back, was reported as fine. Both now
+    show a message, and what didn't come back is retried on the next check.
+  - An internet target that never answered could hide behind an amber reading ("needs
+    attention" instead of "couldn't measure").
+  - The speed test could pass with no latency-under-load reading for one direction.
+  - The first check said "nothing else seems to be using the line" with nothing to compare with.
+  - Measuring CPU could crash the app once the kernel's tick counters wrapped (weeks of uptime).
+  - The live dot could stay green while the server stopped answering; a new session showed the
+    last session's readings; the live watch kept pinging the old router after a network change;
+    GeForce NOW and Luna sessions were watched against Xbox's server.
+  - After Game Mode turned on or off, the screen still showed the Mac and apps as they were before.
+  - Apps were listed as closed even when they refused to quit.
+  - Delete All Data looked done even when the file couldn't be deleted.
+  - A history line cut short by a crash swallowed the next record.
+  - A failed Better xCloud read kept showing the previous browser's settings.
 - While a check ran, Basic still showed a greyed-out "Check now" (or "Fix & Play"); the button
   now stays hidden until the check finishes. Advanced's button reads "Checking…".
 - "Turn on Game Mode" read as if it switched the Wi-Fi off. It now says the Wi-Fi stays on and

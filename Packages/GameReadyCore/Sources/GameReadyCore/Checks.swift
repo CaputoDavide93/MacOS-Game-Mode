@@ -20,7 +20,7 @@ public enum Finding: String, Sendable, Codable, CaseIterable {
     // speed
     case speedGood, speedBloatMild, speedBloatBad, speedSlow, speedTooSlow, speedRateLimited
     // line free
-    case lineQuiet, lineMaybeBusy, lineBusy
+    case lineQuiet, lineMaybeBusy, lineBusy, lineNoBaseline
     // mac
     case macReady, awdlOn, lowPowerOn, onBattery, batteryLow, thermalHigh, cpuBusy
     // apps

@@ -39,6 +39,8 @@ public struct Thresholds: Sendable, Codable, Equatable {
 
     // Live watch
     public var liveSpikeMs = 40.0
+    public var liveRouterGreenMs = 10.0
+    public var liveServerGreenMs = 40.0
 
     public init() {}
 
