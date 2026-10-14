@@ -101,6 +101,9 @@ struct HistoryView: View {
                     .padding(Theme.padding)
                 }
             }
+            if let error = model.historyError {
+                Text(error).font(.callout).foregroundStyle(Theme.bad).padding(.horizontal, Theme.padding)
+            }
             HStack {
                 Button(L("ui.history.export")) { export() }.disabled(model.entries.isEmpty)
                 Spacer()
@@ -244,7 +247,7 @@ struct MenuBarView: View {
             if model.live.running {
                 HStack(spacing: 16) {
                     reading(L("ui.live.router"), model.live.lastRouterMs)
-                    reading(L("ui.live.server"), model.live.lastServerMs)
+                    reading(model.liveServerLabel, model.live.lastServerMs)
                 }
                 if model.live.events.isEmpty {
                     Text(L("ui.live.noEvents")).font(.callout).foregroundStyle(.secondary)

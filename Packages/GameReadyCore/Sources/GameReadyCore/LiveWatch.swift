@@ -11,7 +11,7 @@ public enum Layer: String, Sendable, Codable {
 }
 
 public enum LiveEventKind: String, Sendable, Codable {
-    case spike, loss, linkChanged, awdlBack, cpuBusy, thermalHigh, noisyAppStarted
+    case spike, loss, linkChanged, networkChanged, awdlBack, cpuBusy, thermalHigh, noisyAppStarted
 }
 
 public struct LiveEvent: Sendable, Codable, Equatable, Identifiable {
@@ -86,6 +86,25 @@ public struct LiveClassifier: Sendable {
     private func routerIsFine(_ sample: Double??) -> Bool {
         if case .some(.some(let ms)) = sample { return ms <= spikeMs }
         return false
+    }
+}
+
+/// The live dot's colour. Green needs a recent reply from both the router and the server:
+/// a reading from before a run of losses says nothing about now.
+public enum LiveHealth {
+    /// A hiccup this recent turns the dot red.
+    public static let redSeconds: TimeInterval = 20
+    /// A reply older than this is stale (the server pings every 2 s, the router every 1 s).
+    public static let freshSeconds: TimeInterval = 6
+
+    public static func grade(running: Bool, now: Date, lastEventAt: Date?,
+                             router: (ms: Double, at: Date)?, server: (ms: Double, at: Date)?,
+                             thresholds t: Thresholds = .standard) -> Grade {
+        guard running else { return .unknown }
+        if let e = lastEventAt, now.timeIntervalSince(e) < redSeconds { return .red }
+        guard let r = router, let s = server,
+              now.timeIntervalSince(r.at) <= freshSeconds, now.timeIntervalSince(s.at) <= freshSeconds else { return .amber }
+        return r.ms <= t.liveRouterGreenMs && s.ms <= t.liveServerGreenMs ? .green : .amber
     }
 }
 

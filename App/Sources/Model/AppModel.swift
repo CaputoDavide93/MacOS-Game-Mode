@@ -68,6 +68,9 @@ final class AppModel {
         checklist = Checklist(defaults: defaults)
         isDemo = demo
         guard !demo else { return }
+        // The guard died, hit its time limit, or another window turned Game Mode off:
+        // run the whole "off" (settings, live watch, session), not just the switch.
+        gameMode.onEndedUnexpectedly = { [weak self] in await self?.endUnexpectedly() }
         if self.housekeeping { try? history.prune() }
         entries = history.load()
         // An undo left over from a session whose Game Mode is already off (e.g. Better xCloud
@@ -80,7 +83,11 @@ final class AppModel {
         guard housekeeping, !quitting, !gameMode.isOn, !gameMode.leftOn, !switching, changes.hasPendingRestore else { return }
         switching = true
         defer { switching = false }
-        if !(await changes.restore()) { changesError = SessionChanges.ApplyError.unreadablePlan.localizedDescription }
+        switch await changes.restore() {
+        case .done: changesError = nil   // whatever it said was about this pending undo
+        case .pending: changesError = L("ui.changes.pending")
+        case .unreadable: changesError = SessionChanges.ApplyError.unreadablePlan.localizedDescription
+        }
     }
 
     var stepCount: Int { includeSpeed ? Step.allCases.count : Step.allCases.count - 1 }
@@ -204,7 +211,9 @@ final class AppModel {
 
     /// True while Game Mode is switching; the switch ignores clicks until it settles.
     private(set) var switching = false
+    /// A full sentence for Basic and Advanced: why Game Mode didn't start, or what didn't come back.
     private(set) var changesError: String?
+    private(set) var historyError: String?
 
     func toggleGameMode() async {
         if gameMode.isOn || gameMode.leftOn {
@@ -223,22 +232,56 @@ final class AppModel {
         defer { switching = false }
         changesError = nil
         let apps = AppsProbe.runningNoisy(enabled: settings.quitApps)
-        let names = apps.compactMap(\.localizedName)
         await gameMode.turnOn(quitting: apps)
-        guard gameMode.phase == .on else { return false }
+        guard gameMode.phase == .on else {
+            if case .failed(let reason) = gameMode.phase {
+                changesError = reason.isEmpty ? L("ui.gameMode.failed") : L("ui.gameMode.failed") + " " + reason
+            }
+            return false
+        }
         do {
-            try await changes.apply(betterXcloud: tuneXcloud && settings.platform.usesBetterXcloud, browser: settings.browser)
+            let notApplied = try await changes.apply(betterXcloud: tuneXcloud && settings.platform.usesBetterXcloud,
+                                                     browser: settings.browser)
+            if !notApplied.isEmpty { changesError = L("ui.changes.notApplied") }
         } catch {
             // Couldn't record the originals: change nothing, and back out of Game Mode.
-            changesError = error.localizedDescription
+            changesError = L("ui.gameMode.failed") + " " + error.localizedDescription
             await gameMode.turnOff()
             await changes.restore()
             return false
         }
-        closedApps = names
-        noisyApps = []
-        live.start(router: router ?? NetworkProbe.snapshot().router, server: settings.gameServerHost)
+        // An app can refuse to quit (an unsaved document): only claim the ones that went.
+        let stillRunning = await waitForQuit(apps)
+        closedApps = apps.filter { !stillRunning.contains($0) }.compactMap(\.localizedName)
+        noisyApps = stillRunning.compactMap(\.localizedName)
+        await regradeMac()
+        live.start(router: router ?? NetworkProbe.snapshot().router, server: liveServerHost)
         return true
+    }
+
+    /// Xbox is pinged at its own front door; other platforms are watched on Cloudflare, as
+    /// the pre-flight check grades them.
+    private var liveServerHost: String {
+        settings.platform == .xboxCloud ? settings.gameServerHost : Endpoints.cloudflareDNSv4
+    }
+
+    var liveServerLabel: String { settings.platform == .xboxCloud ? L("ui.live.server") : L("layer.internet") }
+
+    private func waitForQuit(_ apps: [NSRunningApplication]) async -> [NSRunningApplication] {
+        for _ in 0..<10 where !apps.allSatisfy(\.isTerminated) {
+            try? await Task.sleep(for: .milliseconds(300))
+        }
+        return apps.filter { !$0.isTerminated }
+    }
+
+    /// After Game Mode, the Mac and apps checks describe a Mac that no longer exists (Low Power
+    /// Mode, AirDrop radio, noisy apps): measure those two again so the verdict is current.
+    private func regradeMac() async {
+        guard verdict != nil else { return }
+        let mac = await MacProbe.state()
+        let apps = grader.apps(noisy: noisyApps, timeMachineRunning: await AppsProbe.timeMachineRunning())
+        results = order(results.filter { $0.id != .mac && $0.id != .apps } + [grader.mac(mac), apps])
+        verdict = Verdict(results: results)
     }
 
     func turnGameModeOff() async {
@@ -250,19 +293,44 @@ final class AppModel {
     /// finishes first, then Game Mode goes off even if a check is still measuring.
     func shutDown() async {
         quitting = true
-        while switching { try? await Task.sleep(for: .milliseconds(100)) }
-        if gameMode.isOn || gameMode.leftOn { await performOff() }
+        await waitForSwitch()
+        // Never a password prompt on quit: a dead guard's originals wait for the next launch's
+        // "left on" banner.
+        if gameMode.isOn || gameMode.flagPresent { await performOff(mayPrompt: false) }
     }
 
     private(set) var quitting = false
 
-    private func performOff() async {
+    /// One transition at a time: let a switch in progress (e.g. tuning Better xCloud) finish first.
+    private func endUnexpectedly() async {
+        guard await waitForSwitch() else { return }
+        guard gameMode.isOn || gameMode.flagPresent || live.running else { return }
+        await performOff()
+    }
+
+    /// Waits until no switch is in progress. False if the waiting task was cancelled.
+    @discardableResult
+    private func waitForSwitch() async -> Bool {
+        while switching {
+            do { try await Task.sleep(for: .milliseconds(100)) } catch { return false }
+        }
+        return true
+    }
+
+    private func performOff(mayPrompt: Bool = true) async {
         switching = true
         defer { switching = false }
         changesError = nil
-        await gameMode.turnOff()
-        if !(await changes.restore()) { changesError = SessionChanges.ApplyError.unreadablePlan.localizedDescription }
+        let privileged = await gameMode.turnOff(mayPrompt: mayPrompt)
+        let restored = await changes.restore()
+        if !privileged || restored != .done {
+            let detail = restored == .pending ? L("ui.changes.pending")
+                : restored == .unreadable ? SessionChanges.ApplyError.unreadablePlan.localizedDescription : nil
+            changesError = [L("ui.gameMode.offIncomplete"), detail].compactMap { $0 }.joined(separator: " ")
+        }
         closedApps = []
+        // Low Power Mode and the AirDrop radio are back: the Mac result should say so.
+        if !quitting { await regradeMac() }
         if let summary = live.stop() {
             lastSession = summary
             try? history.append(.session(summary))
@@ -356,9 +424,15 @@ final class AppModel {
     // MARK: - History
 
     func deleteAllData() {
-        try? history.deleteAll()
-        entries = []
-        lastSession = nil
+        do {
+            try history.deleteAll()
+            historyError = nil
+            entries = []
+            lastSession = nil
+        } catch {
+            historyError = L("ui.history.deleteFailed")
+            entries = history.load()
+        }
     }
 
     func exportCSV() -> String {

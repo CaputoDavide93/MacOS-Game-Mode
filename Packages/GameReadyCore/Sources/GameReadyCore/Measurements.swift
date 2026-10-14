@@ -67,6 +67,23 @@ public struct SpeedMeasurement: Sendable, Codable, Equatable {
     }
 }
 
+/// The kernel's whole-machine CPU tick counters (`host_cpu_load_info`). They are 32-bit
+/// and wrap after weeks of uptime, so deltas use wrapping subtraction per counter.
+public struct CPUTicks: Sendable, Equatable {
+    public var user: UInt32, system: UInt32, idle: UInt32, nice: UInt32
+
+    public init(user: UInt32, system: UInt32, idle: UInt32, nice: UInt32) {
+        self.user = user; self.system = system; self.idle = idle; self.nice = nice
+    }
+
+    /// Busy share of the time between two readings, in percent. Nil when no time passed.
+    public static func busyPercent(from a: CPUTicks, to b: CPUTicks) -> Double? {
+        let busy = Double(b.user &- a.user) + Double(b.system &- a.system) + Double(b.nice &- a.nice)
+        let total = busy + Double(b.idle &- a.idle)
+        return total > 0 ? busy * 100 / total : nil
+    }
+}
+
 public struct ChecklistItemState: Sendable, Codable, Equatable {
     public var key: String
     public var done: Bool

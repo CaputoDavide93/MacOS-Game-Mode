@@ -70,7 +70,7 @@ private struct LiveReadouts: View {
                 .font(.system(size: 10, weight: .bold, design: .monospaced)).foregroundStyle(Theme.textVariant)
                 .padding(.leading, 12).padding(.bottom, 2)
             row(L("ui.live.router"), model.live.running ? model.live.lastRouterMs : nil, unit: "ms")
-            row(L("ui.live.server"), model.live.running ? model.live.lastServerMs : model.metrics.pingMs, unit: "ms")
+            row(model.liveServerLabel, model.live.running ? model.live.lastServerMs : model.metrics.pingMs, unit: "ms")
             row(L("adv.loss"), model.metrics.lossPercent, unit: "%", decimals: 1)
         }
         .padding(.bottom, 10)
@@ -104,7 +104,7 @@ struct OverviewPage: View {
                     }
                 }
                 if let error = model.changesError {
-                    Text(L("ui.gameMode.failed") + " " + error).font(.callout).foregroundStyle(Theme.bad)
+                    Text(error).font(.callout).foregroundStyle(Theme.bad)
                 }
                 if !model.results.isEmpty {
                     RowGroup(title: L("adv.group.network")) { rows([.connection, .wifi, .hop, .internet, .udp, .ipv6]) }
@@ -158,7 +158,13 @@ struct OverviewPage: View {
     private var leftOnBanner: some View {
         HStack {
             Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(Theme.warn)
-            Text(L("ui.gameMode.leftOn")).foregroundStyle(Theme.text)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(L("ui.gameMode.leftOn")).foregroundStyle(Theme.text)
+                if model.gameMode.needsPrivilegedRestore {
+                    Text(L("ui.gameMode.restoreNeeded")).font(.callout).foregroundStyle(Theme.textVariant)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
             Spacer()
             Button(L("ui.gameMode.turnOff")) { Task { await model.turnGameModeOff() } }
         }

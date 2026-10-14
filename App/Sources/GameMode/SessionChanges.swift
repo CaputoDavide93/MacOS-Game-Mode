@@ -35,7 +35,9 @@ final class SessionChanges {
 
     /// Snapshots and changes the sharing settings, and the Better xCloud preset if asked.
     /// Nothing changes unless every original was read and the plan is safely on disk.
-    func apply(betterXcloud: Bool, browser: Browser) async throws {
+    /// Returns the settings that don't read back as the Game Mode value afterwards.
+    @discardableResult
+    func apply(betterXcloud: Bool, browser: Browser) async throws -> [SharingSetting] {
         // An existing plan that can't be read holds originals we'd otherwise overwrite: stop.
         // (Not `try?`: that flattens "no plan yet", the normal case, into the same nil as a failure.)
         let existing: RestorePlan?
@@ -51,11 +53,17 @@ final class SessionChanges {
         try save(plan)
         for setting in SharingSetting.all { await write(setting.applyArguments) }
         await reload()
+        var notApplied = [SharingSetting]()
+        for setting in SharingSetting.all {
+            if case .value(let now) = await read(setting), setting.isGameValue(now) { continue }
+            notApplied.append(setting)
+        }
 
         if betterXcloud {
             await applyXcloud(into: &plan, browser: browser)
             try? save(plan)
         }
+        return notApplied
     }
 
     private func applyXcloud(into plan: inout RestorePlan, browser: Browser) async {
@@ -87,14 +95,24 @@ final class SessionChanges {
 
     // MARK: - Restore
 
+    enum RestoreOutcome: Equatable {
+        /// Everything is back (or there was nothing to put back).
+        case done
+        /// A macOS setting didn't read back as its original, or the plan couldn't be saved:
+        /// retried on the next check. (Better xCloud waiting for an xbox.com tab isn't this;
+        /// the checklist shows it as `restorePending`.)
+        case pending
+        /// A plan exists but can't be read: it stays on disk untouched.
+        case unreadable
+    }
+
     /// Puts back everything in the saved plan. Better xCloud is restored in the browser it was
     /// tuned in, which needs an open xbox.com tab; otherwise that part is retried next time.
-    /// False when a plan exists but can't be read: it stays on disk and the caller says so.
     @discardableResult
-    func restore() async -> Bool {
+    func restore() async -> RestoreOutcome {
         let loaded: RestorePlan?
-        do { loaded = try loadPlanStrict() } catch { return false }
-        guard var plan = loaded else { return true }
+        do { loaded = try loadPlanStrict() } catch { return .unreadable }
+        guard var plan = loaded else { return .done }
         for (setting, original) in plan.sharing { await write(setting.restoreArguments(original: original)) }
         await reload()
         // Only what reads back as the original leaves the plan; anything else is retried next time.
@@ -122,8 +140,13 @@ final class SessionChanges {
                 xcloud = .restorePending
             }
         }
-        if plan.isEmpty { try? FileManager.default.removeItem(at: Self.planURL) } else { try? save(plan) }
-        return true
+        let saved: Bool
+        if plan.isEmpty {
+            saved = (try? FileManager.default.removeItem(at: Self.planURL)) != nil
+        } else {
+            saved = (try? save(plan)) != nil
+        }
+        return saved && plan.sharing.isEmpty ? .done : .pending
     }
 
     // MARK: - Read (checklist)
@@ -139,7 +162,9 @@ final class SessionChanges {
                 xcloud = BetterXcloud.matchesPreset(s) ? .matches : .differs
             }
         case let other:
+            // Whatever was read before (maybe in another browser) no longer describes the page.
             xcloud = status(for: other)
+            xcloudSettings = nil
         }
     }
 

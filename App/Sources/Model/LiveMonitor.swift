@@ -18,14 +18,19 @@ final class LiveMonitor {
     private var macTask: Task<Void, Never>?
     /// Latest router sample (nil = lost) and when it arrived.
     private var recentRouter: (ms: Double?, at: Date)?
+    /// Latest replies (not losses), for the dot: green needs both to be fresh.
+    private var routerReply: (ms: Double, at: Date)?
+    private var serverReply: (ms: Double, at: Date)?
     private var lastLink: (WiFiBand, Int?)?
+    /// The gateway being pinged; a new one (another network) restarts the router ping.
+    private var routerHost: String?
+    /// Identifies the running session, so a check that finishes after "stop" changes nothing.
+    private var session: UUID?
 
     /// Current health for the menu-bar dot.
     var grade: Grade {
-        guard running else { return .unknown }
-        if let last = events.last, Date().timeIntervalSince(last.at) < 20 { return .red }
-        if let r = lastRouterMs, let s = lastServerMs, r <= 10, s <= 40 { return .green }
-        return .amber
+        LiveHealth.grade(running: running, now: Date(), lastEventAt: events.last?.at,
+                         router: routerReply, server: serverReply)
     }
 
     func start(router: String?, server: String) {
@@ -34,22 +39,33 @@ final class LiveMonitor {
         startedAt = Date()
         events = []
         classifier = LiveClassifier()
-        if let router {
-            routerPing = StreamingPing(host: router, interval: 1) { [weak self] ms in
-                Task { @MainActor in self?.receive(router: ms) }
-            }
-            routerPing?.start()
-        }
+        // Nothing from an earlier session (maybe another network) carries over.
+        lastRouterMs = nil; lastServerMs = nil
+        recentRouter = nil; routerReply = nil; serverReply = nil; lastLink = nil
+        startRouterPing(router)
         serverPing = StreamingPing(host: server, interval: 2) { [weak self] ms in
             Task { @MainActor in self?.receive(server: ms) }
         }
         serverPing?.start()
+        let session = UUID()
+        self.session = session
         macTask = Task { [weak self] in
             while !Task.isCancelled {
-                try? await Task.sleep(for: .seconds(10))
-                await self?.checkMac()
+                do { try await Task.sleep(for: .seconds(10)) } catch { return }
+                await self?.checkMac(session: session)
             }
         }
+    }
+
+    private func startRouterPing(_ host: String?) {
+        routerPing?.stop()
+        routerPing = nil
+        routerHost = host
+        guard let host else { return }
+        routerPing = StreamingPing(host: host, interval: 1) { [weak self] ms in
+            Task { @MainActor in self?.receive(router: ms) }
+        }
+        routerPing?.start()
     }
 
     /// Screenshots only: a running session with made-up readings.
@@ -58,6 +74,8 @@ final class LiveMonitor {
         startedAt = t.addingTimeInterval(-1_800)
         lastRouterMs = 3
         lastServerMs = 18
+        routerReply = (3, t)
+        serverReply = (18, t)
         events = [LiveEvent(at: t.addingTimeInterval(-1_200), kind: .spike, layer: .internet, value: "62 ms"),
                   LiveEvent(at: t.addingTimeInterval(-300), kind: .awdlBack, layer: .macWiFi)]
     }
@@ -68,6 +86,7 @@ final class LiveMonitor {
         guard running, let start = startedAt else { return nil }
         routerPing?.stop(); serverPing?.stop(); macTask?.cancel()
         routerPing = nil; serverPing = nil; macTask = nil
+        session = nil
         running = false
         return SessionSummary(start: start, end: Date(), events: events)
     }
@@ -75,7 +94,7 @@ final class LiveMonitor {
     /// A router sample on its own can show a Wi-Fi hiccup.
     private func receive(router ms: Double?) {
         let now = Date()
-        if let ms { lastRouterMs = ms }
+        if let ms { lastRouterMs = ms; routerReply = (ms, now) }
         recentRouter = (ms, now)
         record(classifier.classify(LiveTick(at: now, routerMs: .some(ms), serverMs: .none)))
     }
@@ -84,7 +103,7 @@ final class LiveMonitor {
     /// spike is blamed on the internet only when the Wi-Fi hop was fine at the same moment.
     private func receive(server ms: Double?) {
         let now = Date()
-        if let ms { lastServerMs = ms }
+        if let ms { lastServerMs = ms; serverReply = (ms, now) }
         let router: Double?? = recentRouter.flatMap { now.timeIntervalSince($0.at) <= 3 ? .some($0.ms) : nil }
         record(classifier.classify(LiveTick(at: now, routerMs: router, serverMs: .some(ms))))
     }
@@ -95,8 +114,9 @@ final class LiveMonitor {
         if events.count > 500 { events.removeFirst(events.count - 500) }
     }
 
-    private func checkMac() async {
+    private func checkMac(session: UUID) async {
         let state = await MacProbe.state()
+        guard running, self.session == session else { return }
         let now = Date()
         if state.awdlUp == true { record(classifier.report(LiveEvent(at: now, kind: .awdlBack, layer: .macWiFi))) }
         if let cpu = state.cpuPercent, cpu > Thresholds.standard.cpuRedPercent {
@@ -106,6 +126,12 @@ final class LiveMonitor {
             record(classifier.report(LiveEvent(at: now, kind: .thermalHigh, layer: .mac)))
         }
         let snap = NetworkProbe.snapshot()
+        // Another network (Wi-Fi to Ethernet, a new gateway): ping the router that's there now.
+        if snap.router != routerHost {
+            record(classifier.report(LiveEvent(at: now, kind: .networkChanged, layer: .macWiFi)))
+            recentRouter = nil; routerReply = nil; lastRouterMs = nil; lastLink = nil
+            startRouterPing(snap.router)
+        }
         if let link = snap.wifi {
             let key = (link.band, link.channel)
             if let last = lastLink, last.0 != key.0 || last.1 != key.1 {

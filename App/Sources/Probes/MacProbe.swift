@@ -40,11 +40,10 @@ enum MacProbe {
         guard let a = ticks() else { return nil }
         try? await Task.sleep(for: .milliseconds(500))
         guard let b = ticks() else { return nil }
-        let busy = Double(b.busy - a.busy), total = Double(b.total - a.total)
-        return total > 0 ? busy * 100 / total : nil
+        return CPUTicks.busyPercent(from: a, to: b)
     }
 
-    private static func ticks() -> (busy: UInt64, total: UInt64)? {
+    private static func ticks() -> CPUTicks? {
         var info = host_cpu_load_info()
         var count = mach_msg_type_number_t(MemoryLayout<host_cpu_load_info_data_t>.size / MemoryLayout<integer_t>.size)
         let result = withUnsafeMutablePointer(to: &info) {
@@ -53,9 +52,7 @@ enum MacProbe {
             }
         }
         guard result == KERN_SUCCESS else { return nil }
-        let user = UInt64(info.cpu_ticks.0), system = UInt64(info.cpu_ticks.1)
-        let idle = UInt64(info.cpu_ticks.2), nice = UInt64(info.cpu_ticks.3)
-        return (user + system + nice, user + system + idle + nice)
+        return CPUTicks(user: info.cpu_ticks.0, system: info.cpu_ticks.1, idle: info.cpu_ticks.2, nice: info.cpu_ticks.3)
     }
 }
 

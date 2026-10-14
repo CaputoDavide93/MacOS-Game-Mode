@@ -33,7 +33,7 @@ struct BasicView: View {
                 .disabled(model.running)
                 .accessibilityHidden(model.running)
             if let error = model.changesError {
-                Text(L("ui.gameMode.failed") + " " + error).font(.callout).foregroundStyle(Theme.bad)
+                Text(error).font(.callout).foregroundStyle(Theme.bad)
                     .multilineTextAlignment(.center).padding(.horizontal, 24)
             }
             Spacer(minLength: 6)

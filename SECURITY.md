@@ -27,11 +27,18 @@ Game Mode runs one script as root, after macOS asks for an administrator passwor
 - Its only argument is the app's own flag file. The script accepts nothing but
   `/Users/<user>/Library/Application Support/Game Ready/gamemode.on`, refuses symlinks and
   files not owned by that user, re-checks both every 5 seconds while it runs, stops after
-  12 hours at most, and refuses to start a second copy.
+  12 hours at most, and refuses to start a second copy (the lock records its owner, so a
+  start still in progress is never mistaken for a dead guard, and only one start can reclaim a
+  dead guard's lock).
 - It changes three things (the AirDrop/Handoff radio `awdl0`, Low Power Mode per power
-  source, Time Machine automatic backups), records their previous values first, and restores
-  only what it changed when the flag disappears or the script stops.
-- Turning Game Mode off is deleting the flag file; no further root access happens.
+  source, Time Machine automatic backups), records their previous values first in
+  `/var/db/game-ready/originals` (root-owned, kept across a restart), and restores only what
+  it changed when the flag disappears or the script stops.
+- Turning Game Mode off is deleting the flag file; no further root access happens. The one
+  exception: if the guard died without restoring (the Mac restarted mid-session), the
+  originals are still on disk, and turning off runs the same script with `--restore`, after a
+  second password prompt. It reads that file as `key=value` lines checked one by one, never
+  executing it.
 
 ## Settings changed as the user
 

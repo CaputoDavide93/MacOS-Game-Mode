@@ -54,7 +54,7 @@ All screenshots use demo data (`--screenshots`), never a real network.
 | 🎚️ | Basic and Advanced | **Basic**: one status and one button, Fix & Play, which applies every fix and opens the game. **Advanced**: every number, a readiness score, grouped results |
 | 🩺 | Pre-flight check | 11 checks in about a minute: connection type, Wi-Fi signal, the Mac → router hop, internet and game-server latency, UDP loss over IPv4 and IPv6, speed with latency under load, whether the line is busy, the Mac's power and heat, background apps, and a checklist |
 | 🚦 | One verdict | Ready, Ready with a warning, Not ready, or Couldn't finish. A check that couldn't measure never counts as a pass |
-| ⚡ | Game Mode | Switches off the AirDrop/Handoff radio (and keeps it off), sets AirDrop to No One, turns off Handoff, Universal Control and Low Power Mode, pauses Time Machine, keeps the Mac awake, quits apps that get in the way. One password prompt; every setting is put back on "off" or quit, even after a crash |
+| ⚡ | Game Mode | Switches off the AirDrop/Handoff radio (and keeps it off), sets AirDrop to No One, turns off Handoff, Universal Control and Low Power Mode, pauses Time Machine, keeps the Mac awake, quits apps that get in the way. One password prompt; every setting is put back on "off" or quit, even after the app crashes. If the Mac restarts mid-session, turning off asks for the password once more to put back Low Power Mode and Time Machine |
 | 🎮 | Play | Opens Xbox Cloud Gaming, GeForce NOW (its Mac app when installed) or Amazon Luna |
 | 🎛️ | Better xCloud | Reads its settings to tick the checklist; opt-in, Game Mode sets the highest bitrate, the high H.264 profile and Prefer IPv6, and puts your own values back on "off" |
 | 📈 | Live watch | While Game Mode is on, a menu-bar dot and a log label every hiccup: the Mac's Wi-Fi, the internet, or the Mac |
@@ -149,11 +149,11 @@ APP="build/dd/Build/Products/Release/Game Ready.app/Contents/MacOS/Game Ready"
 | Connection | Primary interface | Ethernet (6/5 GHz Wi-Fi warns, 2.4 GHz fails) |
 | Wi-Fi signal | CoreWLAN signal and link rate | ≥ −60 dBm, ≥ 600 Mbps |
 | Mac to router | 100 pings at 10/s | worst < 10 ms, no loss |
-| Internet latency | 50 pings each to 1.1.1.1 and the game server | < 25 ms, jitter < 5 ms, no loss |
+| Internet latency | 50 pings to 1.1.1.1, and to the game server for Xbox Cloud Gaming | < 25 ms, jitter < 5 ms, no loss |
 | Game traffic (UDP) | 200 DNS queries over IPv4 and IPv6 | no loss, p95 < 30 ms |
-| IPv6 | Global address and UDP over IPv6 | works (never a failure) |
+| IPv6 | Global address and UDP over IPv6 | works; no IPv6 is never a failure, but IPv6 that loses packets fails the UDP check |
 | Speed under load | 10 s download + 10 s upload, 4 streams, pinging all along | ≥ 40 Mbps down, latency rise < 15 ms |
-| Line free | Idle latency vs. the best of the last 14 days | within 10 ms |
+| Line free | Idle latency vs. the best of the last 14 days (the first check has nothing to compare with and says so) | within 10 ms |
 | This Mac | AirDrop radio, Low Power Mode, battery, heat, CPU | off, off, on power, nominal, < 80% |
 | Background apps | Running apps from the Settings list, Time Machine | none |
 | Checklist | Ticked or detected settings | all done |

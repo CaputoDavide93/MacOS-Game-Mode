@@ -534,7 +534,7 @@ import Testing
             Issue.record("no atomic lock"); return
         }
         #expect(lock.lowerBound < capture.lowerBound)
-        #expect(s.contains(#"rmdir "$LOCK""#))
+        #expect(s.contains(#"rm -rf "$LOCK""#))   // the lock holds its owner's pid since the Codex review
     }
 }
 
@@ -842,5 +842,280 @@ import Testing
         let off = FixPlanner.Context(gameModeOn: false, betterXcloudNeedsTuning: false, betterXcloudBlocked: false, noisyApps: [])
         let results = CheckID.allCases.map { $0 == .mac ? r(.mac, .amber, [.awdlOn]) : r($0, .green) }
         #expect(FixPlanner.plan(results, off).advice.isEmpty)
+    }
+}
+
+/// Regressions from the Codex review (2026-10-14).
+@Suite struct CodexReviewTests {
+    let g = Grader()
+
+    // An internet target that never answered must not hide behind an amber reading.
+    @Test func unansweredTargetKeepsTheResultIncomplete() {
+        let slowish = PingStats(samples: Array(repeating: 30, count: 50))
+        let r = g.internet(["Cloudflare": slowish, "Game server": PingStats(samples: Array(repeating: nil, count: 50))])
+        #expect(r.findings.contains(.notMeasured))
+        let all = Verdict.essential.filter { $0 != .internet }.map { CheckResult(id: $0, grade: .green, findings: []) } + [r]
+        #expect(Verdict(results: all).level == .incomplete)
+    }
+
+    // Both directions measured but one had no loaded-latency reading: can't vouch for it.
+    @Test func speedNeedsLoadedLatencyForEveryMeasuredDirection() {
+        let noUpLatency = SpeedMeasurement(downMbps: 200, upMbps: 100, idleMedianMs: 10,
+                                           loadedDownMedianMs: 12, loadedUpMedianMs: nil)
+        #expect(g.speed(noUpLatency).grade != .green)
+        let noDownLatency = SpeedMeasurement(downMbps: 200, upMbps: 100, idleMedianMs: 10,
+                                             loadedDownMedianMs: nil, loadedUpMedianMs: 12)
+        #expect(g.speed(noDownLatency).grade != .green)
+        let both = SpeedMeasurement(downMbps: 200, upMbps: 100, idleMedianMs: 10,
+                                    loadedDownMedianMs: 12, loadedUpMedianMs: 13)
+        #expect(g.speed(both).grade == .green)
+    }
+
+    // The first check has nothing to compare with: say so instead of "the line is quiet".
+    @Test func lineFreeWithoutBaselineDoesNotClaimQuiet() {
+        let r = g.lineFree(idleMedianMs: 45, bestRecentMs: nil)
+        #expect(r.findings == [.lineNoBaseline])
+        #expect(r.grade == .green)   // not a failure, and not essential
+    }
+
+    // The kernel's CPU tick counters are 32-bit and wrap after weeks of uptime.
+    @Test func cpuPercentSurvivesCounterWrap() {
+        let a = CPUTicks(user: .max - 10, system: 0, idle: .max - 30, nice: 0)
+        let b = CPUTicks(user: 40, system: 0, idle: 20, nice: 0)   // user +51, idle +51
+        #expect(CPUTicks.busyPercent(from: a, to: b) == 50)
+        #expect(CPUTicks.busyPercent(from: a, to: a) == nil)
+    }
+
+    // A crash mid-write leaves no final newline; the next record must not be glued to it.
+    @Test func appendAfterTruncatedLineKeepsTheNewRecord() throws {
+        let dir = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: dir) }
+        let store = HistoryStore(directory: dir)
+        try Data(#"{"check":{"_0":{"id":"#.utf8).write(to: store.fileURL)
+        try store.append(.check(CheckRecord(at: Date(), verdict: .ready, results: [])))
+        #expect(store.load().count == 1)
+    }
+
+    // Live dot: green only on fresh replies from both, never on readings from before a loss.
+    @Test func liveHealthNeedsFreshReplies() {
+        let now = Date()
+        func grade(router: Date?, server: Date?, event: Date? = nil) -> Grade {
+            LiveHealth.grade(running: true, now: now, lastEventAt: event,
+                             router: router.map { (3, $0) }, server: server.map { (18, $0) })
+        }
+        #expect(grade(router: now, server: now.addingTimeInterval(-2)) == .green)
+        #expect(grade(router: now, server: now.addingTimeInterval(-30)) == .amber)   // server stopped answering
+        #expect(grade(router: nil, server: now) == .amber)
+        #expect(grade(router: now, server: now, event: now.addingTimeInterval(-5)) == .red)
+        #expect(LiveHealth.grade(running: false, now: now, lastEventAt: nil, router: nil, server: nil) == .unknown)
+    }
+}
+
+/// The guard's crash safety (Codex review): originals survive a restart, and the lock
+/// can't be stolen from a guard that is still starting.
+@Suite struct GuardJournalTests {
+    let s = GuardScript.source
+
+    private func index(_ needle: String) -> String.Index? { s.range(of: needle)?.lowerBound }
+
+    @Test func journalIsWrittenBeforeAnySettingChanges() throws {
+        let journal = try #require(index(#"mv -f "$JOURNAL.tmp" "$JOURNAL""#))
+        for change in ["pmset -b lowpowermode 0", "tmutil disable", "ifconfig awdl0 down"] {
+            let at = try #require(index(change), "missing \(change)")
+            #expect(journal < at, "\(change) runs before the journal is saved")
+        }
+    }
+
+    @Test func journalLivesWhereARestartKeepsIt() {
+        // The app reads these paths; they must be the ones the script composes.
+        #expect(s.contains("STATE_DIR=/var/run/game-ready\n") && s.contains(#"JOURNAL_DIR=/var/db/game-ready "#))
+        #expect(s.contains(#"LOCK="$STATE_DIR/lock""#) && GuardScript.lockPath == "/var/run/game-ready/lock")
+        #expect(s.contains(#"PIDFILE="$STATE_DIR/guard.pid""#) && GuardScript.pidPath == "/var/run/game-ready/guard.pid")
+        #expect(s.contains(#"JOURNAL="$JOURNAL_DIR/originals""#) && GuardScript.journalPath == "/var/db/game-ready/originals")
+    }
+
+    @Test func aLeftoverJournalIsAdoptedNotOverwritten() throws {
+        let adopt = try #require(index("read_journal\n"))
+        let capture = try #require(index("awdl_was_up=1"))
+        #expect(adopt < capture)
+        #expect(!s.contains("source \"$JOURNAL\"") && !s.contains(". \"$JOURNAL\""))   // never executed
+    }
+
+    @Test func restoreClearsTheJournalOnlyWhenEverythingIsBack() {
+        #expect(s.contains(#"[[ $restored_all == 1 ]] && rm -f "$JOURNAL""#))
+        #expect(s.contains("pmset -b lowpowermode 1 || restored_all=0") && s.contains("tmutil enable 2>/dev/null || restored_all=0"))
+        #expect(s.contains("exit 7"))   // --restore reports a partial restore as a failure
+    }
+
+    // Codex, second pass: two starts that both saw a stale lock must not both reclaim it.
+    @Test func staleLockIsReclaimedUnderASecondLockAndRechecked() throws {
+        let reclaim = try #require(index(#"mkdir "$LOCK.reclaim""#))
+        let recheck = try #require(s.range(of: #"if alive "$PIDFILE" || alive "$LOCK/pid"; then rmdir "$LOCK.reclaim""#)?.lowerBound)
+        let remove = try #require(index(#"rm -rf "$LOCK"\#n"#))
+        #expect(reclaim < recheck && recheck < remove)
+        // ...including a fresh lock another start took meanwhile and hasn't stamped yet.
+        let fresh = try #require(index("# a fresh start took it meanwhile"))
+        #expect(recheck < fresh && fresh < remove)
+    }
+
+    @Test func onlyTheOwnerReleasesTheLock() {
+        #expect(s.contains(#"[[ "$(cat "$LOCK/owner" 2>/dev/null)" == "$TOKEN" ]] || return 0"#))
+    }
+
+    // A killed guard's pid may be reused by another process: that isn't a live guard.
+    @Test func aliveMeansARunningBash() {
+        #expect(s.contains(#"[[ "$(ps -p "$p" -o comm= 2>/dev/null)" == *bash ]]"#))
+    }
+
+    @Test func restoreModeNeedsRootToo() throws {
+        let p = Process()
+        p.executableURL = URL(fileURLWithPath: "/bin/bash")
+        p.arguments = ["-c", s, "game-mode-guard", "--restore"]
+        let out = Pipe(); p.standardOutput = out; p.standardError = out
+        try p.run(); p.waitUntilExit()
+        #expect(p.terminationStatus == 1)
+    }
+
+    @Test func lockRecordsItsOwnerBeforeCapturing() throws {
+        let owner = try #require(index(#"echo $$ > "$LOCK/pid""#))
+        let capture = try #require(index("awdl_was_up=1"))
+        #expect(owner < capture)
+        // A lock with no owner yet is a start in progress, not a dead guard.
+        #expect(s.contains("start in progress"))
+    }
+}
+
+/// Runs the real guard script, minus its root check, against stub `pmset`/`tmutil`/`ifconfig`
+/// in a temporary folder: the crash-safety paths executed, not just read (Codex review).
+@Suite(.serialized) struct GuardSimulationTests {
+    final class Sandbox: @unchecked Sendable {   // immutable paths; tests use it serially
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent("guard-sim-\(UUID().uuidString)")
+        var flag: String { root.path + "/flag/gamemode.on" }
+        var journal: String { root.path + "/db/game-ready/originals" }
+        var lock: String { root.path + "/run/game-ready/lock" }
+        var lowPower: String { (try? String(contentsOfFile: root.path + "/lp", encoding: .utf8))?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "1" }
+
+        init() throws {
+            let fm = FileManager.default
+            for dir in ["bin", "run", "db", "flag"] {
+                try fm.createDirectory(at: root.appendingPathComponent(dir), withIntermediateDirectories: true)
+            }
+            let r = root.path
+            let stubs = [
+                "pmset": """
+                #!/bin/bash
+                if [[ "$1" == "-g" ]]; then printf 'Battery Power:\\n lowpowermode %s\\nAC Power:\\n lowpowermode 0\\n' "$(cat \(r)/lp 2>/dev/null || echo 1)"; fi
+                if [[ "$1" == "-b" ]]; then echo "$3" > \(r)/lp; fi
+                exit 0
+                """,
+                "tmutil": "#!/bin/bash\n[[ \"$1\" == enable && -f \(r)/tmfail ]] && exit 1\nexit 0\n",
+                "ifconfig": "#!/bin/bash\n[[ $# -eq 1 ]] && echo 'awdl0: flags=8943<UP,BROADCAST,RUNNING>'\nexit 0\n",
+                "defaults": "#!/bin/bash\necho 1\n",
+            ]
+            for (name, text) in stubs {
+                let path = root.path + "/bin/" + name
+                try text.write(toFile: path, atomically: true, encoding: .utf8)
+                try fm.setAttributes([.posixPermissions: 0o755], ofItemAtPath: path)
+            }
+            var s = GuardScript.source
+            let swaps = [
+                ("[[ $EUID -eq 0 ]] ||", "true ||"),
+                ("PATH=/usr/bin:/bin:/usr/sbin:/sbin", "PATH=\(r)/bin:/usr/bin:/bin:/usr/sbin:/sbin"),
+                ("STATE_DIR=/var/run/game-ready", "STATE_DIR=\(r)/run/game-ready"),
+                ("JOURNAL_DIR=/var/db/game-ready ", "JOURNAL_DIR=\(r)/db/game-ready "),
+                ("sleep 5", "sleep 0.2"),
+            ]
+            for (a, b) in swaps {
+                guard s.contains(a) else { throw CocoaError(.fileReadCorruptFile) }
+                s = s.replacingOccurrences(of: a, with: b)
+            }
+            // Accept the sandbox flag instead of the real Application Support path.
+            guard let check = s.range(of: #"[[ "$FLAG" =~"#), let end = s.range(of: #"owner="${BASH_REMATCH[1]}""#) else {
+                throw CocoaError(.fileReadCorruptFile)
+            }
+            s.replaceSubrange(check.lowerBound..<end.upperBound, with: "owner=$(id -un)")
+            try s.write(toFile: r + "/guard.sh", atomically: true, encoding: .utf8)
+            fm.createFile(atPath: flag, contents: Data())
+        }
+
+        @discardableResult
+        func run(_ argument: String) throws -> (status: Int32, output: String) {
+            let p = Process()
+            p.executableURL = URL(fileURLWithPath: "/bin/bash")
+            p.arguments = [root.path + "/guard.sh", argument]
+            let pipe = Pipe()
+            p.standardOutput = pipe; p.standardError = pipe
+            try p.run(); p.waitUntilExit()
+            return (p.terminationStatus, String(decoding: pipe.fileHandleForReading.readDataToEndOfFile(), as: UTF8.self))
+        }
+
+        /// SIGKILL: no trap runs, as when the Mac restarts mid-session.
+        func killGuard() {
+            if let text = try? String(contentsOfFile: root.path + "/run/game-ready/guard.pid", encoding: .utf8),
+               let pid = pid_t(text.trimmingCharacters(in: .whitespacesAndNewlines)) {
+                kill(pid, SIGKILL)
+                wait { kill(pid, 0) != 0 }
+            }
+        }
+
+        func wait(_ condition: () -> Bool) {
+            for _ in 0..<50 where !condition() { usleep(100_000) }
+        }
+
+        func exists(_ path: String) -> Bool { FileManager.default.fileExists(atPath: path) }
+
+        func stop() {
+            try? FileManager.default.removeItem(atPath: flag)
+            wait { !exists(lock) }
+            try? FileManager.default.removeItem(at: root)
+        }
+    }
+
+    @Test func aKilledGuardsOriginalsAreRestoredAndKeptUntilTheyAre() throws {
+        let box = try Sandbox()
+        defer { box.stop() }
+        #expect(try box.run(box.flag).output.contains("started"))
+        #expect(box.lowPower == "0" && box.exists(box.journal))
+        box.killGuard()
+
+        FileManager.default.createFile(atPath: box.root.path + "/tmfail", contents: Data())
+        #expect(try box.run("--restore").status == 7)
+        #expect(box.exists(box.journal))   // Time Machine didn't come back: keep the originals
+
+        try FileManager.default.removeItem(atPath: box.root.path + "/tmfail")
+        #expect(try box.run("--restore").status == 0)
+        #expect(!box.exists(box.journal) && box.lowPower == "1")
+    }
+
+    @Test func aNewSessionAdoptsALeftoverJournal() throws {
+        let box = try Sandbox()
+        defer { box.stop() }
+        try box.run(box.flag)
+        box.killGuard()   // Low Power Mode is now 0, which is not the original
+        try box.run(box.flag)
+        try FileManager.default.removeItem(atPath: box.flag)
+        box.wait { !box.exists(box.lock) }
+        #expect(box.lowPower == "1" && !box.exists(box.journal))
+    }
+
+    @Test func simultaneousStartsOnAStaleLockGiveOneGuard() throws {
+        let box = try Sandbox()
+        defer { box.stop() }
+        try box.run(box.flag)
+        box.killGuard()
+        try FileManager.default.setAttributes([.modificationDate: Date(timeIntervalSinceNow: -3600)], ofItemAtPath: box.lock)
+        let outputs = OutputBoxes()
+        DispatchQueue.concurrentPerform(iterations: 5) { _ in
+            if let out = try? box.run(box.flag).output { outputs.add(out) }
+        }
+        #expect(outputs.all.filter { $0.contains("started") }.count == 1)
+    }
+
+    final class OutputBoxes: @unchecked Sendable {
+        private let lock = NSLock()
+        private var items = [String]()
+        func add(_ s: String) { lock.lock(); items.append(s); lock.unlock() }
+        var all: [String] { lock.lock(); defer { lock.unlock() }; return items }
     }
 }

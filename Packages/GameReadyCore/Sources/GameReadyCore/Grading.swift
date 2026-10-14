@@ -75,6 +75,8 @@ public struct Grader: Sendable {
             else { g = .green; f = .internetGood }
             if g > grade { grade = g; findings.insert(f, at: 0) } else if !findings.contains(f) { findings.append(f) }
         }
+        // A silent target stays "couldn't measure" unless another one is already red (D4).
+        if measured.count < targets.count && grade < .red { grade = .unknown }
         return CheckResult(id: .internet, grade: grade, findings: findings, details: details)
     }
 
@@ -116,7 +118,7 @@ public struct Grader: Sendable {
         var grade = Grade.green
         var findings = [Finding]()
         func add(_ g: Grade, _ f: Finding) {
-            if g > grade { grade = g; findings.insert(f, at: 0) } else { findings.append(f) }
+            if g > grade { grade = g; findings.insert(f, at: 0) } else if !findings.contains(f) { findings.append(f) }
         }
         if down < t.downAmberMbps { add(.red, .speedTooSlow) }
         else if down < t.downGreenMbps || (m.upMbps.map { $0 < t.upGreenMbps } ?? false) { add(.amber, .speedSlow) }
@@ -127,6 +129,8 @@ public struct Grader: Sendable {
             add(.unknown, .notMeasured)
         }
         if m.upMbps == nil { add(.unknown, .notMeasured) }   // upload not measured: can't vouch for it
+        // A direction that moved data but has no loaded latency could hide its bufferbloat.
+        if (m.upMbps != nil && m.loadedUpMedianMs == nil) || m.loadedDownMedianMs == nil { add(.unknown, .notMeasured) }
         if m.rateLimited { add(.amber, .speedRateLimited) }
         if findings.isEmpty { findings = [.speedGood] }
         return CheckResult(id: .speed, grade: grade, findings: findings, details: details)
@@ -135,8 +139,9 @@ public struct Grader: Sendable {
     // C8 — idle latency now vs. the best this Mac has seen recently.
     public func lineFree(idleMedianMs: Double?, bestRecentMs: Double?) -> CheckResult {
         guard let now = idleMedianMs else { return .notMeasured(.lineFree) }
+        // Nothing to compare with yet: not a problem, but no claim that the line is quiet either.
         guard let best = bestRecentMs else {
-            return CheckResult(id: .lineFree, grade: .green, findings: [.lineQuiet], details: ["now": ms(now)])
+            return CheckResult(id: .lineFree, grade: .green, findings: [.lineNoBaseline], details: ["now": ms(now)])
         }
         let rise = now - best
         let details = ["now": ms(now), "usual": ms(best)]
