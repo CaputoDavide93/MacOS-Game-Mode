@@ -4,6 +4,8 @@ All notable changes to this project are documented here. Format: [Keep a Changel
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-10-14
+
 ### Added
 - Game Mode also turns off the AirPlay Receiver, and stops new automatic macOS and App Store
   update downloads from starting during the session (a multi-GB download fills the line; one
@@ -14,7 +16,7 @@ All notable changes to this project are documented here. Format: [Keep a Changel
 - `tools/gen_icon.sh` is now `tools/gen-icon.sh`, the house name for shell scripts.
 
 ### Fixed
-- Found in a Codex review of the whole app:
+- Found in a review of the whole app:
   - If the Mac restarted (or the guard was killed) during Game Mode, Low Power Mode and Time
     Machine stayed changed for good. The guard now saves the originals in
     `/var/db/game-ready/originals` before changing anything; turning off from the "left on"
@@ -47,7 +49,7 @@ All notable changes to this project are documented here. Format: [Keep a Changel
 - While a check ran, Basic still showed a greyed-out "Check now" (or "Fix & Play"); the button
   now stays hidden until the check finishes. Advanced's button reads "Checking…".
 - "Turn on Game Mode" read as if it switched the Wi-Fi off. It now says the Wi-Fi stays on and
-  only AirDrop, Handoff and Universal Control go off. Basic's window is a little taller so it fits.
+  names what does go off. Basic's window is a little taller so it fits.
 
 ## [0.3.0] - 2026-10-02
 
@@ -97,7 +99,8 @@ All notable changes to this project are documented here. Format: [Keep a Changel
 - `--check` (JSON results) and `--screenshots <dir>` command-line modes.
 - App icon drawn as SVG (`App/Design/AppIcon.svg`), rendered by `tools/gen_icon.sh`.
 
-[Unreleased]: https://github.com/CaputoDavide93/MacOS-Game-Mode/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/CaputoDavide93/MacOS-Game-Mode/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/CaputoDavide93/MacOS-Game-Mode/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/CaputoDavide93/MacOS-Game-Mode/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/CaputoDavide93/MacOS-Game-Mode/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/CaputoDavide93/MacOS-Game-Mode/compare/v0.1.0...v0.1.1

@@ -141,7 +141,7 @@ light, both AA). Prominent buttons and switches are drawn by the app (`FilledBut
 "couldn't measure" nothing. It's a summary for the ring, never used to decide the verdict.
 
 ## D21 — The guard keeps a journal, and every end of a session is a full "off" (2026-10-14)
-Supersedes part of D8 and D13. A Codex review found the guard held the original Low Power
+Supersedes part of D8 and D13. A review of the whole app found the guard held the original Low Power
 Mode and Time Machine values only in memory: a restart mid-session left them changed for
 good. The guard now writes them to `/var/db/game-ready/originals` (root-owned; `/var/run` is
 cleared on restart) before its first change, adopts that file instead of re-reading if it's

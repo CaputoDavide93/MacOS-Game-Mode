@@ -534,7 +534,7 @@ import Testing
             Issue.record("no atomic lock"); return
         }
         #expect(lock.lowerBound < capture.lowerBound)
-        #expect(s.contains(#"rm -rf "$LOCK""#))   // the lock holds its owner's pid since the Codex review
+        #expect(s.contains(#"rm -rf "$LOCK""#))   // the lock holds its owner's pid since review nine
     }
 }
 
@@ -845,8 +845,8 @@ import Testing
     }
 }
 
-/// Regressions from the Codex review (2026-10-14).
-@Suite struct CodexReviewTests {
+/// Regressions from review nine, of the whole app (2026-10-14).
+@Suite struct ReviewNineTests {
     let g = Grader()
 
     // An internet target that never answered must not hide behind an amber reading.
@@ -912,7 +912,7 @@ import Testing
     }
 }
 
-/// The guard's crash safety (Codex review): originals survive a restart, and the lock
+/// The guard's crash safety (review nine): originals survive a restart, and the lock
 /// can't be stolen from a guard that is still starting.
 @Suite struct GuardJournalTests {
     let s = GuardScript.source
@@ -949,7 +949,7 @@ import Testing
         #expect(s.contains("exit 7"))   // --restore reports a partial restore as a failure
     }
 
-    // Codex, second pass: two starts that both saw a stale lock must not both reclaim it.
+    // Review nine, second pass: two starts that both saw a stale lock must not both reclaim it.
     @Test func staleLockIsReclaimedUnderASecondLockAndRechecked() throws {
         let reclaim = try #require(index(#"mkdir "$LOCK.reclaim""#))
         let recheck = try #require(s.range(of: #"if alive "$PIDFILE" || alive "$LOCK/pid"; then rmdir "$LOCK.reclaim""#)?.lowerBound)
@@ -988,7 +988,7 @@ import Testing
 }
 
 /// Runs the real guard script, minus its root check, against stub `pmset`/`tmutil`/`ifconfig`
-/// in a temporary folder: the crash-safety paths executed, not just read (Codex review).
+/// in a temporary folder: the crash-safety paths executed, not just read (review nine).
 @Suite(.serialized) struct GuardSimulationTests {
     final class Sandbox: @unchecked Sendable {   // immutable paths; tests use it serially
         let root = FileManager.default.temporaryDirectory.appendingPathComponent("guard-sim-\(UUID().uuidString)")
@@ -1155,7 +1155,7 @@ import Testing
         #expect(box.pref("com.apple.commerce", "AutoUpdate") == nil)
     }
 
-    // Codex: a session that adopts an older journal must still pause (and later restore) updates.
+    // A session that adopts an older journal must still pause (and later restore) updates.
     @Test func adoptingAnOlderJournalStillPausesUpdates() throws {
         let box = try Sandbox()
         defer { box.stop() }
@@ -1169,7 +1169,7 @@ import Testing
         #expect(box.pref("com.apple.SoftwareUpdate", "AutomaticDownload") == "1")
     }
 
-    // Codex: a key that can't be read (not "does not exist") is left alone, never deleted later.
+    // A key that can't be read (not "does not exist") is left alone, never deleted later.
     @Test func anUnreadableUpdateKeyIsLeftAlone() throws {
         let box = try Sandbox()
         defer { box.stop() }
