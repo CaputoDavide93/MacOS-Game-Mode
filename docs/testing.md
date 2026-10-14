@@ -20,11 +20,12 @@ Device-only behaviour. ✅ verified · ⚠️ partly · ⬜ not yet run.
 | Full check on Wi-Fi with AirDrop on: Mac → router flagged | ⬜ | Expected: red hop with spikes; green after Game Mode |
 | Game Mode on: one password prompt, AirDrop radio stays down 30 min | ⬜ | Watch `ifconfig awdl0` every 5 s |
 | First Game Mode on a Mac with no undo plan yet stays on (broken in v0.1.0–v0.2.0) | ⬜ | Delete `restore-plan.json` first; expect no "undo plan" error |
-| Game Mode off restores AirDrop, Low Power Mode and Time Machine to their previous values (the only place restore is executed) | ⬜ | Compare `pmset -g`, `tmutil` status and `ifconfig awdl0` before/after |
+| Game Mode off restores AirDrop, Low Power Mode, Time Machine and automatic update downloads to their previous values | ⬜ | Compare `pmset -g`, `tmutil` status, `ifconfig awdl0` and `defaults read /Library/Preferences/com.apple.SoftwareUpdate AutomaticDownload` before/after; the restore logic itself runs against stubs in `GuardSimulationTests` |
+| Paused update downloads: no new macOS or App Store download starts during a session | ⬜ | A download already under way finishes; whether `softwareupdated` re-reads the key mid-session is not yet seen |
 | Quit with Game Mode on → restored before exit | ⬜ | |
 | Kill the app with Game Mode on → reopening offers "Turn off" | ⬜ | |
 | Live watch labels a router spike as "Mac's Wi-Fi" and a server-only spike as "Internet" | ⬜ | Logic covered by unit tests |
-| AirDrop No One / Handoff off / Universal Control off take effect, and come back on "off" | ⬜ | The `defaults` round trip is tested on a throwaway domain; the effect on the real agents is not yet seen |
+| AirDrop No One / Handoff off / Universal Control off / AirPlay Receiver off take effect, and come back on "off" | ⬜ | The `defaults` round trip is tested on a throwaway domain; the effect on the real agents is not yet seen |
 | Better xCloud: read with an xbox.com tab open; tune on Game Mode on; original values back on "off" | ⬜ | Script generation is compiled (`osacompile`) and executed (JavaScriptCore) in tests; not yet run against the real page |
 | Play opens each service (and the GeForce NOW app when installed) | ⬜ | |
 | Basic: Fix & Play turns on Game Mode, tunes Better xCloud, closes noisy apps, then opens the game; cancelling the password launches nothing | ⬜ | |

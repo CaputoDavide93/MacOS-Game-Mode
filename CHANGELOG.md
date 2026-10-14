@@ -4,6 +4,12 @@ All notable changes to this project are documented here. Format: [Keep a Changel
 
 ## [Unreleased]
 
+### Added
+- Game Mode also turns off the AirPlay Receiver, and stops new automatic macOS and App Store
+  update downloads from starting during the session (a multi-GB download fills the line; one
+  already under way finishes). Both are saved first and put back on "off"; the update
+  settings ride on the same single password prompt.
+
 ### Changed
 - `tools/gen_icon.sh` is now `tools/gen-icon.sh`, the house name for shell scripts.
 

@@ -30,7 +30,8 @@ public enum ReadinessScore {
 
 /// What Basic's "Fix & Play" will do for you, and what only you can do.
 public enum Fix: Equatable, Sendable, Hashable {
-    /// AirDrop radio off, Handoff, Universal Control, Low Power Mode, Time Machine, sleep.
+    /// AirDrop radio off, Handoff, Universal Control, AirPlay Receiver, Low Power Mode,
+    /// Time Machine, automatic update downloads, sleep.
     case gameMode
     /// The Better xCloud preset (needs the browser's one-time permission).
     case betterXcloud

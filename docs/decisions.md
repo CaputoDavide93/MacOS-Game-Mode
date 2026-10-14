@@ -158,3 +158,18 @@ waits for an old guard to finish, and the watchdog ends the session (settings, l
 history) when the guard is gone or the flag is deleted, not just the switch. These paths are
 run, not just read, in `GuardSimulationTests`: the real script minus its root check, with
 stub `pmset`/`tmutil`/`ifconfig`.
+
+## D22 — Game Mode acts on more than the AirDrop radio (2026-10-14)
+Game Mode should change what it can rather than list it. Added: the AirPlay Receiver goes off
+(`com.apple.controlcenter AirplayRecieverEnabled`, -currentHost, Apple's spelling; user level,
+in the undo plan like the other sharing settings), and automatic downloads of macOS updates
+(`/Library/Preferences/com.apple.SoftwareUpdate AutomaticDownload`) and App Store updates
+(`/Library/Preferences/com.apple.commerce AutoUpdate`) are turned off by the root guard, journaled
+and restored like Low Power Mode, with "not set" restored by deleting the key. Only `defaults`'
+own "not set" wordings ("does not exist", "Could not find key") count as not set; any other
+read failure leaves that key untouched, so restore can never delete a real value. All under the
+one password prompt per session. A download already under way isn't stopped.
+Considered and left as checklist items: Location Services (its settings are protected by
+System Integrity Protection), the browser's energy saver (Chrome only takes it as a managed
+policy, which would mark the browser "managed by your organisation"), Focus (no supported
+command-line switch), and a Bluetooth controller (only a cable fixes that).

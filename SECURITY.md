@@ -30,8 +30,10 @@ Game Mode runs one script as root, after macOS asks for an administrator passwor
   12 hours at most, and refuses to start a second copy (the lock records its owner, so a
   start still in progress is never mistaken for a dead guard, and only one start can reclaim a
   dead guard's lock).
-- It changes three things (the AirDrop/Handoff radio `awdl0`, Low Power Mode per power
-  source, Time Machine automatic backups), records their previous values first in
+- It changes five things (the AirDrop/Handoff radio `awdl0`, Low Power Mode per power
+  source, Time Machine automatic backups, and automatic downloads of macOS updates
+  (`com.apple.SoftwareUpdate AutomaticDownload`) and App Store updates
+  (`com.apple.commerce AutoUpdate`)), records their previous values first in
   `/var/db/game-ready/originals` (root-owned, kept across a restart), and restores only what
   it changed when the flag disappears or the script stops.
 - Turning Game Mode off is deleting the flag file; no further root access happens. The one
@@ -42,8 +44,8 @@ Game Mode runs one script as root, after macOS asks for an administrator passwor
 
 ## Settings changed as the user
 
-Game Mode also sets AirDrop to No One and turns off Handoff and Universal Control (user
-`defaults`, no root). Their original values, including "not set", are saved to
+Game Mode also sets AirDrop to No One and turns off Handoff, Universal Control and the
+AirPlay Receiver (user `defaults`, no root). Their original values, including "not set", are saved to
 `restore-plan.json` before anything changes and put back on "off", with each one read back
 to confirm. If a current value can't be read, or the undo plan can't be saved, nothing is
 changed at all.
