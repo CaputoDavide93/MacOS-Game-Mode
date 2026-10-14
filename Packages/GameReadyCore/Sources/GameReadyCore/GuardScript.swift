@@ -13,7 +13,8 @@ public enum GuardScript {
 #!/bin/bash
 # Game Ready — Game Mode guard. Started once per session as root, after the user approves
 # the administrator prompt. While the flag file exists it keeps the AirDrop/Handoff radio
-# (awdl0) down; when the flag goes it restores exactly what it changed, then exits.
+# (awdl0) down, with Low Power Mode off, Time Machine paused and automatic macOS and App Store
+# update downloads paused; when the flag goes it restores exactly what it changed, then exits.
 #
 #   bash -c "$SOURCE" game-mode-guard <flag-file>     start a session
 #   bash -c "$SOURCE" game-mode-guard --restore       put back what a dead guard left changed
@@ -85,7 +86,12 @@ release() {
   rm -f "$PIDFILE"; rm -rf "$LOCK"
 }
 
-awdl_was_up=0; lp_battery=""; lp_ac=""; tm_was=0
+SU=/Library/Preferences/com.apple.SoftwareUpdate      # AutomaticDownload: macOS updates
+AS=/Library/Preferences/com.apple.commerce            # AutoUpdate: App Store apps
+# su_dl/as_up: 1 or 0 as set, empty when the key isn't set (restored by deleting it).
+# "0" also stands for "nothing to put back", so a journal from before these keys restores none.
+awdl_was_up=0; lp_battery=""; lp_ac=""; tm_was=0; su_dl=0; as_up=0
+su_seen=0; as_seen=0   # whether the journal had them (one from an older version may not)
 # key=value lines, checked one by one; the file is never executed.
 read_journal() {
   local k v
@@ -96,6 +102,8 @@ read_journal() {
       lp_battery)  lp_battery=$v ;;
       lp_ac)       lp_ac=$v ;;
       tm_was)      tm_was=${v:-0} ;;
+      su_dl)       su_dl=$v; su_seen=1 ;;
+      as_up)       as_up=$v; as_seen=1 ;;
     esac
   done < "$JOURNAL"
 }
@@ -103,11 +111,33 @@ read_journal() {
 # The journal goes only once every lasting setting is back; otherwise it stays for a retry.
 # (The AirDrop radio isn't one: a restart brings it back by itself.)
 restored_all=1
+# put_back <domain> <key> <original>: 1 → on again, empty → unset again, 0 → untouched.
+put_back() {
+  case "$3" in
+    1) defaults write "$1" "$2" -bool true || restored_all=0 ;;
+    "") defaults delete "$1" "$2" 2>/dev/null
+        defaults read "$1" "$2" >/dev/null 2>&1 && restored_all=0 ;;   # still there: retry later
+  esac
+}
+# A key's value as 1/0, empty when it isn't set, and 0 ("leave it alone") when it can't be
+# read for any other reason: guessing "not set" would make restore delete a real value.
+read_bool() {
+  local v
+  if v=$(defaults read "$1" "$2" 2>&1); then
+    [[ "$v" == "0" ]] && echo 0 || echo 1
+  elif [[ "$v" == *"does not exist"* || "$v" == *"Could not find key"* ]]; then   # both wordings occur
+    echo ""
+  else
+    echo 0
+  fi
+}
 restore() {
   [[ "$awdl_was_up" == "1" ]] && ifconfig awdl0 up 2>/dev/null
   if [[ "$lp_battery" == "1" ]]; then pmset -b lowpowermode 1 || restored_all=0; fi
   if [[ "$lp_ac" == "1" ]]; then pmset -c lowpowermode 1 || restored_all=0; fi
   if [[ "$tm_was" == "1" ]]; then tmutil enable 2>/dev/null || restored_all=0; fi
+  put_back "$SU" AutomaticDownload "$su_dl"
+  put_back "$AS" AutoUpdate "$as_up"
   [[ $restored_all == 1 ]] && rm -f "$JOURNAL"
   release
 }
@@ -125,8 +155,15 @@ else
   lp_ac=$(pmset -g custom | awk '/^AC Power:/{s=1} /^Battery Power:/{s=0} s&&$1=="lowpowermode"{print $2; exit}')
   tm_was=$(defaults read /Library/Preferences/com.apple.TimeMachine AutoBackup 2>/dev/null || echo 0)
   [[ "$tm_was" == "1" ]] || tm_was=0
+fi
+
+if [[ $MODE == guard ]]; then
+  # Settings this journal doesn't hold yet are still as the user left them: record them now.
+  [[ $su_seen == 1 ]] || su_dl=$(read_bool "$SU" AutomaticDownload)
+  [[ $as_seen == 1 ]] || as_up=$(read_bool "$AS" AutoUpdate)
   mkdir -p "$JOURNAL_DIR" && chmod 755 "$JOURNAL_DIR"
-  printf 'awdl_was_up=%s\nlp_battery=%s\nlp_ac=%s\ntm_was=%s\n' "$awdl_was_up" "$lp_battery" "$lp_ac" "$tm_was" > "$JOURNAL.tmp" \
+  printf 'awdl_was_up=%s\nlp_battery=%s\nlp_ac=%s\ntm_was=%s\nsu_dl=%s\nas_up=%s\n' \
+    "$awdl_was_up" "$lp_battery" "$lp_ac" "$tm_was" "$su_dl" "$as_up" > "$JOURNAL.tmp" \
     && mv -f "$JOURNAL.tmp" "$JOURNAL" \
     || { echo "could not save the original settings" >&2; release; exit 6; }
 fi
@@ -140,6 +177,9 @@ fi
 [[ "$lp_battery" == "1" ]] && pmset -b lowpowermode 0
 [[ "$lp_ac" == "1" ]] && pmset -c lowpowermode 0
 if [[ "$tm_was" == "1" ]]; then tmutil stopbackup 2>/dev/null; tmutil disable 2>/dev/null; fi
+# Downloads already under way finish; no new one starts while you play.
+[[ "$su_dl" != "0" ]] && defaults write "$SU" AutomaticDownload -bool false
+[[ "$as_up" != "0" ]] && defaults write "$AS" AutoUpdate -bool false
 ifconfig awdl0 down 2>/dev/null
 
 # Detach: the administrator prompt returns at once, the loop carries on.

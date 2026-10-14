@@ -1,7 +1,7 @@
 import Foundation
 
 /// macOS settings Game Mode changes as the user (no root): the ones that wake the AirDrop
-/// radio. Each is snapshotted before the change and restored exactly, including "the key
+/// radio, and the AirPlay Receiver, which listens for nearby devices on it. Each is snapshotted before the change and restored exactly, including "the key
 /// wasn't there" (the macOS default), which is restored by deleting the key.
 public struct SharingSetting: Sendable, Codable, Equatable, Hashable {
     public enum Kind: String, Sendable, Codable { case string, bool }
@@ -24,7 +24,11 @@ public struct SharingSetting: Sendable, Codable, Equatable, Hashable {
     public static let universalControl = SharingSetting(domain: "com.apple.universalcontrol", key: "Disable",
                                                         currentHost: false, kind: .bool, gameValue: "true", reloadProcess: "UniversalControl")
 
-    public static let all: [SharingSetting] = [.airDrop, .handoffAdvertise, .handoffReceive, .universalControl]
+    /// Apple's own spelling ("Reciever") of the key behind Settings → AirDrop & Handoff → AirPlay Receiver.
+    public static let airPlayReceiver = SharingSetting(domain: "com.apple.controlcenter", key: "AirplayRecieverEnabled",
+                                                       currentHost: true, kind: .bool, gameValue: "false", reloadProcess: "ControlCenter")
+
+    public static let all: [SharingSetting] = [.airDrop, .handoffAdvertise, .handoffReceive, .universalControl, .airPlayReceiver]
 
     /// `defaults` arguments to read the current value.
     public var readArguments: [String] { host + ["read", domain, key] }

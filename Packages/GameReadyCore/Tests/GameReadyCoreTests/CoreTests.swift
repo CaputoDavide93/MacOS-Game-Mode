@@ -921,7 +921,8 @@ import Testing
 
     @Test func journalIsWrittenBeforeAnySettingChanges() throws {
         let journal = try #require(index(#"mv -f "$JOURNAL.tmp" "$JOURNAL""#))
-        for change in ["pmset -b lowpowermode 0", "tmutil disable", "ifconfig awdl0 down"] {
+        for change in ["pmset -b lowpowermode 0", "tmutil disable", "ifconfig awdl0 down",
+                       #"defaults write "$SU" AutomaticDownload -bool false"#, #"defaults write "$AS" AutoUpdate -bool false"#] {
             let at = try #require(index(change), "missing \(change)")
             #expect(journal < at, "\(change) runs before the journal is saved")
         }
@@ -1011,7 +1012,18 @@ import Testing
                 """,
                 "tmutil": "#!/bin/bash\n[[ \"$1\" == enable && -f \(r)/tmfail ]] && exit 1\nexit 0\n",
                 "ifconfig": "#!/bin/bash\n[[ $# -eq 1 ]] && echo 'awdl0: flags=8943<UP,BROADCAST,RUNNING>'\nexit 0\n",
-                "defaults": "#!/bin/bash\necho 1\n",
+                "defaults": """
+                #!/bin/bash
+                f="\(r)/def_$(basename "$2")_$3"
+                case "$1" in
+                  read) if [[ -f "$f.unreadable" ]]; then echo "Could not read" >&2; exit 1
+                        elif [[ -f "$f" ]]; then cat "$f"; elif [[ "$3" == AutoBackup ]]; then echo 1
+                        else echo "Error: Could not find key '$3' in domain '$2'." >&2; exit 1; fi ;;   # macOS 27's wording
+                  write) if [[ "$5" == true ]]; then echo 1 > "$f"; else echo 0 > "$f"; fi ;;
+                  delete) rm -f "$f" ;;
+                esac
+                exit 0
+                """,
             ]
             for (name, text) in stubs {
                 let path = root.path + "/bin/" + name
@@ -1065,6 +1077,15 @@ import Testing
 
         func exists(_ path: String) -> Bool { FileManager.default.fileExists(atPath: path) }
 
+        /// A root preference as the stub `defaults` holds it; nil = the key isn't set.
+        func pref(_ domain: String, _ key: String) -> String? {
+            (try? String(contentsOfFile: root.path + "/def_\(domain)_\(key)", encoding: .utf8))?
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+        func setPref(_ domain: String, _ key: String, _ value: String) throws {
+            try (value + "\n").write(toFile: root.path + "/def_\(domain)_\(key)", atomically: true, encoding: .utf8)
+        }
+
         func stop() {
             try? FileManager.default.removeItem(atPath: flag)
             wait { !exists(lock) }
@@ -1117,5 +1138,69 @@ import Testing
         private var items = [String]()
         func add(_ s: String) { lock.lock(); items.append(s); lock.unlock() }
         var all: [String] { lock.lock(); defer { lock.unlock() }; return items }
+    }
+
+    // Game Mode pauses automatic update downloads (they fill the line) and puts back exactly
+    // what was there: a set value comes back, an unset key is deleted again.
+    @Test func updateDownloadsArePausedAndRestored() throws {
+        let box = try Sandbox()
+        defer { box.stop() }
+        try box.setPref("com.apple.SoftwareUpdate", "AutomaticDownload", "1")
+        #expect(try box.run(box.flag).output.contains("started"))
+        #expect(box.pref("com.apple.SoftwareUpdate", "AutomaticDownload") == "0")
+        #expect(box.pref("com.apple.commerce", "AutoUpdate") == "0")
+        try FileManager.default.removeItem(atPath: box.flag)
+        box.wait { !box.exists(box.lock) }
+        #expect(box.pref("com.apple.SoftwareUpdate", "AutomaticDownload") == "1")
+        #expect(box.pref("com.apple.commerce", "AutoUpdate") == nil)
+    }
+
+    // Codex: a session that adopts an older journal must still pause (and later restore) updates.
+    @Test func adoptingAnOlderJournalStillPausesUpdates() throws {
+        let box = try Sandbox()
+        defer { box.stop() }
+        try FileManager.default.createDirectory(atPath: box.root.path + "/db/game-ready", withIntermediateDirectories: true)
+        try "awdl_was_up=1\nlp_battery=1\nlp_ac=\ntm_was=1\n".write(toFile: box.journal, atomically: true, encoding: .utf8)
+        try box.setPref("com.apple.SoftwareUpdate", "AutomaticDownload", "1")
+        #expect(try box.run(box.flag).output.contains("started"))
+        #expect(box.pref("com.apple.SoftwareUpdate", "AutomaticDownload") == "0")
+        try FileManager.default.removeItem(atPath: box.flag)
+        box.wait { !box.exists(box.lock) }
+        #expect(box.pref("com.apple.SoftwareUpdate", "AutomaticDownload") == "1")
+    }
+
+    // Codex: a key that can't be read (not "does not exist") is left alone, never deleted later.
+    @Test func anUnreadableUpdateKeyIsLeftAlone() throws {
+        let box = try Sandbox()
+        defer { box.stop() }
+        try box.setPref("com.apple.SoftwareUpdate", "AutomaticDownload", "1")
+        FileManager.default.createFile(atPath: box.root.path + "/def_com.apple.SoftwareUpdate_AutomaticDownload.unreadable", contents: Data())
+        try box.run(box.flag)
+        try FileManager.default.removeItem(atPath: box.root.path + "/def_com.apple.SoftwareUpdate_AutomaticDownload.unreadable")
+        try FileManager.default.removeItem(atPath: box.flag)
+        box.wait { !box.exists(box.lock) }
+        #expect(box.pref("com.apple.SoftwareUpdate", "AutomaticDownload") == "1")
+    }
+
+    // A journal from before this change has no update lines: nothing to put back for them.
+    @Test func anOlderJournalRestoresNoUpdateSettings() throws {
+        let box = try Sandbox()
+        defer { box.stop() }
+        try FileManager.default.createDirectory(atPath: box.root.path + "/db/game-ready", withIntermediateDirectories: true)
+        try "awdl_was_up=1\nlp_battery=1\nlp_ac=\ntm_was=1\n".write(toFile: box.journal, atomically: true, encoding: .utf8)
+        try box.setPref("com.apple.SoftwareUpdate", "AutomaticDownload", "0")
+        #expect(try box.run("--restore").status == 0)
+        #expect(box.pref("com.apple.SoftwareUpdate", "AutomaticDownload") == "0")
+        #expect(box.pref("com.apple.commerce", "AutoUpdate") == nil)
+    }
+}
+
+@Suite struct AirPlayReceiverTests {
+    @Test func gameModeTurnsOffTheAirPlayReceiver() {
+        let a = SharingSetting.airPlayReceiver
+        #expect(SharingSetting.all.contains(a))
+        #expect(a.applyArguments == ["-currentHost", "write", "com.apple.controlcenter", "AirplayRecieverEnabled", "-bool", "false"])
+        #expect(a.restoreArguments(original: nil) == ["-currentHost", "delete", "com.apple.controlcenter", "AirplayRecieverEnabled"])
+        #expect(a.reloadProcess == "ControlCenter")
     }
 }
