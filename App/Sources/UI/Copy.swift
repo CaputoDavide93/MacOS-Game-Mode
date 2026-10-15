@@ -10,6 +10,11 @@ func L(_ key: String) -> String {
 
 enum Copy {
     static func name(_ id: CheckID) -> String { L("check.\(id.rawValue)") }
+    /// On a cable the Wi-Fi check grades the Ethernet link, and says so.
+    static func name(_ r: CheckResult) -> String {
+        let wired: Set<Finding> = [.ethernet, .ethernetFast, .ethernetSlow, .ethernetBroken]
+        return r.id == .wifi && r.findings.contains(where: wired.contains) ? L("check.ethernet") : name(r.id)
+    }
     static func sentence(_ f: Finding) -> String { L("finding.\(f.rawValue)") }
     static func title(_ v: VerdictLevel) -> String { L("verdict.\(v.rawValue).title") }
     static func subtitle(_ v: VerdictLevel) -> String { L("verdict.\(v.rawValue).subtitle") }
@@ -24,6 +29,6 @@ enum Copy {
     /// "Wi-Fi hop: needs attention. Your Mac's Wi-Fi keeps pausing."
     static func accessibility(_ r: CheckResult) -> String {
         let finding = r.findings.first.map(sentence) ?? ""
-        return "\(name(r.id)): \(grade(r.grade)). \(finding)"
+        return "\(name(r)): \(grade(r.grade)). \(finding)"
     }
 }

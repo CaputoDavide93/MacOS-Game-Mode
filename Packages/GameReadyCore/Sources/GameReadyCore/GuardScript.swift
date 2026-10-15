@@ -18,6 +18,9 @@ public enum GuardScript {
 #
 #   bash -c "$SOURCE" game-mode-guard <flag-file>     start a session
 #   bash -c "$SOURCE" game-mode-guard --restore       put back what a dead guard left changed
+#   bash -c "$SOURCE" game-mode-guard <flag-file> --airdrop-session
+#                                                     also remove the AirDrop profile on "off"
+#   bash -c "$SOURCE" game-mode-guard --remove-airdrop   remove the AirDrop profile now
 #
 # The flag must be gamemode.on inside a user's own Application Support/Game Ready folder,
 # a regular file (not a symlink) owned by that user. It is re-checked on every loop, so a
@@ -26,6 +29,8 @@ set -u
 PATH=/usr/bin:/bin:/usr/sbin:/sbin
 
 FLAG="${1:-}"
+EXTRA="${2:-}"
+AD_PROFILE=io.github.caputodavide93.gameready.airdrop   # AirDropProfile.identifier
 STATE_DIR=/var/run/game-ready
 PIDFILE="$STATE_DIR/guard.pid"
 LOCK="$STATE_DIR/lock"
@@ -34,9 +39,36 @@ JOURNAL="$JOURNAL_DIR/originals"
 MAX_SECONDS=$((12 * 3600))       # safety net: never run longer than a long gaming day
 
 [[ $EUID -eq 0 ]] || { echo "must run as root" >&2; exit 1; }
+# Is Game Ready's AirDrop profile installed? "yes", "no", or "unknown" when the list can't be
+# read: only a list that was read and lacks the exact identifier counts as gone.
+ad_state() {
+  local out
+  out=$(profiles -P 2>/dev/null) || { echo unknown; return; }
+  if printf '%s\n' "$out" | awk -v id="$AD_PROFILE" '/profileIdentifier:/ && $NF == id { f = 1 } END { exit !f }'; then
+    echo yes
+  else
+    echo no
+  fi
+}
+if [[ "$FLAG" == "--remove-airdrop" ]]; then
+  [[ $# -eq 1 ]] || { echo "refusing argument" >&2; exit 2; }
+  # Only ever this one identifier: Game Ready's own profile.
+  profiles remove -identifier "$AD_PROFILE" >/dev/null 2>&1
+  [[ "$(ad_state)" == "no" ]] || { echo "the AirDrop profile may still be installed" >&2; exit 8; }
+  echo "removed"; exit 0
+fi
+ad_session=0
+ad_arg=0   # this start's own choice; in guard mode it wins over an older journal's
 if [[ "$FLAG" == "--restore" ]]; then
+  [[ $# -eq 1 ]] || { echo "refusing argument" >&2; exit 2; }
   MODE=restore
 else
+  [[ $# -le 2 ]] || { echo "refusing argument" >&2; exit 2; }
+  case "$EXTRA" in
+    "") ;;
+    --airdrop-session) ad_session=1; ad_arg=1 ;;
+    *) echo "refusing argument" >&2; exit 2 ;;
+  esac
   MODE=guard
   [[ "$FLAG" =~ ^/Users/([A-Za-z0-9._-]+)/Library/Application\ Support/Game\ Ready/gamemode\.on$ ]] \
     || { echo "refusing flag path" >&2; exit 2; }
@@ -102,6 +134,7 @@ read_journal() {
       lp_battery)  lp_battery=$v ;;
       lp_ac)       lp_ac=$v ;;
       tm_was)      tm_was=${v:-0} ;;
+      ad_session)  [[ "$v" == "1" ]] && ad_session=1 ;;
       su_dl)       su_dl=$v; su_seen=1 ;;
       as_up)       as_up=$v; as_seen=1 ;;
     esac
@@ -138,6 +171,11 @@ restore() {
   if [[ "$tm_was" == "1" ]]; then tmutil enable 2>/dev/null || restored_all=0; fi
   put_back "$SU" AutomaticDownload "$su_dl"
   put_back "$AS" AutoUpdate "$as_up"
+  # "During Game Mode" AirDrop block: the profile goes with the session.
+  if [[ "$ad_session" == "1" ]]; then
+    profiles remove -identifier "$AD_PROFILE" >/dev/null 2>&1
+    [[ "$(ad_state)" == "no" ]] || restored_all=0   # still there, or can't tell: retry later
+  fi
   [[ $restored_all == 1 ]] && rm -f "$JOURNAL"
   release
 }
@@ -158,12 +196,15 @@ else
 fi
 
 if [[ $MODE == guard ]]; then
+  # Whether the AirDrop profile goes with this session is this session's choice (an "Always"
+  # user keeps it), not whatever an older session's journal said.
+  ad_session=$ad_arg
   # Settings this journal doesn't hold yet are still as the user left them: record them now.
   [[ $su_seen == 1 ]] || su_dl=$(read_bool "$SU" AutomaticDownload)
   [[ $as_seen == 1 ]] || as_up=$(read_bool "$AS" AutoUpdate)
   mkdir -p "$JOURNAL_DIR" && chmod 755 "$JOURNAL_DIR"
-  printf 'awdl_was_up=%s\nlp_battery=%s\nlp_ac=%s\ntm_was=%s\nsu_dl=%s\nas_up=%s\n' \
-    "$awdl_was_up" "$lp_battery" "$lp_ac" "$tm_was" "$su_dl" "$as_up" > "$JOURNAL.tmp" \
+  printf 'awdl_was_up=%s\nlp_battery=%s\nlp_ac=%s\ntm_was=%s\nsu_dl=%s\nas_up=%s\nad_session=%s\n' \
+    "$awdl_was_up" "$lp_battery" "$lp_ac" "$tm_was" "$su_dl" "$as_up" "$ad_session" > "$JOURNAL.tmp" \
     && mv -f "$JOURNAL.tmp" "$JOURNAL" \
     || { echo "could not save the original settings" >&2; release; exit 6; }
 fi

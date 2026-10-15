@@ -23,6 +23,35 @@ public struct WiFiLink: Sendable, Codable, Equatable {
     }
 }
 
+/// An Ethernet port's negotiated link, from `ifconfig`'s media line.
+public struct EthernetLink: Sendable, Codable, Equatable {
+    public var mbps: Int
+    public var fullDuplex: Bool
+
+    public init(mbps: Int, fullDuplex: Bool) { self.mbps = mbps; self.fullDuplex = fullDuplex }
+
+    /// "media: autoselect (1000baseT <full-duplex>)" → 1000 Mbps, full duplex. The active media
+    /// is in parentheses when it differs from the configured one ("autoselect"); a port set to a
+    /// fixed speed prints it bare ("media: 100baseTX <full-duplex>"). Nil with no link.
+    public static func parse(_ ifconfig: String) -> EthernetLink? {
+        guard let line = ifconfig.split(separator: "\n").first(where: { $0.contains("media:") }),
+              let colon = line.range(of: "media:") else { return nil }
+        var active = line[colon.upperBound...]
+        if let open = active.firstIndex(of: "("), let close = active.lastIndex(of: ")"), open < close {
+            active = active[active.index(after: open)..<close]
+        }
+        let inside = active.lowercased()
+        // The speed is the number before "base": 10, 100, 1000, 2500, 5000, or 10g.
+        guard let base = inside.range(of: "base") else { return nil }
+        let token = inside[..<base.lowerBound].trimmingCharacters(in: .whitespaces)
+        let mbps: Int
+        if token.hasSuffix("g"), let g = Int(token.dropLast()) { mbps = g * 1000 }
+        else if let m = Int(token) { mbps = m }
+        else { return nil }
+        return EthernetLink(mbps: mbps, fullDuplex: !inside.contains("half-duplex"))
+    }
+}
+
 public enum ThermalLevel: String, Sendable, Codable {
     case nominal, fair, serious, critical
 }

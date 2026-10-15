@@ -4,6 +4,29 @@ All notable changes to this project are documented here. Format: [Keep a Changel
 
 ## [Unreleased]
 
+### Added
+- **AirDrop off** (Settings): never, while Game Mode is on, or always. Current macOS only lets
+  AirDrop be switched off by a configuration profile, which you approve in System Settings →
+  General → Device Management; Game Ready opens it, explains why, and removes it itself (after
+  your password, or automatically when Game Mode goes off). Not yet confirmed on a real Mac.
+
+### Changed
+- On Ethernet, the Wi-Fi check becomes **Ethernet link**: it reads the port's negotiated speed
+  and duplex, and flags a link stuck at 100 Mbps or half duplex (usually a worn cable, port or
+  adapter). Pauses between the Mac and the router are no longer blamed on the Wi-Fi when you're
+  on a cable, and "a cable is steadier" isn't suggested to someone already on one. The live
+  watch names that layer "Mac to router".
+- Game Mode no longer sets AirDrop to "No One": on current macOS the setting read back as
+  changed but AirDrop ignored it. The AirDrop radio stays held off by Game Mode, which is what
+  stops it interrupting; the checklist says how to choose No One for good in Control Center.
+
+### Fixed
+- "The browser blocks this" (Allow JavaScript from Apple Events) kept showing for Better xCloud.
+  Game Ready now starts with your Mac's default browser instead of always Chrome, names the
+  browser and its exact steps (Safari's include showing the developer features first; Chrome's
+  note the switch is per profile), checks again by itself when you come back from the browser,
+  and offers to switch when a different supported browser is the one open.
+
 ## [0.4.0] - 2026-10-14
 
 ### Added

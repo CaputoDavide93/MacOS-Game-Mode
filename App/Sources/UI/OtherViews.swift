@@ -74,7 +74,7 @@ struct ChecklistView: View {
         .background(Theme.surface)
         .task {
             guard !model.isDemo else { return }
-            await model.checklist.detect()
+            await model.detectChecklist()
             if model.settings.platform.usesBetterXcloud {
                 await model.changes.refreshXcloud(browser: model.settings.browser)
                 model.checklist.applyBetterXcloud(model.changes.xcloudSettings)
@@ -212,6 +212,7 @@ struct SettingsView: View {
                     }
                 }
             }
+            AirDropSection()
             Section(L("ui.settings.quitApps")) {
                 ForEach(AppsProbe.knownNoisy, id: \.id) { app in
                     Toggle(app.name, isOn: Binding(
@@ -226,6 +227,45 @@ struct SettingsView: View {
         }
         .formStyle(.grouped)
         .frame(width: embedded ? nil : 460, height: embedded ? nil : 560)
+    }
+}
+
+/// Settings → AirDrop: when to use the AirDrop-off profile, why macOS needs the user to
+/// approve it, and whether it's installed now (D24).
+struct AirDropSection: View {
+    @Environment(AppModel.self) private var model
+
+    var body: some View {
+        Section(L("ui.airdrop.section")) {
+            Picker(L("ui.airdrop.mode"), selection: Binding(get: { model.settings.airDropBlock },
+                                                            set: { mode in Task { await model.setAirDropBlock(mode) } })) {
+                Text(L("ui.airdrop.mode.never")).tag(AirDropBlock.never)
+                Text(L("ui.airdrop.mode.gameMode")).tag(AirDropBlock.gameMode)
+                Text(L("ui.airdrop.mode.always")).tag(AirDropBlock.always)
+            }
+            .disabled(model.airDropModeLocked)
+            if model.gameMode.isOn {
+                Text(L("ui.airdrop.locked")).font(.caption).foregroundStyle(.secondary)
+            }
+            Text(L("ui.airdrop.help")).font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+            if let installed = model.airDrop.installed {
+                HStack {
+                    Text(L(installed ? "ui.airdrop.installed" : "ui.airdrop.notInstalled"))
+                    Spacer()
+                    if installed {
+                        Button(L("ui.airdrop.remove")) { Task { await model.removeAirDropProfile() } }
+                            .disabled(model.switching)
+                    } else if model.settings.airDropBlock == .always {
+                        Button(L("ui.airdrop.install")) { Task { await model.installAirDropProfile() } }
+                            .disabled(model.switching)
+                    }
+                }
+            }
+            if let notice = model.airDropNotice {
+                Text(notice).font(.callout).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .task { if !model.isDemo { await model.refreshAirDrop() } }
     }
 }
 
@@ -293,16 +333,23 @@ struct XcloudCard: View {
                     Text("Better xCloud").font(.headline).foregroundStyle(Theme.text)
                     Spacer()
                     Button(L("ui.xcloud.refresh")) {
-                        Task {
-                            await model.changes.refreshXcloud(browser: model.settings.browser)
-                            model.checklist.applyBetterXcloud(model.changes.xcloudSettings)
-                        }
+                        Task { await model.refreshBetterXcloud() }
                     }
                     .buttonStyle(.plain)
                     .foregroundStyle(Theme.primary)
                 }
                 Text(L("ui.xcloud.\(key)")).font(.callout).foregroundStyle(Theme.textVariant)
                     .fixedSize(horizontal: false, vertical: true)
+                if !isWorking, let other = model.browserSuggestion {
+                    HStack {
+                        Text(String(format: L("ui.xcloud.otherBrowser"), model.settings.browser.displayName, other.displayName))
+                            .font(.callout).foregroundStyle(Theme.text).fixedSize(horizontal: false, vertical: true)
+                        Spacer()
+                        Button(String(format: L("ui.xcloud.useBrowser"), other.displayName)) {
+                            Task { await model.switchBrowser(to: other) }
+                        }
+                    }
+                }
             }
         }
         .accessibilityElement(children: .combine)
@@ -313,7 +360,7 @@ struct XcloudCard: View {
         case .unknown: return "unknown"
         case .notInstalled: return "notInstalled"
         case .noTab: return "noTab"
-        case .jsDisabled: return "jsDisabled"
+        case .jsDisabled: return "jsDisabled.\(model.settings.browser.rawValue)"
         case .notAllowed: return "notAllowed"
         case .browserClosed: return "browserClosed"
         case .failed: return "failed"
@@ -321,6 +368,14 @@ struct XcloudCard: View {
         case .differs: return "differs"
         case .applied: return "applied"
         case .restorePending: return "restorePending"
+        }
+    }
+
+    /// Reading works: no reason to suggest another browser.
+    private var isWorking: Bool {
+        switch model.changes.xcloud {
+        case .matches, .differs, .applied, .restorePending: return true
+        default: return false
         }
     }
 

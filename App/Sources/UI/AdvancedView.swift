@@ -103,6 +103,9 @@ struct OverviewPage: View {
                         if let step = model.step { Text(Copy.step(step)).font(.callout).foregroundStyle(Theme.textVariant) }
                     }
                 }
+                if let notice = model.airDropNotice {
+                    Text(notice).font(.callout).foregroundStyle(Theme.textVariant).fixedSize(horizontal: false, vertical: true)
+                }
                 if let error = model.changesError {
                     Text(error).font(.callout).foregroundStyle(Theme.bad)
                 }
@@ -248,7 +251,7 @@ struct ResultLine: View {
                     Capsule().fill(color).frame(width: 4, height: 26)
                         .shadow(color: color.opacity(scheme == .dark ? 0.7 : 0), radius: 4)
                     VStack(alignment: .leading, spacing: 1) {
-                        Text(Copy.name(result.id)).fontWeight(.medium).foregroundStyle(Theme.text)
+                        Text(Copy.name(result)).fontWeight(.medium).foregroundStyle(Theme.text)
                         Text(result.findings.first.map(Copy.sentence) ?? "").font(.caption).foregroundStyle(Theme.textVariant)
                             .lineLimit(open ? nil : 1)
                     }
@@ -288,7 +291,7 @@ struct ResultLine: View {
 
     /// The headline number for the row; falls back to the grade word.
     private var value: String {
-        for key in ["avg", "rssi", "down", "now", "IPv4", "Cloudflare", "Game server", "cpu", "open"] {
+        for key in ["avg", "rssi", "rate", "down", "now", "IPv4", "Cloudflare", "Game server", "cpu", "open"] {
             if let v = result.details[key] { return v.components(separatedBy: ",").first ?? v }
         }
         return Copy.grade(result.grade)

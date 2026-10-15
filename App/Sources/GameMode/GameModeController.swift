@@ -62,7 +62,8 @@ final class GameModeController {
     /// Game Mode off.
     var leftOn: Bool { phase == .off && (flagPresent || needsPrivilegedRestore) }
 
-    func turnOn(quitting apps: [NSRunningApplication]) async {
+    /// `airDropSession`: the guard also removes the AirDrop-off profile when the session ends.
+    func turnOn(quitting apps: [NSRunningApplication], airDropSession: Bool = false) async {
         guard !isOn else { return }
         phase = .starting
         do {
@@ -75,7 +76,7 @@ final class GameModeController {
             if !FileManager.default.fileExists(atPath: Self.flagURL.path) {
                 try Data().write(to: Self.flagURL)
             }
-            try await startGuard()
+            try await runGuard([Self.flagURL.path] + (airDropSession ? ["--airdrop-session"] : []))
         } catch GameModeError.cancelled {
             try? FileManager.default.removeItem(at: Self.flagURL)
             phase = .off
@@ -107,7 +108,7 @@ final class GameModeController {
         var restored = await waitForGuardToExit(seconds: 15)
         // A guard that died never restored: put its originals back (one password prompt).
         if restored, needsPrivilegedRestore {
-            if mayPrompt { _ = try? await runGuard("--restore") }
+            if mayPrompt { _ = try? await runGuard(["--restore"]) }
             restored = !needsPrivilegedRestore
         }
         phase = .off
@@ -116,15 +117,25 @@ final class GameModeController {
 
     private var isFailed: Bool { if case .failed = phase { return true }; return false }
 
-    private func startGuard() async throws {
-        try await runGuard(Self.flagURL.path)
+    /// Removes the AirDrop-off profile (one administrator prompt). Nil when the prompt was cancelled.
+    func removeAirDropProfile() async -> Bool? {
+        do {
+            try await runGuard(["--remove-airdrop"])
+            return true
+        } catch GameModeError.cancelled {
+            return nil
+        } catch {
+            return false
+        }
     }
 
     /// One administrator prompt. The script text comes from the signed binary (`GuardScript`);
-    /// the only argument is our own flag path, or `--restore`.
+    /// the arguments are our own flag path (plus `--airdrop-session`), `--restore` or
+    /// `--remove-airdrop`, and the script refuses anything else.
     @discardableResult
-    private func runGuard(_ argument: String) async throws -> String {
-        let command = "/bin/bash -c " + Self.shellQuote(GuardScript.source) + " game-mode-guard " + Self.shellQuote(argument)
+    private func runGuard(_ arguments: [String]) async throws -> String {
+        let command = "/bin/bash -c " + Self.shellQuote(GuardScript.source) + " game-mode-guard "
+            + arguments.map(Self.shellQuote).joined(separator: " ")
         let source = "do shell script \"\(Self.appleScriptEscape(command))\" with administrator privileges"
         let result: (ok: Bool, cancelled: Bool, message: String) = await Task.detached {
             var error: NSDictionary?

@@ -1011,6 +1011,17 @@ import Testing
                 exit 0
                 """,
                 "tmutil": "#!/bin/bash\n[[ \"$1\" == enable && -f \(r)/tmfail ]] && exit 1\nexit 0\n",
+                // One profile: installed while \(r)/ad_profile exists; ad_stuck makes removal fail.
+                "profiles": """
+                #!/bin/bash
+                case "$1" in
+                  remove) [[ -f \(r)/ad_stuck ]] || rm -f \(r)/ad_profile ;;
+                  -P) [[ -f \(r)/ad_queryfail ]] && exit 1
+                      if [[ -f \(r)/ad_profile ]]; then echo "_computerlevel[1] attribute: profileIdentifier: \(AirDropProfile.identifier)"
+                      else echo "There are no configuration profiles installed"; fi ;;
+                esac
+                exit 0
+                """,
                 "ifconfig": "#!/bin/bash\n[[ $# -eq 1 ]] && echo 'awdl0: flags=8943<UP,BROADCAST,RUNNING>'\nexit 0\n",
                 "defaults": """
                 #!/bin/bash
@@ -1052,10 +1063,10 @@ import Testing
         }
 
         @discardableResult
-        func run(_ argument: String) throws -> (status: Int32, output: String) {
+        func run(_ arguments: String...) throws -> (status: Int32, output: String) {
             let p = Process()
             p.executableURL = URL(fileURLWithPath: "/bin/bash")
-            p.arguments = [root.path + "/guard.sh", argument]
+            p.arguments = [root.path + "/guard.sh"] + arguments
             let pipe = Pipe()
             p.standardOutput = pipe; p.standardError = pipe
             try p.run(); p.waitUntilExit()
@@ -1076,6 +1087,8 @@ import Testing
         }
 
         func exists(_ path: String) -> Bool { FileManager.default.fileExists(atPath: path) }
+        var airDropProfileInstalled: Bool { exists(root.path + "/ad_profile") }
+        func installAirDropProfile() { FileManager.default.createFile(atPath: root.path + "/ad_profile", contents: Data()) }
 
         /// A root preference as the stub `defaults` holds it; nil = the key isn't set.
         func pref(_ domain: String, _ key: String) -> String? {
@@ -1204,3 +1217,220 @@ import Testing
         #expect(a.reloadProcess == "ControlCenter")
     }
 }
+
+/// Which browser Game Ready talks to (Better xCloud lives in one browser's xbox.com tab).
+@Suite struct BrowserChoiceTests {
+    let supported = ["com.google.Chrome", "com.apple.Safari", "com.microsoft.edgemac"]
+
+    @Test func firstLaunchUsesTheMacsDefaultBrowserWhenSupported() {
+        #expect(BrowserChoice.initial(saved: nil, systemDefault: "com.apple.Safari", supported: supported) == "com.apple.Safari")
+        #expect(BrowserChoice.initial(saved: nil, systemDefault: "org.mozilla.firefox", supported: supported) == "com.google.Chrome")
+        #expect(BrowserChoice.initial(saved: nil, systemDefault: nil, supported: supported) == "com.google.Chrome")
+        // A choice the user made always wins.
+        #expect(BrowserChoice.initial(saved: "com.microsoft.edgemac", systemDefault: "com.apple.Safari", supported: supported) == "com.microsoft.edgemac")
+    }
+
+    @Test func suggestsTheOpenBrowserWhenTheChosenOneIsClosed() {
+        #expect(BrowserChoice.suggestion(selected: "com.google.Chrome", running: ["com.apple.Safari"], supported: supported) == "com.apple.Safari")
+        #expect(BrowserChoice.suggestion(selected: "com.google.Chrome", running: ["com.google.Chrome", "com.apple.Safari"], supported: supported) == nil)
+        #expect(BrowserChoice.suggestion(selected: "com.google.Chrome", running: ["org.mozilla.firefox"], supported: supported) == nil)
+        // Two others open: no guess.
+        #expect(BrowserChoice.suggestion(selected: "com.google.Chrome", running: ["com.apple.Safari", "com.microsoft.edgemac"], supported: supported) == nil)
+    }
+}
+
+/// On a cable there's no Wi-Fi to grade: the link itself (speed, duplex) is what can go wrong.
+@Suite struct EthernetTests {
+    let g = Grader()
+
+    @Test func parsesIfconfigMedia() {
+        #expect(EthernetLink.parse("\tmedia: autoselect (1000baseT <full-duplex,flow-control>)\n\tstatus: active")
+                == EthernetLink(mbps: 1000, fullDuplex: true))
+        #expect(EthernetLink.parse("media: autoselect (2500Base-T <full-duplex>)") == EthernetLink(mbps: 2500, fullDuplex: true))
+        #expect(EthernetLink.parse("media: autoselect (10GbaseT <full-duplex>)") == EthernetLink(mbps: 10_000, fullDuplex: true))
+        #expect(EthernetLink.parse("media: autoselect (100baseTX <full-duplex>)") == EthernetLink(mbps: 100, fullDuplex: true))
+        #expect(EthernetLink.parse("media: autoselect (10baseT/UTP <half-duplex>)") == EthernetLink(mbps: 10, fullDuplex: false))
+        // A port set to a fixed speed prints it without parentheses (ifmedia.c: they show only
+        // when the active media differs from the configured one).
+        #expect(EthernetLink.parse("\tmedia: 100baseTX <full-duplex>\n\tstatus: active") == EthernetLink(mbps: 100, fullDuplex: true))
+        #expect(EthernetLink.parse("media: autoselect (none)") == nil)
+        #expect(EthernetLink.parse("media: autoselect") == nil)
+        #expect(EthernetLink.parse("") == nil)
+    }
+
+    @Test func gradesTheCableNotTheWiFi() {
+        let fast = g.wifi(nil, kind: .ethernet, ethernet: EthernetLink(mbps: 1000, fullDuplex: true))
+        #expect(fast.grade == .green && fast.findings == [.ethernetFast] && fast.details["rate"] == "1000 Mbps")
+        let slow = g.wifi(nil, kind: .ethernet, ethernet: EthernetLink(mbps: 100, fullDuplex: true))
+        #expect(slow.grade == .amber && slow.findings == [.ethernetSlow])
+        #expect(g.wifi(nil, kind: .ethernet, ethernet: EthernetLink(mbps: 1000, fullDuplex: false)).findings == [.ethernetBroken])
+        #expect(g.wifi(nil, kind: .ethernet, ethernet: EthernetLink(mbps: 10, fullDuplex: true)).grade == .red)
+        // Speed unreadable: still a cable, and never a Wi-Fi verdict.
+        #expect(g.wifi(nil, kind: .ethernet, ethernet: nil).findings == [.ethernet])
+    }
+
+    @Test func wiredHopIsNotBlamedOnWiFi() {
+        let pausing = g.hop(PingStats(samples: Array(repeating: 2, count: 99) + [50]), wired: true)
+        #expect(pausing.findings == [.hopPausingWired])
+        let spiky = g.hop(PingStats(samples: Array(repeating: 2, count: 99) + [15]), wired: true)
+        #expect(spiky.findings == [.hopSpikyWired])
+        // Game Mode can't fix a cable: these aren't "fixable" findings.
+        #expect(!BasicState.fixableFindings.contains(.hopPausingWired))
+    }
+
+    @Test func noCableAdviceWhenAlreadyOnACable() {
+        let results = [CheckResult(id: .connection, grade: .green, findings: [.ethernet]),
+                       CheckResult(id: .wifi, grade: .green, findings: [.ethernetFast]),
+                       CheckResult(id: .hop, grade: .red, findings: [.hopLoss])]
+        let plan = FixPlanner.plan(results, .init(gameModeOn: true, betterXcloudNeedsTuning: false,
+                                                  betterXcloudBlocked: false, noisyApps: []))
+        #expect(!plan.advice.contains(.useCable))
+    }
+}
+
+@Suite struct AirDropSettingTests {
+    // Reported on a real Mac: AirDrop stayed on although Game Mode "set it to No One".
+    @Test func gameModeNoLongerClaimsToSetAirDropToNoOne() {
+        #expect(!SharingSetting.all.contains(.airDrop))
+    }
+
+    // An undo plan saved by an older version still holds AirDrop's original: it must decode.
+    @Test func anOlderPlanWithAirDropStillRestores() throws {
+        let plan = RestorePlan(sharing: [.airDrop: "Contacts Only"])
+        let back = try JSONDecoder().decode(RestorePlan.self, from: JSONEncoder().encode(plan))
+        #expect(back.sharing[.airDrop] == .some("Contacts Only"))
+    }
+}
+
+/// AirDrop off by configuration profile: the only switch current macOS honours (D24).
+@Suite struct AirDropProfileTests {
+    @Test func profileBlocksAirDropAndCanBeRemoved() throws {
+        let plist = try #require(PropertyListSerialization.propertyList(from: Data(AirDropProfile.source.utf8), format: nil) as? [String: Any])
+        #expect(plist["PayloadIdentifier"] as? String == AirDropProfile.identifier)
+        #expect(plist["PayloadScope"] as? String == "System")
+        #expect(plist["PayloadRemovalDisallowed"] as? Bool == false)
+        let payload = try #require((plist["PayloadContent"] as? [[String: Any]])?.first)
+        #expect(payload["PayloadType"] as? String == "com.apple.applicationaccess")
+        #expect(payload["allowAirDrop"] as? Bool == false)
+    }
+
+    @Test func detectsTheProfileInSystemProfilerOutput() {
+        let out = "Configuration Profiles:\n    Device Profiles:\n        Game Ready: AirDrop off:\n          Identifier: \(AirDropProfile.identifier)\n"
+        #expect(AirDropProfile.isInstalled(systemProfilerOutput: out))
+        #expect(!AirDropProfile.isInstalled(systemProfilerOutput: "Configuration Profiles:\n"))
+        // Exact identifier only: not our payload's longer one, not a mention in some description.
+        #expect(!AirDropProfile.isInstalled(systemProfilerOutput: "          Identifier: \(AirDropProfile.identifier).restrictions\n"))
+        #expect(!AirDropProfile.isInstalled(systemProfilerOutput: "          Description: replaces \(AirDropProfile.identifier) on this Mac\n"))
+        #expect(!AirDropProfile.isInstalled(systemProfilerOutput: "          Description: \(AirDropProfile.identifier)\n"))
+        #expect(AirDropProfile.isInstalled(systemProfilerOutput: "          Profile Identifier: \(AirDropProfile.identifier)\n"))
+    }
+
+    @Test func blockModesHaveStableNames() {
+        #expect(AirDropBlock.allCases.map(\.rawValue) == ["never", "gameMode", "always"])
+    }
+}
+
+/// The guard removes the AirDrop profile when a "during Game Mode" session ends.
+extension GuardSimulationTests {
+    @Test func sessionProfileIsRemovedOnOff() throws {
+        let box = try Sandbox()
+        defer { box.stop() }
+        #expect(try box.run(box.flag, "--airdrop-session").output.contains("started"))
+        box.installAirDropProfile()   // the user approved it in System Settings
+        try FileManager.default.removeItem(atPath: box.flag)
+        box.wait { !box.exists(box.lock) }
+        #expect(!box.airDropProfileInstalled && !box.exists(box.journal))
+    }
+
+    @Test func aProfileThatWontGoKeepsTheJournal() throws {
+        let box = try Sandbox()
+        defer { box.stop() }
+        try box.run(box.flag, "--airdrop-session")
+        box.installAirDropProfile()
+        FileManager.default.createFile(atPath: box.root.path + "/ad_stuck", contents: Data())
+        try FileManager.default.removeItem(atPath: box.flag)
+        box.wait { !box.exists(box.lock) }
+        #expect(box.airDropProfileInstalled && box.exists(box.journal))   // retried by the next "off"
+    }
+
+    @Test func withoutTheSessionFlagTheProfileIsLeftAlone() throws {
+        let box = try Sandbox()   // "Always" mode: the user's standing choice
+        defer { box.stop() }
+        box.installAirDropProfile()
+        try box.run(box.flag)
+        try FileManager.default.removeItem(atPath: box.flag)
+        box.wait { !box.exists(box.lock) }
+        #expect(box.airDropProfileInstalled)
+    }
+
+    @Test func removeModeTakesTheProfileOff() throws {
+        let box = try Sandbox()
+        defer { box.stop() }
+        box.installAirDropProfile()
+        #expect(try box.run("--remove-airdrop").status == 0)
+        #expect(!box.airDropProfileInstalled)
+        box.installAirDropProfile()
+        FileManager.default.createFile(atPath: box.root.path + "/ad_stuck", contents: Data())
+        #expect(try box.run("--remove-airdrop").status == 8)
+    }
+
+    @Test func refusesAnyOtherSecondArgument() throws {
+        let box = try Sandbox()
+        defer { box.stop() }
+        #expect(try box.run(box.flag, "--something").status == 2)
+    }
+}
+
+/// Review ten: a profile that can't be confirmed gone is never reported gone.
+extension GuardSimulationTests {
+    @Test func removeFailsWhenTheProfileListCantBeRead() throws {
+        let box = try Sandbox()
+        defer { box.stop() }
+        box.installAirDropProfile()
+        FileManager.default.createFile(atPath: box.root.path + "/ad_stuck", contents: Data())
+        FileManager.default.createFile(atPath: box.root.path + "/ad_queryfail", contents: Data())
+        #expect(try box.run("--remove-airdrop").status == 8)
+    }
+
+    @Test func sessionKeepsTheJournalWhenRemovalCantBeConfirmed() throws {
+        let box = try Sandbox()
+        defer { box.stop() }
+        try box.run(box.flag, "--airdrop-session")
+        box.installAirDropProfile()
+        FileManager.default.createFile(atPath: box.root.path + "/ad_queryfail", contents: Data())
+        try FileManager.default.removeItem(atPath: box.flag)
+        box.wait { !box.exists(box.lock) }
+        #expect(box.exists(box.journal))
+    }
+
+    @Test func extraArgumentsAreRefused() throws {
+        let box = try Sandbox()
+        defer { box.stop() }
+        #expect(try box.run("--remove-airdrop", "x").status == 2)
+        #expect(try box.run("--restore", "x").status == 2)
+        #expect(try box.run(box.flag, "--airdrop-session", "x").status == 2)
+    }
+}
+
+/// Review eleven: the session's own choice decides whether its profile goes on "off".
+extension GuardSimulationTests {
+    @Test func anAlwaysSessionDoesntInheritAnOldSessionsRemoval() throws {
+        let box = try Sandbox()
+        defer { box.stop() }
+        // A "during Game Mode" session whose removal didn't take: its journal stays.
+        try box.run(box.flag, "--airdrop-session")
+        box.installAirDropProfile()
+        FileManager.default.createFile(atPath: box.root.path + "/ad_stuck", contents: Data())
+        try FileManager.default.removeItem(atPath: box.flag)
+        box.wait { !box.exists(box.lock) }
+        #expect(box.exists(box.journal))
+        // The user now picks "Always": the next session must leave the profile alone.
+        try FileManager.default.removeItem(atPath: box.root.path + "/ad_stuck")
+        FileManager.default.createFile(atPath: box.flag, contents: Data())
+        #expect(try box.run(box.flag).output.contains("started"))
+        try FileManager.default.removeItem(atPath: box.flag)
+        box.wait { !box.exists(box.lock) }
+        #expect(box.airDropProfileInstalled)
+    }
+}
+

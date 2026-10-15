@@ -32,6 +32,10 @@ struct BasicView: View {
                 .opacity(model.running ? 0 : 1)
                 .disabled(model.running)
                 .accessibilityHidden(model.running)
+            if let notice = model.airDropNotice {
+                Text(notice).font(.callout).foregroundStyle(Theme.textVariant)
+                    .multilineTextAlignment(.center).padding(.horizontal, 24).fixedSize(horizontal: false, vertical: true)
+            }
             if let error = model.changesError {
                 Text(error).font(.callout).foregroundStyle(Theme.bad)
                     .multilineTextAlignment(.center).padding(.horizontal, 24)
