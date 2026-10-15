@@ -16,6 +16,7 @@ final class AppModel {
     let gameMode = GameModeController()
     let live = LiveMonitor()
     let changes = SessionChanges()
+    let airDrop = AirDropBlocker()
     let history = HistoryStore(directory: GameModeController.supportDir)
 
     private(set) var results: [CheckResult] = []
@@ -64,13 +65,24 @@ final class AppModel {
         } else {
             defaults = .standard
         }
-        settings = AppSettings(defaults: defaults)
+        // Screenshots stay the same on every Mac: no system default browser there.
+        settings = AppSettings(defaults: defaults, systemBrowser: demo ? nil : Browser.systemDefaultBundleID)
         checklist = Checklist(defaults: defaults)
         isDemo = demo
         guard !demo else { return }
         // The guard died, hit its time limit, or another window turned Game Mode off:
         // run the whole "off" (settings, live watch, session), not just the switch.
         gameMode.onEndedUnexpectedly = { [weak self] in await self?.endUnexpectedly() }
+        // Back from the browser (where the user may have just flipped "Allow JavaScript from
+        // Apple Events"): look again, so the warning goes without a Refresh or a new check.
+        if self.housekeeping {
+            NotificationCenter.default.addObserver(forName: NSApplication.didBecomeActiveNotification, object: nil, queue: .main) { [weak self] _ in
+                Task { @MainActor in
+                    await self?.recheckBlockedXcloud()
+                    await self?.recheckAirDropApproval()
+                }
+            }
+        }
         if self.housekeeping { try? history.prune() }
         entries = history.load()
         // An undo left over from a session whose Game Mode is already off (e.g. Better xCloud
@@ -107,7 +119,9 @@ final class AppModel {
         step = .connection
         let net = NetworkProbe.snapshot()
         router = net.router
-        var out = [grader.connection(net.kind, band: net.wifi?.band), grader.wifi(net.wifi, kind: net.kind)]
+        // On a cable there's no Wi-Fi to grade: the link's own speed and duplex instead.
+        let ethernet = net.kind == .ethernet ? await NetworkProbe.ethernetLink(net.interface) : nil
+        var out = [grader.connection(net.kind, band: net.wifi?.band), grader.wifi(net.wifi, kind: net.kind, ethernet: ethernet)]
         advance(out)
 
         // Hop and internet run together; UDP after (it's 200 queries spaced 20 ms).
@@ -119,7 +133,7 @@ final class AppModel {
         let pingGame = settings.platform == .xboxCloud
         async let gameSamples: [Double?] = pingGame ? PingProbe.run(host: settings.gameServerHost, count: 50, interval: 0.1) : []
         let hop = await hopSamples
-        out.append(hop.isEmpty ? .notMeasured(.hop) : grader.hop(PingStats(samples: hop)))
+        out.append(hop.isEmpty ? .notMeasured(.hop) : grader.hop(PingStats(samples: hop), wired: net.kind == .ethernet))
         advance(out)
 
         step = .internet
@@ -151,7 +165,7 @@ final class AppModel {
         let noisy = AppsProbe.runningNoisy(enabled: settings.quitApps).compactMap(\.localizedName)
         noisyApps = noisy
         out.append(grader.apps(noisy: noisy, timeMachineRunning: await AppsProbe.timeMachineRunning()))
-        await checklist.detect()
+        await detectChecklist()
         if settings.platform.usesBetterXcloud {
             await changes.refreshXcloud(browser: settings.browser)
             checklist.applyBetterXcloud(changes.xcloudSettings)
@@ -232,8 +246,11 @@ final class AppModel {
         defer { switching = false }
         changesError = nil
         let apps = AppsProbe.runningNoisy(enabled: settings.quitApps)
-        await gameMode.turnOn(quitting: apps)
+        // The mode this session runs with: the guard is told now, and the picker is locked until "off".
+        sessionAirDrop = settings.airDropBlock
+        await gameMode.turnOn(quitting: apps, airDropSession: sessionAirDrop == .gameMode)
         guard gameMode.phase == .on else {
+            sessionAirDrop = nil
             if case .failed(let reason) = gameMode.phase {
                 changesError = reason.isEmpty ? L("ui.gameMode.failed") : L("ui.gameMode.failed") + " " + reason
             }
@@ -246,6 +263,7 @@ final class AppModel {
         } catch {
             // Couldn't record the originals: change nothing, and back out of Game Mode.
             changesError = L("ui.gameMode.failed") + " " + error.localizedDescription
+            sessionAirDrop = nil   // the guard still removes the profile itself if one was approved
             await gameMode.turnOff()
             await changes.restore()
             return false
@@ -256,7 +274,85 @@ final class AppModel {
         noisyApps = stillRunning.compactMap(\.localizedName)
         await regradeMac()
         live.start(router: router ?? NetworkProbe.snapshot().router, server: liveServerHost)
+        if sessionAirDrop == .gameMode { await offerAirDropProfileIfMissing(for: .gameMode) }
         return true
+    }
+
+    // MARK: - AirDrop profile (D24)
+
+    /// What the user has to do, in their own words: approve the profile, or what went wrong.
+    private(set) var airDropNotice: String?
+    /// The AirDrop mode the running Game Mode session started with (the guard knows only that one).
+    private var sessionAirDrop: AirDropBlock?
+
+    /// The picker can't change while a session runs: the guard was told the mode at the start.
+    var airDropModeLocked: Bool { gameMode.isOn || switching }
+
+    /// The checklist's own detection, then the profile, which outranks AirDrop's own setting.
+    func detectChecklist() async {
+        await checklist.detect()
+        await refreshAirDrop()
+    }
+
+    /// Every look at the profile goes through here, so a late approval is never missed.
+    func refreshAirDrop() async {
+        await airDrop.refresh()
+        switch airDrop.installed {
+        case true?: checklist.noteAirDropBlocked()
+        case false?: checklist.noteAirDropUnblocked()   // also when removed in System Settings
+        case nil: break
+        }
+        guard airDrop.awaitingApproval, airDrop.installed == true else { return }
+        airDrop.noteSeen()
+        // Approved after its Game Mode session had ended: nothing will take it off by itself.
+        let sessionOver = settings.airDropBlock == .gameMode && !gameMode.isOn
+        airDropNotice = sessionOver ? L("ui.airdrop.lateInstall") : nil
+    }
+
+    /// Offers the profile when it's missing and `mode` is still what's wanted after the check.
+    private func offerAirDropProfileIfMissing(for mode: AirDropBlock) async {
+        await refreshAirDrop()
+        let wanted = gameMode.isOn ? sessionAirDrop : settings.airDropBlock
+        guard airDrop.installed != true, wanted == mode else { return }
+        airDropNotice = airDrop.offerInstall() ? L("ui.airdrop.approve") : L("ui.airdrop.openFailed")
+    }
+
+    /// The picker in Settings. "Always" offers the profile at once; "Never" doesn't remove an
+    /// installed one by itself (that's a password prompt): the Remove button is right there.
+    func setAirDropBlock(_ mode: AirDropBlock) async {
+        guard !airDropModeLocked, !running, !quitting else { return }
+        settings.airDropBlock = mode
+        if mode == .always { await installAirDropProfile() }
+    }
+
+    /// Holds the switch lock while it looks and opens: one offer at a time, never during a removal.
+    func installAirDropProfile() async {
+        guard !switching, !running, !quitting else { return }
+        switching = true
+        defer { switching = false }
+        await offerAirDropProfileIfMissing(for: .always)
+    }
+
+    /// One transition at a time: holds the same lock as the Game Mode switch.
+    func removeAirDropProfile() async {
+        guard !switching, !running, !quitting else { return }
+        switching = true
+        defer { switching = false }
+        switch await gameMode.removeAirDropProfile() {
+        case true?:
+            airDrop.noteRemoved()
+            airDropNotice = nil
+            checklist.noteAirDropUnblocked()
+        case false?: airDropNotice = L("ui.airdrop.removeFailed")
+        case nil: break   // password prompt cancelled
+        }
+        await refreshAirDrop()
+    }
+
+    /// Back from System Settings: approved?
+    private func recheckAirDropApproval() async {
+        guard airDrop.awaitingApproval else { return }
+        await refreshAirDrop()
     }
 
     /// Xbox is pinged at its own front door; other platforms are watched on Cloudflare, as
@@ -331,11 +427,47 @@ final class AppModel {
         closedApps = []
         // Low Power Mode and the AirDrop radio are back: the Mac result should say so.
         if !quitting { await regradeMac() }
+        if sessionAirDrop == .gameMode {
+            airDropNotice = nil
+            if !quitting {
+                await refreshAirDrop()   // the guard removed the profile with the session
+                if airDrop.installed == false { checklist.noteAirDropUnblocked() }
+            }
+        }
+        sessionAirDrop = nil
         if let summary = live.stop() {
             lastSession = summary
             try? history.append(.session(summary))
             entries = history.load()
         }
+    }
+
+    // MARK: - Better xCloud
+
+    /// Reads Better xCloud again and updates the checklist (the card's Refresh).
+    func refreshBetterXcloud() async {
+        await changes.refreshXcloud(browser: settings.browser)
+        checklist.applyBetterXcloud(changes.xcloudSettings)
+    }
+
+    /// Only when a read already failed: never the first, unprompted, Automation request.
+    private func recheckBlockedXcloud() async {
+        let blocked: Set<SessionChanges.XcloudStatus> = [.jsDisabled, .notAllowed, .noTab, .browserClosed, .notInstalled]
+        guard settings.platform.usesBetterXcloud, blocked.contains(changes.xcloud),
+              !running, !switching, !quitting else { return }
+        await refreshBetterXcloud()
+    }
+
+    /// The chosen browser is closed but another supported one is open: probably the one in use.
+    var browserSuggestion: Browser? {
+        let running = NSWorkspace.shared.runningApplications.compactMap(\.bundleIdentifier)
+        return BrowserChoice.suggestion(selected: settings.browser.bundleID, running: running,
+                                        supported: Browser.allCases.map(\.bundleID)).flatMap(Browser.init(bundleID:))
+    }
+
+    func switchBrowser(to browser: Browser) async {
+        settings.browser = browser
+        await refreshBetterXcloud()
     }
 
     // MARK: - Basic

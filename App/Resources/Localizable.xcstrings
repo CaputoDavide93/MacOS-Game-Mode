@@ -2991,6 +2991,71 @@
         }
       }
     },
+    "check.ethernet": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Ethernet-Verbindung"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ethernet link"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Enlace Ethernet"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Liaison Ethernet"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ईथरनेट लिंक"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Collegamento Ethernet"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Ethernetリンク"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "이더넷 링크"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Link Ethernet"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "以太网连接"
+          }
+        }
+      }
+    },
     "check.hop": {
       "extractionState": "manual",
       "localizations": {
@@ -3517,61 +3582,61 @@
         "de": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "AirDrop teilt sich den Funk mit dem WLAN und unterbricht es, um nach Geräten in der Nähe zu suchen."
+            "value": "AirDrop teilt sich das WLAN-Funkmodul und pausiert es, um Geräte in der Nähe zu suchen. Der Spielmodus hält dieses Funkmodul aus, solange du spielst. Um AirDrop selbst auszuschalten, nutze AirDrop in den Einstellungen von Game Ready oder wähle Niemand unter Kontrollzentrum → AirDrop."
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "AirDrop shares the Wi-Fi radio and pauses it to look for nearby devices."
+            "value": "AirDrop shares the Wi-Fi radio and pauses it to look for nearby devices. Game Mode keeps that radio off while you play. To switch AirDrop itself off, use AirDrop in Game Ready's Settings, or choose No One in Control Center → AirDrop."
           }
         },
         "es": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "AirDrop comparte la radio Wi-Fi y la pausa para buscar dispositivos cercanos."
+            "value": "AirDrop comparte la radio Wi-Fi y la pausa para buscar dispositivos cercanos. El modo Juego mantiene esa radio apagada mientras juegas. Para desactivar AirDrop del todo, usa AirDrop en los Ajustes de Game Ready, o elige Nadie en Centro de control → AirDrop."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "AirDrop partage la radio Wi-Fi et la met en pause pour chercher des appareils à proximité."
+            "value": "AirDrop partage la radio Wi-Fi et la met en pause pour chercher les appareils à proximité. Le mode Jeu garde cette radio coupée pendant que vous jouez. Pour désactiver AirDrop lui-même, utilisez AirDrop dans les réglages de Game Ready, ou choisissez Personne dans Centre de contrôle → AirDrop."
           }
         },
         "hi": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "AirDrop उसी Wi-Fi रेडियो का उपयोग करता है और आस-पास के डिवाइस खोजने के लिए उसे रोक देता है।"
+            "value": "AirDrop Wi-Fi रेडियो साझा करता है और आस-पास के डिवाइस खोजने के लिए उसे रोकता है। गेम मोड खेलते समय वह रेडियो बंद रखता है। AirDrop को ही बंद करने के लिए, Game Ready की सेटिंग्स में AirDrop इस्तेमाल करें, या कंट्रोल सेंटर → AirDrop में 'कोई नहीं' चुनें।"
           }
         },
         "it": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "AirDrop condivide la radio Wi-Fi e la ferma per cercare dispositivi vicini."
+            "value": "AirDrop condivide la radio Wi-Fi e la mette in pausa per cercare dispositivi vicini. La Modalità gioco tiene spenta quella radio mentre giochi. Per disattivare AirDrop del tutto, usa AirDrop nelle Impostazioni di Game Ready, oppure scegli Nessuno in Centro di Controllo → AirDrop."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "AirDropはWi-Fiと同じ無線を使い、近くのデバイスを探すあいだWi-Fiを一時停止させます。"
+            "value": "AirDropはWi-Fiの無線を共有し、近くのデバイスを探すために一時停止させます。ゲームモードはプレイ中その無線をオフにします。AirDrop自体をオフにするには、Game Readyの設定のAirDropを使うか、コントロールセンター → AirDropで「受信しない」を選んでください。"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "AirDrop은 Wi-Fi 무선 장치를 함께 사용하며, 주변 기기를 찾는 동안 Wi-Fi를 잠시 멈춥니다."
+            "value": "AirDrop은 Wi-Fi 무선을 공유하며 근처 기기를 찾느라 이를 잠시 멈춥니다. 게임 모드는 플레이하는 동안 그 무선을 꺼 둡니다. AirDrop 자체를 끄려면 Game Ready 설정의 AirDrop을 사용하거나 제어 센터 → AirDrop에서 '수신 끔'을 선택하세요."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "O AirDrop compartilha o rádio Wi-Fi e o pausa para procurar dispositivos próximos."
+            "value": "O AirDrop divide o rádio Wi-Fi e o pausa para procurar dispositivos próximos. O Modo Jogo mantém esse rádio desligado enquanto você joga. Para desativar o próprio AirDrop, use AirDrop nos Ajustes do Game Ready ou escolha Ninguém na Central de Controle → AirDrop."
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "隔空投送与无线局域网共用无线电，并会暂停无线局域网来查找附近的设备。"
+            "value": "隔空投送共用无线局域网射频，并会暂停它来寻找附近设备。游戏模式会在你玩游戏时关闭该射频。如需关闭隔空投送本身，请使用 Game Ready 设置中的“隔空投送”，或在控制中心 → 隔空投送中选择“接收关闭”。"
           }
         }
       }
@@ -6696,6 +6761,201 @@
         }
       }
     },
+    "finding.ethernetBroken": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Die Kabelverbindung ist sehr langsam oder Halbduplex. Probiere ein anderes Kabel, einen anderen Port oder Adapter."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The cable link is very slow or half-duplex. Try another cable, port or adapter."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "El enlace por cable es muy lento o semidúplex. Prueba otro cable, puerto o adaptador."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "La liaison filaire est très lente ou en semi-duplex. Essayez un autre câble, port ou adaptateur."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "केबल लिंक बहुत धीमा है या हाफ़-डुप्लेक्स है। दूसरी केबल, पोर्ट या एडैप्टर आज़माएँ।"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Il collegamento via cavo è molto lento o half-duplex. Prova un altro cavo, porta o adattatore."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "有線リンクが非常に遅いか半二重です。別のケーブル、ポート、アダプタを試してください。"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "유선 링크가 매우 느리거나 반이중입니다. 다른 케이블, 포트 또는 어댑터를 사용해 보세요."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "O link por cabo está muito lento ou em half-duplex. Experimente outro cabo, porta ou adaptador."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "网线连接非常慢或为半双工。请换一根网线、端口或转接器试试。"
+          }
+        }
+      }
+    },
+    "finding.ethernetFast": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Per Kabel mit voller Geschwindigkeit verbunden. So spielst du am stabilsten."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wired at full speed. The steadiest way to play."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Conectado por cable a máxima velocidad. La forma más estable de jugar."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Connecté par câble à pleine vitesse. Le moyen le plus stable de jouer."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "केबल से पूरी स्पीड पर जुड़ा है। खेलने का सबसे स्थिर तरीका।"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Collegato via cavo alla massima velocità. Il modo più stabile per giocare."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ケーブルで最高速度で接続しています。最も安定したプレイ方法です。"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "케이블로 최고 속도로 연결되어 있습니다. 가장 안정적으로 플레이할 수 있는 방법입니다."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Conectado por cabo na velocidade máxima. A forma mais estável de jogar."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "已通过网线全速连接。这是最稳定的游戏方式。"
+          }
+        }
+      }
+    },
+    "finding.ethernetSlow": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Die Kabelverbindung läuft nur mit 100 Mbit/s. Meist liegt das an einem abgenutzten Kabel, Port oder Adapter: probiere einen anderen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The cable link runs at only 100 Mbps. A worn cable, port or adapter usually causes this: try another."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "El enlace por cable va solo a 100 Mbps. Suele deberse a un cable, puerto o adaptador gastado: prueba otro."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "La liaison filaire ne tourne qu’à 100 Mbit/s. Un câble, un port ou un adaptateur usé en est souvent la cause : essayez-en un autre."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "केबल लिंक सिर्फ़ 100 Mbps पर चल रहा है। आम तौर पर यह घिसी हुई केबल, पोर्ट या एडैप्टर की वजह से होता है: दूसरा आज़माएँ।"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Il collegamento via cavo va solo a 100 Mbps. Di solito è colpa di un cavo, una porta o un adattatore usurati: provane un altro."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "有線リンクが100 Mbpsしか出ていません。ケーブル、ポート、アダプタの劣化が原因のことが多いので、別のものを試してください。"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "유선 링크가 100 Mbps밖에 되지 않습니다. 보통 낡은 케이블, 포트 또는 어댑터 때문이니 다른 것을 사용해 보세요."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "O link por cabo está a só 100 Mbps. Normalmente é um cabo, porta ou adaptador gasto: experimente outro."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "网线连接只有 100 Mbps。通常是网线、端口或转接器老化所致：请换一个试试。"
+          }
+        }
+      }
+    },
     "finding.hopLoss": {
       "extractionState": "manual",
       "localizations": {
@@ -6826,6 +7086,71 @@
         }
       }
     },
+    "finding.hopPausingWired": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Die Kabelverbindung zum Router setzt immer wieder aus. Probiere ein anderes Kabel, einen anderen Port oder Adapter, oder starte den Router neu."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The cable link to the router keeps pausing. Try another cable, port or adapter, or restart the router."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "El enlace por cable con el router se detiene una y otra vez. Prueba otro cable, puerto o adaptador, o reinicia el router."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "La liaison filaire vers le routeur s’interrompt sans cesse. Essayez un autre câble, port ou adaptateur, ou redémarrez le routeur."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "राउटर तक का केबल लिंक बार-बार रुक रहा है। दूसरी केबल, पोर्ट या एडैप्टर आज़माएँ, या राउटर रीस्टार्ट करें।"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Il collegamento via cavo al router continua a fermarsi. Prova un altro cavo, porta o adattatore, o riavvia il router."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ルーターまでの有線リンクが何度も途切れます。別のケーブル、ポート、アダプタを試すか、ルーターを再起動してください。"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "라우터까지의 유선 링크가 계속 끊깁니다. 다른 케이블, 포트 또는 어댑터를 사용하거나 라우터를 재시동해 보세요."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "O link por cabo até o roteador para toda hora. Experimente outro cabo, porta ou adaptador, ou reinicie o roteador."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "到路由器的网线连接反复中断。请换一根网线、端口或转接器，或重启路由器。"
+          }
+        }
+      }
+    },
     "finding.hopSpiky": {
       "extractionState": "manual",
       "localizations": {
@@ -6887,6 +7212,71 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "你的 Mac 的无线局域网有短暂停顿。游戏模式通常可以解决此问题。"
+          }
+        }
+      }
+    },
+    "finding.hopSpikyWired": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Die Kabelverbindung zum Router hat kurze Aussetzer. Der Router ist vielleicht ausgelastet."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The cable link to the router has small pauses. The router may be busy."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "El enlace por cable con el router tiene pequeñas pausas. Puede que el router esté ocupado."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "La liaison filaire vers le routeur fait de courtes pauses. Le routeur est peut-être occupé."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "राउटर तक के केबल लिंक में छोटी-छोटी रुकावटें हैं। राउटर व्यस्त हो सकता है।"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Il collegamento via cavo al router ha piccole pause. Il router potrebbe essere occupato."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ルーターまでの有線リンクに短い途切れがあります。ルーターが混雑している可能性があります。"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "라우터까지의 유선 링크가 잠깐씩 멈춥니다. 라우터가 바쁠 수 있습니다."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "O link por cabo até o roteador tem pequenas pausas. O roteador pode estar ocupado."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "到路由器的网线连接有短暂停顿。路由器可能正忙。"
           }
         }
       }
@@ -9952,61 +10342,61 @@
         "de": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "WLAN des Mac"
+            "value": "Mac zum Router"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Mac's Wi-Fi"
+            "value": "Mac to router"
           }
         },
         "es": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "Wi-Fi del Mac"
+            "value": "Del Mac al router"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "Wi-Fi du Mac"
+            "value": "Mac vers routeur"
           }
         },
         "hi": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "Mac का Wi-Fi"
+            "value": "Mac से राउटर तक"
           }
         },
         "it": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "Wi-Fi del Mac"
+            "value": "Mac → router"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "MacのWi-Fi"
+            "value": "Macからルーターまで"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "Mac의 Wi-Fi"
+            "value": "Mac과 라우터 간"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "Wi-Fi do Mac"
+            "value": "Mac ao roteador"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "Mac 的无线局域网"
+            "value": "Mac 到路由器"
           }
         }
       }
@@ -10462,6 +10852,981 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "正在测试游戏流量"
+          }
+        }
+      }
+    },
+    "ui.airdrop.approve": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Um AirDrop auszuschalten: Doppelklicke in Systemeinstellungen → Allgemein → Geräteverwaltung auf „Game Ready: AirDrop off“ und klicke auf Installieren."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "To turn AirDrop off: in System Settings → General → Device Management, double-click “Game Ready: AirDrop off” and click Install."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Para desactivar AirDrop: en Ajustes del Sistema → General → Gestión de dispositivos, haz doble clic en “Game Ready: AirDrop off” y luego en Instalar."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Pour désactiver AirDrop : dans Réglages Système → Général → Gestion des appareils, double-cliquez sur « Game Ready: AirDrop off », puis cliquez sur Installer."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "AirDrop बंद करने के लिए: सिस्टम सेटिंग्स → जनरल → डिवाइस मैनेजमेंट में “Game Ready: AirDrop off” पर डबल-क्लिक करें और इंस्टॉल पर क्लिक करें।"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Per disattivare AirDrop: in Impostazioni di Sistema → Generali → Gestione dispositivi, fai doppio clic su “Game Ready: AirDrop off” e poi su Installa."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "AirDropをオフにするには：システム設定 → 一般 → デバイス管理で「Game Ready: AirDrop off」をダブルクリックし、「インストール」をクリックしてください。"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "AirDrop을 끄려면: 시스템 설정 → 일반 → 기기 관리에서 'Game Ready: AirDrop off'를 이중 클릭한 다음 설치를 클릭하세요."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Para desativar o AirDrop: em Ajustes do Sistema → Geral → Gerenciamento de Dispositivos, clique duas vezes em “Game Ready: AirDrop off” e depois em Instalar."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "要关闭隔空投送：在“系统设置”→“通用”→“设备管理”中，连按“Game Ready: AirDrop off”，然后点按“安装”。"
+          }
+        }
+      }
+    },
+    "ui.airdrop.help": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "macOS lässt Apps AirDrop nicht mehr ausschalten. Der einzige Weg ist ein Konfigurationsprofil, und macOS lässt dich jedes selbst in Systemeinstellungen → Allgemein → Geräteverwaltung mit deinem Passwort bestätigen. Game Ready öffnet das Profil; du klickst auf Installieren. Zum Entfernen brauchst du die Systemeinstellungen nicht: Game Ready macht es nach deinem Passwort (und von selbst, wenn der Spielmodus ausgeht, falls du das gewählt hast). Mit oder ohne Profil hält der Spielmodus das AirDrop-Funkmodul aus, solange er an ist."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "macOS no longer lets apps switch AirDrop off. The one way left is a configuration profile, and macOS makes you approve each one yourself in System Settings → General → Device Management, with your password. Game Ready opens the profile; you click Install. Removing it doesn't need System Settings: Game Ready does it after your password (and on its own when Game Mode goes off, if you chose that). With or without the profile, Game Mode keeps the AirDrop radio off while it's on."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "macOS ya no deja que las apps desactiven AirDrop. La única forma que queda es un perfil de configuración, y macOS te pide que lo apruebes tú en Ajustes del Sistema → General → Gestión de dispositivos, con tu contraseña. Game Ready abre el perfil; tú haces clic en Instalar. Para quitarlo no hace falta ir a Ajustes del Sistema: lo hace Game Ready tras tu contraseña (y solo, al desactivar el modo Juego, si lo eliges así). Con o sin perfil, el modo Juego mantiene apagada la radio de AirDrop mientras está activado."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "macOS ne permet plus aux apps de désactiver AirDrop. Le seul moyen restant est un profil de configuration, et macOS vous demande de l’approuver vous-même dans Réglages Système → Général → Gestion des appareils, avec votre mot de passe. Game Ready ouvre le profil ; vous cliquez sur Installer. Le supprimer ne demande pas de passer par Réglages Système : Game Ready s’en charge après votre mot de passe (et tout seul à la désactivation du mode Jeu, si vous l’avez choisi). Avec ou sans profil, le mode Jeu garde la radio d’AirDrop coupée tant qu’il est activé."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "macOS अब ऐप्स को AirDrop बंद करने नहीं देता। बचा हुआ एकमात्र तरीका कॉन्फ़िगरेशन प्रोफ़ाइल है, और macOS चाहता है कि आप हर प्रोफ़ाइल को सिस्टम सेटिंग्स → जनरल → डिवाइस मैनेजमेंट में अपने पासवर्ड से खुद मंज़ूर करें। Game Ready प्रोफ़ाइल खोलता है; आप इंस्टॉल पर क्लिक करते हैं। हटाने के लिए सिस्टम सेटिंग्स की ज़रूरत नहीं: आपके पासवर्ड के बाद Game Ready इसे हटा देता है (और अगर आपने यह चुना है, तो गेम मोड बंद होने पर अपने-आप)। प्रोफ़ाइल हो या न हो, गेम मोड चालू रहने तक AirDrop का रेडियो बंद रखता है।"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "macOS non permette più alle app di disattivare AirDrop. L'unico modo rimasto è un profilo di configurazione, e macOS ti chiede di approvarlo tu stesso in Impostazioni di Sistema → Generali → Gestione dispositivi, con la tua password. Game Ready apre il profilo; tu fai clic su Installa. Per rimuoverlo non serve Impostazioni di Sistema: lo fa Game Ready dopo la tua password (e da solo quando la Modalità gioco si spegne, se hai scelto così). Con o senza profilo, la Modalità gioco tiene spenta la radio di AirDrop mentre è attiva."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "macOSでは、アプリがAirDropをオフにすることはできなくなりました。残る唯一の方法は構成プロファイルで、macOSはシステム設定 → 一般 → デバイス管理で、パスワードを使ってご自身で承認することを求めます。Game Readyがプロファイルを開くので、「インストール」をクリックしてください。削除にはシステム設定は不要です。パスワードの入力後にGame Readyが削除します（選んだ場合はゲームモードがオフになると自動で削除）。プロファイルの有無にかかわらず、ゲームモードはオンの間AirDropの無線をオフにします。"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "macOS는 더 이상 앱이 AirDrop을 끄도록 허용하지 않습니다. 남은 유일한 방법은 구성 프로파일이며, macOS는 시스템 설정 → 일반 → 기기 관리에서 암호로 직접 승인하도록 요구합니다. Game Ready가 프로파일을 열면 설치를 클릭하세요. 제거할 때는 시스템 설정이 필요 없습니다. 암호를 입력하면 Game Ready가 제거합니다(그렇게 선택했다면 게임 모드가 꺼질 때 자동으로). 프로파일이 있든 없든 게임 모드는 켜져 있는 동안 AirDrop 무선을 꺼 둡니다."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "O macOS não deixa mais os apps desativarem o AirDrop. O único jeito que resta é um perfil de configuração, e o macOS pede que você mesmo o aprove em Ajustes do Sistema → Geral → Gerenciamento de Dispositivos, com sua senha. O Game Ready abre o perfil; você clica em Instalar. Para removê-lo não é preciso ir aos Ajustes do Sistema: o Game Ready faz isso após sua senha (e sozinho quando o Modo Jogo for desativado, se você escolher assim). Com ou sem o perfil, o Modo Jogo mantém o rádio do AirDrop desligado enquanto estiver ativado."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "macOS 已不再允许 App 关闭隔空投送。唯一剩下的方法是配置描述文件，而 macOS 要求你在“系统设置”→“通用”→“设备管理”中亲自用密码批准。Game Ready 会打开描述文件，你点按“安装”即可。移除时无需前往系统设置：输入密码后由 Game Ready 完成（如果你这样选择，游戏模式关闭时也会自动移除）。无论是否安装描述文件，游戏模式开启期间都会关闭隔空投送的射频。"
+          }
+        }
+      }
+    },
+    "ui.airdrop.install": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Installieren …"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Install…"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Instalar…"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Installer…"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "इंस्टॉल करें…"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Installa…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "インストール…"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "설치…"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Instalar…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "安装…"
+          }
+        }
+      }
+    },
+    "ui.airdrop.installed": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Das Profil, das AirDrop ausschaltet, ist installiert."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The AirDrop-off profile is installed."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "El perfil que desactiva AirDrop está instalado."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Le profil qui désactive AirDrop est installé."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "AirDrop बंद करने वाली प्रोफ़ाइल इंस्टॉल है।"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Il profilo che disattiva AirDrop è installato."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "AirDropをオフにするプロファイルがインストールされています。"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "AirDrop을 끄는 프로파일이 설치되어 있습니다."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "O perfil que desativa o AirDrop está instalado."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "关闭隔空投送的描述文件已安装。"
+          }
+        }
+      }
+    },
+    "ui.airdrop.lateInstall": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "AirDrop ist noch aus: Das Profil wurde erst nach dem Ende des Spielmodus bestätigt, daher entfernt es nichts von selbst. Entferne es unter Einstellungen → AirDrop."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AirDrop is still off: its profile was approved after Game Mode ended, so nothing will remove it by itself. Remove it in Settings → AirDrop."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "AirDrop sigue desactivado: su perfil se aprobó después de terminar el modo Juego, así que nada lo quitará solo. Quítalo en Ajustes → AirDrop."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "AirDrop est toujours désactivé : son profil a été approuvé après la fin du mode Jeu, donc rien ne le supprimera tout seul. Supprimez-le dans Réglages → AirDrop."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "AirDrop अब भी बंद है: इसकी प्रोफ़ाइल गेम मोड खत्म होने के बाद मंज़ूर हुई, इसलिए इसे अपने-आप कोई नहीं हटाएगा। इसे सेटिंग्स → AirDrop में हटाएँ।"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "AirDrop è ancora spento: il profilo è stato approvato dopo la fine della Modalità gioco, quindi nulla lo rimuoverà da solo. Rimuovilo in Impostazioni → AirDrop."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "AirDropはまだオフです。プロファイルがゲームモード終了後に承認されたため、自動では削除されません。設定 → AirDropで削除してください。"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "AirDrop이 아직 꺼져 있습니다. 프로파일이 게임 모드가 끝난 뒤에 승인되어 자동으로 제거되지 않습니다. 설정 → AirDrop에서 제거하세요."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "O AirDrop continua desativado: o perfil foi aprovado depois que o Modo Jogo terminou, então nada vai removê-lo sozinho. Remova-o em Ajustes → AirDrop."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "隔空投送仍处于关闭状态：其描述文件是在游戏模式结束后才批准的，因此不会被自动移除。请在“设置”→“隔空投送”中移除。"
+          }
+        }
+      }
+    },
+    "ui.airdrop.locked": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Ändere das, wenn der Spielmodus aus ist."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Change this when Game Mode is off."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Cámbialo cuando el modo Juego esté desactivado."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Modifiez-le quand le mode Jeu est désactivé."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "गेम मोड बंद होने पर इसे बदलें।"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Modificalo quando la Modalità gioco è disattivata."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ゲームモードがオフのときに変更してください。"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "게임 모드가 꺼져 있을 때 변경하세요."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Altere isso quando o Modo Jogo estiver desativado."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "请在游戏模式关闭后更改。"
+          }
+        }
+      }
+    },
+    "ui.airdrop.mode": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "AirDrop ausschalten"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turn AirDrop off"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Desactivar AirDrop"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Désactiver AirDrop"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "AirDrop बंद करें"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Disattiva AirDrop"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "AirDropをオフにする"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "AirDrop 끄기"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Desativar o AirDrop"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "关闭隔空投送"
+          }
+        }
+      }
+    },
+    "ui.airdrop.mode.always": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Immer"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Always"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Siempre"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Toujours"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "हमेशा"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Sempre"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "常に"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "항상"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Sempre"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "始终"
+          }
+        }
+      }
+    },
+    "ui.airdrop.mode.gameMode": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Während der Spielmodus an ist"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "While Game Mode is on"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Mientras el modo Juego está activado"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Quand le mode Jeu est activé"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "जब गेम मोड चालू हो"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Mentre la Modalità gioco è attiva"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "ゲームモードがオンの間"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "게임 모드가 켜져 있는 동안"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Enquanto o Modo Jogo estiver ativado"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "游戏模式开启时"
+          }
+        }
+      }
+    },
+    "ui.airdrop.mode.never": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Nie"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Never"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Nunca"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Jamais"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "कभी नहीं"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Mai"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "しない"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "안 함"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Nunca"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "从不"
+          }
+        }
+      }
+    },
+    "ui.airdrop.notInstalled": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Das Profil, das AirDrop ausschaltet, ist nicht installiert."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The AirDrop-off profile isn't installed."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "El perfil que desactiva AirDrop no está instalado."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Le profil qui désactive AirDrop n’est pas installé."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "AirDrop बंद करने वाली प्रोफ़ाइल इंस्टॉल नहीं है।"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Il profilo che disattiva AirDrop non è installato."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "AirDropをオフにするプロファイルはインストールされていません。"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "AirDrop을 끄는 프로파일이 설치되어 있지 않습니다."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "O perfil que desativa o AirDrop não está instalado."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "关闭隔空投送的描述文件未安装。"
+          }
+        }
+      }
+    },
+    "ui.airdrop.openFailed": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Das Profil, das AirDrop ausschaltet, konnte nicht geöffnet werden. Es liegt in Application Support/Game Ready: doppelklicke es dort."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn't open the AirDrop-off profile. It's in Application Support/Game Ready: double-click it there."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "No se ha podido abrir el perfil que desactiva AirDrop. Está en Application Support/Game Ready: haz doble clic en él allí."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Impossible d’ouvrir le profil qui désactive AirDrop. Il se trouve dans Application Support/Game Ready : double-cliquez dessus."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "AirDrop बंद करने वाली प्रोफ़ाइल खोली नहीं जा सकी। यह Application Support/Game Ready में है: वहाँ उस पर डबल-क्लिक करें।"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Impossibile aprire il profilo che disattiva AirDrop. Si trova in Application Support/Game Ready: fai doppio clic lì."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "AirDropをオフにするプロファイルを開けませんでした。Application Support/Game Readyにあるので、そこでダブルクリックしてください。"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "AirDrop을 끄는 프로파일을 열 수 없습니다. Application Support/Game Ready에 있으니 거기서 이중 클릭하세요."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Não foi possível abrir o perfil que desativa o AirDrop. Ele está em Application Support/Game Ready: clique duas vezes nele lá."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "无法打开关闭隔空投送的描述文件。它位于 Application Support/Game Ready 中：请在那里连按它。"
+          }
+        }
+      }
+    },
+    "ui.airdrop.remove": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Entfernen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Quitar"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Supprimer"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "हटाएँ"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Rimuovi"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "削除"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "제거"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Remover"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "移除"
+          }
+        }
+      }
+    },
+    "ui.airdrop.removeFailed": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Das Profil, das AirDrop ausschaltet, konnte nicht entfernt werden. Entferne es in Systemeinstellungen → Allgemein → Geräteverwaltung."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn't remove the AirDrop-off profile. Remove it in System Settings → General → Device Management."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "No se ha podido quitar el perfil que desactiva AirDrop. Quítalo en Ajustes del Sistema → General → Gestión de dispositivos."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Impossible de supprimer le profil qui désactive AirDrop. Supprimez-le dans Réglages Système → Général → Gestion des appareils."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "AirDrop बंद करने वाली प्रोफ़ाइल हटाई नहीं जा सकी। इसे सिस्टम सेटिंग्स → जनरल → डिवाइस मैनेजमेंट में हटाएँ।"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Impossibile rimuovere il profilo che disattiva AirDrop. Rimuovilo in Impostazioni di Sistema → Generali → Gestione dispositivi."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "AirDropをオフにするプロファイルを削除できませんでした。システム設定 → 一般 → デバイス管理で削除してください。"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "AirDrop을 끄는 프로파일을 제거할 수 없습니다. 시스템 설정 → 일반 → 기기 관리에서 제거하세요."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Não foi possível remover o perfil que desativa o AirDrop. Remova-o em Ajustes do Sistema → Geral → Gerenciamento de Dispositivos."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "无法移除关闭隔空投送的描述文件。请在“系统设置”→“通用”→“设备管理”中移除。"
+          }
+        }
+      }
+    },
+    "ui.airdrop.section": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "AirDrop"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AirDrop"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "AirDrop"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "AirDrop"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "AirDrop"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "AirDrop"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "AirDrop"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "AirDrop"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "AirDrop"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "隔空投送"
           }
         }
       }
@@ -14366,67 +15731,197 @@
         }
       }
     },
-    "ui.xcloud.jsDisabled": {
+    "ui.xcloud.jsDisabled.chrome": {
       "extractionState": "manual",
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "Der Browser blockiert das. In Chrome oder Edge: Darstellung → Entwickler → JavaScript von Apple Events zulassen. In Safari: Entwickler → JavaScript von Apple Events erlauben."
+            "value": "Chrome blockiert das. In der Menüleiste von Chrome: Darstellung → Entwickler → JavaScript von Apple Events zulassen, im Chrome-Profil, mit dem du spielst. Game Ready prüft erneut, wenn du zurückkommst."
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "The browser blocks this. In Chrome or Edge: View → Developer → Allow JavaScript from Apple Events. In Safari: Develop → Allow JavaScript from Apple Events."
+            "value": "Chrome blocks this. In Chrome's menu bar: View → Developer → Allow JavaScript from Apple Events, in the Chrome profile you play in. Game Ready checks again when you come back."
           }
         },
         "es": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "El navegador lo bloquea. En Chrome o Edge: Ver → Desarrollador → Permitir JavaScript desde Apple Events. En Safari: Desarrollo → Permitir JavaScript desde Apple Events."
+            "value": "Chrome lo bloquea. En la barra de menús de Chrome: Ver → Desarrollador → Permitir JavaScript desde Apple Events, en el perfil de Chrome con el que juegas. Game Ready vuelve a comprobarlo cuando regresas."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "Le navigateur bloque cette action. Dans Chrome ou Edge : Présentation → Options pour les développeurs → Autoriser JavaScript à partir des Apple Events. Dans Safari : Développement → Autoriser JavaScript à partir des Apple Events."
+            "value": "Chrome bloque cette action. Dans la barre des menus de Chrome : Présentation → Options pour les développeurs → Autoriser JavaScript à partir des Apple Events, dans le profil Chrome avec lequel vous jouez. Game Ready revérifie à votre retour."
           }
         },
         "hi": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "ब्राउज़र इसे ब्लॉक कर रहा है। Chrome या Edge में: देखें → डेवलपर → Apple Events से JavaScript को अनुमति दें। Safari में: डेवलप → Apple Events से JavaScript को अनुमति दें।"
+            "value": "Chrome इसे ब्लॉक कर रहा है। Chrome के मेनू बार में: देखें → डेवलपर → Apple Events से JavaScript को अनुमति दें, उस Chrome प्रोफ़ाइल में जिससे आप खेलते हैं। लौटने पर Game Ready फिर से जाँचता है।"
           }
         },
         "it": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "Il browser lo blocca. In Chrome o Edge: Visualizza → Sviluppatore → Consenti JavaScript dagli Apple Events. In Safari: Sviluppo → Consenti JavaScript dagli Apple Events."
+            "value": "Chrome lo blocca. Nella barra dei menu di Chrome: Visualizza → Sviluppatore → Consenti JavaScript dagli Apple Events, nel profilo Chrome con cui giochi. Game Ready ricontrolla quando torni qui."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "ブラウザによってブロックされています。ChromeまたはEdgeの場合：表示 → 開発 / 管理 → Apple Events からの JavaScript を許可。Safariの場合：開発 → Apple EventsからのJavaScriptを許可。"
+            "value": "Chromeによってブロックされています。Chromeのメニューバーで：表示 → 開発 / 管理 → Apple Events からの JavaScript を許可（ゲームに使うChromeプロファイルで）。戻ってくるとGame Readyが再確認します。"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "브라우저가 이 작업을 차단하고 있습니다. Chrome 또는 Edge: 보기 → 개발자 정보 → Apple 이벤트의 자바스크립트 허용. Safari: 개발자용 → Apple 이벤트의 JavaScript 허용."
+            "value": "Chrome이 이 작업을 차단하고 있습니다. Chrome 메뉴 막대에서: 보기 → 개발자 정보 → Apple 이벤트의 자바스크립트 허용 (게임에 쓰는 Chrome 프로필에서). 돌아오면 Game Ready가 다시 확인합니다."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "O navegador bloqueia isso. No Chrome ou Edge: Visualizar → Desenvolvedor → Permitir JavaScript de Apple Events. No Safari: Desenvolvedor → Permitir JavaScript de Eventos Apple."
+            "value": "O Chrome bloqueia isso. Na barra de menus do Chrome: Visualizar → Desenvolvedor → Permitir JavaScript de Apple Events, no perfil do Chrome em que você joga. O Game Ready verifica de novo quando você voltar."
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "needs_review",
-            "value": "浏览器阻止了此操作。在 Chrome 或 Edge 中：显示 → 开发者 → 允许来自 Apple 事件的 JavaScript。在 Safari 中：开发 → 允许来自 Apple 事件的 JavaScript。"
+            "value": "Chrome 阻止了此操作。在 Chrome 菜单栏中：显示 → 开发者 → 允许来自 Apple 事件的 JavaScript（在你玩游戏所用的 Chrome 个人资料中）。回到这里时 Game Ready 会再次检查。"
+          }
+        }
+      }
+    },
+    "ui.xcloud.jsDisabled.edge": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Edge blockiert das. In der Menüleiste von Edge: Darstellung → Entwickler → JavaScript von Apple Events zulassen. Game Ready prüft erneut, wenn du zurückkommst."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Edge blocks this. In Edge's menu bar: View → Developer → Allow JavaScript from Apple Events. Game Ready checks again when you come back."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Edge lo bloquea. En la barra de menús de Edge: Ver → Desarrollador → Permitir JavaScript desde Apple Events. Game Ready vuelve a comprobarlo cuando regresas."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Edge bloque cette action. Dans la barre des menus d’Edge : Présentation → Options pour les développeurs → Autoriser JavaScript à partir des Apple Events. Game Ready revérifie à votre retour."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Edge इसे ब्लॉक कर रहा है। Edge के मेनू बार में: देखें → डेवलपर → Apple Events से JavaScript को अनुमति दें। लौटने पर Game Ready फिर से जाँचता है।"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Edge lo blocca. Nella barra dei menu di Edge: Visualizza → Sviluppatore → Consenti JavaScript dagli Apple Events. Game Ready ricontrolla quando torni qui."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Edgeによってブロックされています。Edgeのメニューバーで：表示 → 開発 / 管理 → Apple Events からの JavaScript を許可。戻ってくるとGame Readyが再確認します。"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Edge가 이 작업을 차단하고 있습니다. Edge 메뉴 막대에서: 보기 → 개발자 정보 → Apple 이벤트의 자바스크립트 허용. 돌아오면 Game Ready가 다시 확인합니다."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "O Edge bloqueia isso. Na barra de menus do Edge: Visualizar → Desenvolvedor → Permitir JavaScript de Apple Events. O Game Ready verifica de novo quando você voltar."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Edge 阻止了此操作。在 Edge 菜单栏中：显示 → 开发者 → 允许来自 Apple 事件的 JavaScript。回到这里时 Game Ready 会再次检查。"
+          }
+        }
+      }
+    },
+    "ui.xcloud.jsDisabled.safari": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Safari blockiert das. In Safari: Einstellungen → Erweitert → Funktionen für Webentwickler anzeigen, dann Einstellungen → Entwickler → JavaScript von Apple Events erlauben. Game Ready prüft erneut, wenn du zurückkommst."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Safari blocks this. In Safari: Settings → Advanced → Show features for web developers, then Settings → Developer → Allow JavaScript from Apple Events. Game Ready checks again when you come back."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Safari lo bloquea. En Safari: Ajustes → Avanzado → Mostrar funciones para desarrolladores web, y luego Ajustes → Desarrollador → Permitir JavaScript desde Apple Events. Game Ready vuelve a comprobarlo cuando regresas."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Safari bloque cette action. Dans Safari : Réglages → Avancés → Afficher les fonctionnalités pour les développeurs web, puis Réglages → Développeur → Autoriser JavaScript à partir des Apple Events. Game Ready revérifie à votre retour."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Safari इसे ब्लॉक कर रहा है। Safari में: सेटिंग्स → एडवांस्ड → वेब डेवलपर्स के लिए फ़ीचर दिखाएँ, फिर सेटिंग्स → डेवलपर → Apple Events से JavaScript को अनुमति दें। लौटने पर Game Ready फिर से जाँचता है।"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Safari lo blocca. In Safari: Impostazioni → Avanzate → Mostra funzionalità per sviluppatori web, poi Impostazioni → Sviluppatore → Consenti JavaScript dagli Apple Events. Game Ready ricontrolla quando torni qui."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Safariによってブロックされています。Safariで：設定 → 詳細 → Web開発者向け機能を表示、次に設定 → デベロッパ → Apple EventsからのJavaScriptを許可。戻ってくるとGame Readyが再確認します。"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Safari가 이 작업을 차단하고 있습니다. Safari에서: 설정 → 고급 → 웹 개발자용 기능 보기, 그런 다음 설정 → 개발자 → Apple 이벤트의 JavaScript 허용. 돌아오면 Game Ready가 다시 확인합니다."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "O Safari bloqueia isso. No Safari: Ajustes → Avançado → Mostrar recursos para desenvolvedores web, depois Ajustes → Desenvolvedor → Permitir JavaScript de Eventos Apple. O Game Ready verifica de novo quando você voltar."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Safari 阻止了此操作。在 Safari 中：设置 → 高级 → 显示网页开发者功能，然后设置 → 开发者 → 允许来自 Apple 事件的 JavaScript。回到这里时 Game Ready 会再次检查。"
           }
         }
       }
@@ -14687,6 +16182,71 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "此浏览器中未安装 Better xCloud，或者它尚未存储任何设置。"
+          }
+        }
+      }
+    },
+    "ui.xcloud.otherBrowser": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Game Ready ist auf %@ eingestellt, geöffnet ist aber %@."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Game Ready is set to %@, but %@ is the browser that's open."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Game Ready está configurado para %@, pero el navegador abierto es %@."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Game Ready est réglé sur %@, mais le navigateur ouvert est %@."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Game Ready %@ पर सेट है, लेकिन खुला ब्राउज़र %@ है।"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Game Ready è impostato su %@, ma il browser aperto è %@."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Game Readyは%@に設定されていますが、開いているブラウザは%@です。"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Game Ready는 %@로 설정되어 있지만 열려 있는 브라우저는 %@입니다."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "O Game Ready está configurado para o %@, mas o navegador aberto é o %@."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Game Ready 设置为 %@，但打开的浏览器是 %@。"
           }
         }
       }
@@ -15012,6 +16572,71 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "尚未读取。请打开 xbox.com 并点按“刷新”。"
+          }
+        }
+      }
+    },
+    "ui.xcloud.useBrowser": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ verwenden"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use %@"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Usar %@"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Utiliser %@"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ इस्तेमाल करें"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Usa %@"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@を使う"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ 사용"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Usar %@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "使用 %@"
           }
         }
       }

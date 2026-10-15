@@ -28,7 +28,11 @@ public struct SharingSetting: Sendable, Codable, Equatable, Hashable {
     public static let airPlayReceiver = SharingSetting(domain: "com.apple.controlcenter", key: "AirplayRecieverEnabled",
                                                        currentHost: true, kind: .bool, gameValue: "false", reloadProcess: "ControlCenter")
 
-    public static let all: [SharingSetting] = [.airDrop, .handoffAdvertise, .handoffReceive, .universalControl, .airPlayReceiver]
+    /// What Game Mode changes. Not `.airDrop`: on current macOS (seen on macOS 27) writing
+    /// `DiscoverableMode` reads back fine but AirDrop ignores it, so it reported a change that
+    /// never happened. The guard holding the AirDrop radio down is what stops it (D23).
+    /// `.airDrop` stays defined so an undo plan from an older version still restores it.
+    public static let all: [SharingSetting] = [.handoffAdvertise, .handoffReceive, .universalControl, .airPlayReceiver]
 
     /// `defaults` arguments to read the current value.
     public var readArguments: [String] { host + ["read", domain, key] }

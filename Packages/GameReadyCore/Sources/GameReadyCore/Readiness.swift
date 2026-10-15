@@ -81,7 +81,9 @@ public enum FixPlanner {
         // A cable beats any Wi-Fi; and a hop that still pauses with Game Mode on is the Wi-Fi itself.
         let onWiFi = findings.contains(.wifi24GHz) || findings.contains(.wifi5GHz) || findings.contains(.wifi6GHz)
         let hopBad = findings.contains(.hopLoss) || (findings.contains(.hopPausing) && c.gameModeOn)
-        if onWiFi || hopBad { advice.append(.useCable) }
+        let wired = findings.contains(.ethernet) || findings.contains(.ethernetFast)
+            || findings.contains(.ethernetSlow) || findings.contains(.ethernetBroken)
+        if !wired && (onWiFi || hopBad) { advice.append(.useCable) }
         if findings.contains(.wifiWeak) || findings.contains(.wifiPoor) { advice.append(.moveCloser) }
         if findings.contains(.onBattery) || findings.contains(.batteryLow) { advice.append(.plugIn) }
         if findings.contains(.thermalHigh) { advice.append(.coolDown) }

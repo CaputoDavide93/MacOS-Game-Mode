@@ -23,9 +23,9 @@ public struct Grader: Sendable {
         }
     }
 
-    // C2 — only meaningful on Wi-Fi; Ethernet passes.
-    public func wifi(_ link: WiFiLink?, kind: ConnectionKind) -> CheckResult {
-        if kind == .ethernet { return CheckResult(id: .wifi, grade: .green, findings: [.ethernet]) }
+    // C2 — the Mac's own link: Wi-Fi signal, or on a cable the negotiated Ethernet speed.
+    public func wifi(_ link: WiFiLink?, kind: ConnectionKind, ethernet: EthernetLink? = nil) -> CheckResult {
+        if kind == .ethernet { return self.ethernet(ethernet) }
         guard let link, let rssi = link.rssi else { return .notMeasured(.wifi) }
         var details = ["rssi": "\(rssi) dBm"]
         if let c = link.channel { details["channel"] = "\(c)" + (link.widthMHz.map { " (\($0) MHz)" } ?? "") }
@@ -42,13 +42,25 @@ public struct Grader: Sendable {
         return CheckResult(id: .wifi, grade: .green, findings: [.wifiStrong], details: details)
     }
 
+    /// On Ethernet: the link's speed and duplex. Unreadable is still a cable, so it passes as before.
+    private func ethernet(_ e: EthernetLink?) -> CheckResult {
+        guard let e else { return CheckResult(id: .wifi, grade: .green, findings: [.ethernet]) }
+        let details = ["rate": "\(e.mbps) Mbps" + (e.fullDuplex ? "" : ", half duplex")]
+        if !e.fullDuplex || e.mbps < t.ethernetAmberMbps {
+            return CheckResult(id: .wifi, grade: .red, findings: [.ethernetBroken], details: details)
+        }
+        if e.mbps < t.ethernetGreenMbps { return CheckResult(id: .wifi, grade: .amber, findings: [.ethernetSlow], details: details) }
+        return CheckResult(id: .wifi, grade: .green, findings: [.ethernetFast], details: details)
+    }
+
     // C3 — the Mac's own hop to the router. Spikes here are the Mac, not the internet.
-    public func hop(_ s: PingStats) -> CheckResult {
+    // `wired`: on a cable the pauses aren't the Wi-Fi (or AirDrop), so they're named differently.
+    public func hop(_ s: PingStats, wired: Bool = false) -> CheckResult {
         guard !s.isEmpty, let max = s.maxMs else { return .notMeasured(.hop) }
         let details = ["avg": ms(s.avgMs), "max": ms(max), "loss": String(format: "%.1f%%", s.lossPercent)]
         if s.lossPercent > 0 { return CheckResult(id: .hop, grade: .red, findings: [.hopLoss], details: details) }
-        if max > t.hopMaxAmberMs { return CheckResult(id: .hop, grade: .red, findings: [.hopPausing], details: details) }
-        if max > t.hopMaxGreenMs { return CheckResult(id: .hop, grade: .amber, findings: [.hopSpiky], details: details) }
+        if max > t.hopMaxAmberMs { return CheckResult(id: .hop, grade: .red, findings: [wired ? .hopPausingWired : .hopPausing], details: details) }
+        if max > t.hopMaxGreenMs { return CheckResult(id: .hop, grade: .amber, findings: [wired ? .hopSpikyWired : .hopSpiky], details: details) }
         return CheckResult(id: .hop, grade: .green, findings: [.hopSteady], details: details)
     }
 

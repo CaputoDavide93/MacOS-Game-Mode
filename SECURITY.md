@@ -24,8 +24,10 @@ Game Mode runs one script as root, after macOS asks for an administrator passwor
 
 - The script's text is compiled into the app binary (`GuardScript.swift`); nothing is read
   from a file that could be swapped before it runs.
-- Its only argument is the app's own flag file. The script accepts nothing but
-  `/Users/<user>/Library/Application Support/Game Ready/gamemode.on`, refuses symlinks and
+- Its arguments are fixed forms, checked by count and value: the app's own flag file (optionally
+  followed by `--airdrop-session`), `--restore`, or `--remove-airdrop`; anything else is refused.
+  The flag file must be
+  `/Users/<user>/Library/Application Support/Game Ready/gamemode.on`; the script refuses symlinks and
   files not owned by that user, re-checks both every 5 seconds while it runs, stops after
   12 hours at most, and refuses to start a second copy (the lock records its owner, so a
   start still in progress is never mistaken for a dead guard, and only one start can reclaim a
@@ -36,6 +38,11 @@ Game Mode runs one script as root, after macOS asks for an administrator passwor
   (`com.apple.commerce AutoUpdate`)), records their previous values first in
   `/var/db/game-ready/originals` (root-owned, kept across a restart), and restores only what
   it changed when the flag disappears or the script stops.
+- The same script removes Game Ready's AirDrop-off configuration profile, and only that one
+  (`profiles remove -identifier io.github.caputodavide93.gameready.airdrop`): on "off" when
+  the user chose "while Game Mode is on" (`--airdrop-session`, recorded in the journal), or on
+  **Remove** in Settings (`--remove-airdrop`, its own password prompt). Installing the profile
+  is never done by the app: macOS requires the user to approve it in System Settings.
 - Turning Game Mode off is deleting the flag file; no further root access happens. The one
   exception: if the guard died without restoring (the Mac restarted mid-session), the
   originals are still on disk, and turning off runs the same script with `--restore`, after a
@@ -44,7 +51,7 @@ Game Mode runs one script as root, after macOS asks for an administrator passwor
 
 ## Settings changed as the user
 
-Game Mode also sets AirDrop to No One and turns off Handoff, Universal Control and the
+Game Mode also turns off Handoff, Universal Control and the
 AirPlay Receiver (user `defaults`, no root). Their original values, including "not set", are saved to
 `restore-plan.json` before anything changes and put back on "off", with each one read back
 to confirm. If a current value can't be read, or the undo plan can't be saved, nothing is

@@ -41,6 +41,13 @@ enum NetworkProbe {
         return false
     }
 
+    /// The negotiated speed and duplex of a wired port, from `ifconfig`. Nil with no link.
+    static func ethernetLink(_ interface: String?) async -> EthernetLink? {
+        guard let interface else { return nil }
+        let r = await Shell.run("/sbin/ifconfig", [interface], timeout: 5)
+        return r.status == 0 ? EthernetLink.parse(r.output) : nil
+    }
+
     /// A global unicast IPv6 address (2000::/3) on the interface. Link-local and ULA don't count.
     static func hasGlobalIPv6(_ interface: String) -> Bool {
         var head: UnsafeMutablePointer<ifaddrs>?

@@ -54,10 +54,11 @@ All screenshots use demo data (`--screenshots`), never a real network.
 | 🎚️ | Basic and Advanced | **Basic**: one status and one button, Fix & Play, which applies every fix and opens the game. **Advanced**: every number, a readiness score, grouped results |
 | 🩺 | Pre-flight check | 11 checks in about a minute: connection type, Wi-Fi signal, the Mac → router hop, internet and game-server latency, UDP loss over IPv4 and IPv6, speed with latency under load, whether the line is busy, the Mac's power and heat, background apps, and a checklist |
 | 🚦 | One verdict | Ready, Ready with a warning, Not ready, or Couldn't finish. A check that couldn't measure never counts as a pass |
-| ⚡ | Game Mode | Switches off the AirDrop/Handoff radio (and keeps it off), sets AirDrop to No One, turns off Handoff, Universal Control, the AirPlay Receiver and Low Power Mode, pauses Time Machine, stops new automatic macOS and App Store update downloads from starting, keeps the Mac awake, quits apps that get in the way. One password prompt covers all of it; every setting is put back on "off" or quit, even after the app crashes. If the Mac restarts mid-session, turning off asks for the password once more to put back the settings that needed it |
+| ⚡ | Game Mode | Switches off the AirDrop/Handoff radio (and keeps it off, so AirDrop can't interrupt), turns off Handoff, Universal Control, the AirPlay Receiver and Low Power Mode, pauses Time Machine, stops new automatic macOS and App Store update downloads from starting, keeps the Mac awake, quits apps that get in the way. One password prompt covers all of it; every setting is put back on "off" or quit, even after the app crashes. If the Mac restarts mid-session, turning off asks for the password once more to put back the settings that needed it |
 | 🎮 | Play | Opens Xbox Cloud Gaming, GeForce NOW (its Mac app when installed) or Amazon Luna |
 | 🎛️ | Better xCloud | Reads its settings to tick the checklist; opt-in, Game Mode sets the highest bitrate, the high H.264 profile and Prefer IPv6, and puts your own values back on "off" |
 | 📈 | Live watch | While Game Mode is on, a menu-bar dot and a log label every hiccup: the Mac's Wi-Fi, the internet, or the Mac |
+| 📵 | AirDrop off | Optional, in Settings: never, while Game Mode is on, or always. macOS only lets AirDrop be switched off by a configuration profile you approve in System Settings → General → Device Management; Game Ready opens it for you, and removes it itself (after your password, or automatically when Game Mode goes off) |
 | ☑️ | Checklist | The settings no app can change for you (Location Services, AirDrop, Handoff, browser energy saver, stream quality), detected where macOS allows |
 | 🗂️ | History | Checks and game sessions for 90 days on the Mac, CSV export, Delete All Data |
 | 🔒 | Private | No accounts, analytics or update checks. Only test traffic leaves the Mac |
@@ -120,10 +121,14 @@ tests, builds and publishes the zip with those notes.
 <summary>Letting Game Ready read and tune Better xCloud</summary>
 
 1. Install [Better xCloud](https://github.com/redphx/better-xcloud) and open xbox.com once.
-2. In the browser, allow scripts from other apps: **Chrome / Edge:** View → Developer → Allow
-   JavaScript from Apple Events. **Safari:** Develop → Allow JavaScript from Apple Events.
-3. Press **Refresh** on the Better xCloud card (Checklist). macOS asks once whether Game Ready
-   may control the browser.
+   Game Ready uses your Mac's default browser until you pick one in Settings; the switch below
+   is per browser (and, in Chrome, per profile), so it has to be the one you play in.
+2. In that browser, allow scripts from other apps: **Chrome / Edge:** View → Developer → Allow
+   JavaScript from Apple Events. **Safari:** Settings → Advanced → Show features for web
+   developers, then Settings → Developer → Allow JavaScript from Apple Events.
+3. Come back to Game Ready: it checks again by itself (or press **Refresh** on the Better xCloud
+   card in Checklist). macOS asks once whether Game Ready may control the browser. If another
+   supported browser is the one open, the card offers to switch to it.
 4. To have Game Mode tune it, turn on **Game Mode also tunes Better xCloud** in Settings.
 
 The browser option lets any app you have allowed to control it run scripts in your web pages,
@@ -147,7 +152,7 @@ APP="build/dd/Build/Products/Release/Game Ready.app/Contents/MacOS/Game Ready"
 | Check | How | Good |
 |---|---|---|
 | Connection | Primary interface | Ethernet (6/5 GHz Wi-Fi warns, 2.4 GHz fails) |
-| Wi-Fi signal | CoreWLAN signal and link rate | ≥ −60 dBm, ≥ 600 Mbps |
+| Wi-Fi signal (on a cable: Ethernet link) | CoreWLAN signal and link rate; on Ethernet the port's negotiated speed and duplex | ≥ −60 dBm, ≥ 600 Mbps; on Ethernet ≥ 1000 Mbps, full duplex |
 | Mac to router | 100 pings at 10/s | worst < 10 ms, no loss |
 | Internet latency | 50 pings to 1.1.1.1, and to the game server for Xbox Cloud Gaming | < 25 ms, jitter < 5 ms, no loss |
 | Game traffic (UDP) | 200 DNS queries over IPv4 and IPv6 | no loss, p95 < 30 ms |

@@ -25,7 +25,9 @@ Device-only behaviour. ✅ verified · ⚠️ partly · ⬜ not yet run.
 | Quit with Game Mode on → restored before exit | ⬜ | |
 | Kill the app with Game Mode on → reopening offers "Turn off" | ⬜ | |
 | Live watch labels a router spike as "Mac's Wi-Fi" and a server-only spike as "Internet" | ⬜ | Logic covered by unit tests |
-| AirDrop No One / Handoff off / Universal Control off / AirPlay Receiver off take effect, and come back on "off" | ⬜ | The `defaults` round trip is tested on a throwaway domain; the effect on the real agents is not yet seen |
+| AirDrop-off profile: opening it lists "Game Ready: AirDrop off" in Device Management; approving it switches AirDrop off; `system_profiler` shows it installed | ⬜ | The profile is a plist checked in tests; its effect on macOS 27 is not yet seen |
+| AirDrop-off profile removal as root: "Remove" in Settings, and on "off" in "while Game Mode is on" | ⬜ | The guard's removal and retry run against a stub `profiles` in `GuardSimulationTests`; `profiles remove` and `profiles -P` on a real Mac are not yet seen |
+| Handoff off / Universal Control off / AirPlay Receiver off take effect, and come back on "off" | ⬜ | The `defaults` round trip is tested on a throwaway domain; the effect on the real agents is not yet seen |
 | Better xCloud: read with an xbox.com tab open; tune on Game Mode on; original values back on "off" | ⬜ | Script generation is compiled (`osacompile`) and executed (JavaScriptCore) in tests; not yet run against the real page |
 | Play opens each service (and the GeForce NOW app when installed) | ⬜ | |
 | Basic: Fix & Play turns on Game Mode, tunes Better xCloud, closes noisy apps, then opens the game; cancelling the password launches nothing | ⬜ | |

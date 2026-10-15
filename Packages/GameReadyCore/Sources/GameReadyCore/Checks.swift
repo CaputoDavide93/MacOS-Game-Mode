@@ -9,8 +9,12 @@ public enum Finding: String, Sendable, Codable, CaseIterable {
     // connection / wifi
     case ethernet, wifi6GHz, wifi5GHz, wifi24GHz, notConnected
     case wifiStrong, wifiWeak, wifiPoor, wifiUnknown
+    // the cable's own link (on Ethernet the Wi-Fi check grades this instead)
+    case ethernetFast, ethernetSlow, ethernetBroken
     // hop
     case hopSteady, hopSpiky, hopPausing, hopLoss
+    // on a cable the pauses aren't the Wi-Fi
+    case hopSpikyWired, hopPausingWired
     // internet
     case internetGood, internetSlowish, internetPoor, internetLoss
     // udp

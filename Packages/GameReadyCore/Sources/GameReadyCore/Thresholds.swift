@@ -8,6 +8,10 @@ public struct Thresholds: Sendable, Codable, Equatable {
     public var wifiRateGreenMbps = 600.0
     public var wifiRateRedMbps = 200.0
 
+    // Ethernet link: gigabit is normal; 100 Mbps usually means a bad cable, port or adapter.
+    public var ethernetGreenMbps = 1000
+    public var ethernetAmberMbps = 100
+
     // Mac → router hop. Spikes here are the Mac's own Wi-Fi (AirDrop/AWDL, scans).
     public var hopMaxGreenMs = 10.0
     public var hopMaxAmberMs = 30.0

@@ -64,6 +64,26 @@ final class Checklist {
         }
     }
 
+    /// The AirDrop tick currently comes from the profile (not from the user or AirDrop's setting).
+    private var airDropFromProfile = false
+
+    /// The AirDrop-off profile is installed: AirDrop is off, whatever Control Center shows.
+    /// Not saved: the user's own tick stays as it was, for when the profile goes.
+    func noteAirDropBlocked() {
+        done[.airDrop] = true
+        source[.airDrop] = .detected
+        airDropFromProfile = true
+    }
+
+    /// The profile went (by Game Ready or in System Settings): back to what the user ticked.
+    /// Nothing to undo when the tick didn't come from the profile.
+    func noteAirDropUnblocked() {
+        guard airDropFromProfile else { return }
+        airDropFromProfile = false
+        done[.airDrop] = defaults.bool(forKey: "checklist.\(Item.airDrop.rawValue)")
+        source[.airDrop] = .manual
+    }
+
     /// Better xCloud's own settings answer two checklist items.
     func applyBetterXcloud(_ settings: [String: JSONValue]?) {
         guard let settings else { return }
@@ -72,6 +92,7 @@ final class Checklist {
     }
 
     private func apply(_ item: Item, _ value: Bool) {
+        if item == .airDrop { airDropFromProfile = false }
         source[item] = .detected
         setDone(item, value)
     }

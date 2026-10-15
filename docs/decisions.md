@@ -173,3 +173,27 @@ Considered and left as checklist items: Location Services (its settings are prot
 System Integrity Protection), the browser's energy saver (Chrome only takes it as a managed
 policy, which would mark the browser "managed by your organisation"), Focus (no supported
 command-line switch), and a Bluetooth controller (only a cable fixes that).
+
+## D23 — On a cable, grade the cable; AirDrop's "No One" is the user's switch (2026-10-14)
+On Ethernet the Wi-Fi check (C2, id `wifi`, kept for history) grades the port's negotiated link
+from `ifconfig`'s media line instead: ≥ 1000 Mbps full duplex passes, 100 Mbps warns, slower or
+half duplex fails; unreadable stays the plain "wired" pass it was. Hop findings on a cable have
+their own wording (not the Wi-Fi, and not something Game Mode fixes). Supersedes the AirDrop
+part of D18 and D22: writing `com.apple.sharingd DiscoverableMode` reads back as "Off" but
+AirDrop ignores it on current macOS (reported on a real Mac; on macOS 27 the key isn't even
+stored), so Game Mode stopped claiming it. Apple leaves that switch to Control Center or a
+configuration profile. The guard keeping `awdl0` down is what stops AirDrop during play.
+
+## D24 — AirDrop off by configuration profile, installed by the user, removed by the guard (2026-10-14)
+Follows D23. Since macOS 11 no app can install a configuration profile: the user approves it in
+System Settings → General → Device Management with their password. A restrictions payload
+(`com.apple.applicationaccess`, `allowAirDrop` false) may be installed by hand on macOS, so
+Game Ready writes that profile (fixed identifier and UUIDs, `AirDropProfile`) to its support
+folder and opens it. Removal is root's job and stays in the one audited script: the guard takes
+`--airdrop-session` (journaled, so a dead guard's `--restore` removes it too) and
+`--remove-airdrop`, and only ever removes Game Ready's own identifier; a removal that doesn't
+take keeps the journal for a retry. Three modes, the user's choice: never (the guard still holds
+the AirDrop radio down during Game Mode), while Game Mode is on (offered at each start, removed
+on "off"), always (installed once, removed from Settings). Installed state is read with
+`system_profiler SPConfigurationProfileDataType`, which needs no root. Not yet seen on a real
+Mac: the profile's effect on macOS 27, and `profiles remove` / `profiles -P` as root.
