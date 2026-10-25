@@ -1,0 +1,32 @@
+# Game Ready
+
+> Game Ready is a free, open-source (MIT) Mac app for cloud gamers. Before you play Xbox Cloud Gaming, GeForce NOW or Amazon Luna, it checks your Mac, Wi-Fi and internet, gives one verdict, switches the Mac into Game Mode, and while you play labels each hiccup as the Mac's Wi-Fi, the internet or the Mac. It has no account, no analytics and no purchases. Only test traffic leaves the Mac.
+
+Key facts:
+
+- Tested on: an Apple silicon Mac on macOS 27, wired. Wi-Fi, each gaming service and each browser are covered by unit tests but not yet run end to end; docs/testing.md lists what is verified.
+- Requirements: Apple silicon (arm64 only), macOS 15 or later.
+- Install: download Game-Ready.zip from the latest GitHub release, move Game Ready to Applications, open it, and on the first launch choose Open Anyway in System Settings, Privacy & Security (the app is ad-hoc signed and not notarised). Or build from source with Xcode 16+ and XcodeGen using scripts/build.sh.
+- Pre-flight check: connection type, Wi-Fi signal or Ethernet link, Mac to router latency, internet and game-server latency, UDP loss over IPv4 and IPv6, speed with latency under load, whether the line is busy, the Mac's power and heat, background apps, and a checklist. A check that cannot measure never counts as a pass.
+- Game Mode: switches off the AirDrop/Handoff radio, Handoff, Universal Control, the AirPlay Receiver and Low Power Mode, pauses Time Machine, holds back new automatic macOS and App Store update downloads, keeps the Mac awake and quits apps you choose. One administrator password prompt covers the root part. Every setting is put back when Game Mode ends, including after a crash.
+- Optional: tune the Better xCloud browser userscript (off by default) and switch AirDrop off through a configuration profile that you approve in System Settings.
+- Privacy: history (grades, finding codes, numbers) is stored only on the Mac for 90 days and can be deleted. The Wi-Fi network name is never read. Every host the app contacts is listed in Endpoints.swift and a test fails on any other.
+- Trade-off: Game Mode needs an administrator password, and the first launch needs Open Anyway until the app is notarised.
+- Languages: English, Italian, Spanish, French, German, Portuguese (Brazil), Japanese, Chinese (Simplified), Korean and Hindi. Translations are machine-assisted and not reviewed by native speakers.
+- Independent project, not affiliated with Microsoft, NVIDIA, Amazon or the Better xCloud project.
+
+## Docs
+
+- [README](https://github.com/CaputoDavide93/MacOS-Game-Mode/blob/main/README.md): why it exists, comparison, install, features, usage, supported setups
+- [Setup](https://github.com/CaputoDavide93/MacOS-Game-Mode/blob/main/docs/setup.md): download, first check, Fix & Play, Better xCloud, AirDrop off
+- [FAQ](https://github.com/CaputoDavide93/MacOS-Game-Mode/blob/main/docs/faq.md): cost, Macs, services, what Game Mode changes, what is sent
+- [Troubleshooting](https://github.com/CaputoDavide93/MacOS-Game-Mode/blob/main/docs/troubleshooting.md): symptoms and fixes
+- [How it works](https://github.com/CaputoDavide93/MacOS-Game-Mode/blob/main/docs/how-it-works.md): probes, layer split, verdict, Game Mode and its undo
+- [Privacy](https://github.com/CaputoDavide93/MacOS-Game-Mode/blob/main/docs/privacy.md): each promise and its limits
+- [Security policy](https://github.com/CaputoDavide93/MacOS-Game-Mode/blob/main/SECURITY.md): what the root script may do, how to report
+
+## Optional
+
+- [Testing](https://github.com/CaputoDavide93/MacOS-Game-Mode/blob/main/docs/testing.md)
+- [Decisions](https://github.com/CaputoDavide93/MacOS-Game-Mode/blob/main/docs/decisions.md)
+- [Changelog](https://github.com/CaputoDavide93/MacOS-Game-Mode/blob/main/CHANGELOG.md)
