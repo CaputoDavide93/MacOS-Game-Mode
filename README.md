@@ -1,8 +1,10 @@
 <div align="center">
 
+<img src="App/Design/AppIcon.svg" width="96" alt="Game Ready icon: a game controller with a green tick.">
+
 # 🎮 Game Ready
 
-**A Mac app that checks your Mac, Wi-Fi and internet before cloud gaming, switches the Mac into Game Mode, and tells you which one caused the lag while you play.**
+**Free Mac app for cloud gamers: checks your Mac, Wi-Fi and internet, switches on Game Mode, and tells you which one causes the lag**
 
 ![Swift](https://img.shields.io/badge/Swift-6-F05138?logo=swift&logoColor=white)
 ![SwiftUI](https://img.shields.io/badge/SwiftUI-macOS_15+-0D96F6?logo=apple&logoColor=white)
@@ -15,11 +17,36 @@
 
 ---
 
-Cloud gaming (Xbox Cloud Gaming, GeForce NOW) lags for very different reasons: the Mac's own
-Wi-Fi pausing for AirDrop, the household line filling up, or the game's servers. They all look
-the same on screen. Game Ready measures each layer separately and gives one plain answer.
+## 💡 Why Game Ready
 
-<p align="center"><img src="App/Design/AppIcon.svg" width="128" alt="Game Ready icon: a game controller with a green tick."></p>
+Cloud gaming (Xbox Cloud Gaming, GeForce NOW, Amazon Luna) lags for very different reasons: the
+Mac's own Wi-Fi pausing for AirDrop, the household line filling up, or the game's servers. On
+screen they all look the same, and a speed test says nothing about which one it is.
+
+Game Ready measures each layer separately, gives one plain verdict, and switches off what you
+can switch off on the Mac. While you play, it labels every hiccup as the Mac's Wi-Fi, the
+internet, or the Mac.
+
+| | Game Ready | A web speed test | Doing it by hand |
+|---|---|---|---|
+| Checks the Mac-to-router hop apart from the internet | Yes | No: a web page cannot ping your router | Yes, with Terminal `ping`, one target at a time |
+| Latency to the game server, UDP loss, speed under load | In one check | Speed and latency only | Separate tools |
+| Switches off AirDrop's radio, Handoff, Low Power Mode and update downloads, then puts them back | One click, one password prompt | No | Many settings across System Settings and Terminal, and you remember to undo each |
+| Labels lag while you play | Yes: Mac's Wi-Fi, internet or Mac | No | No |
+| Account or cloud service | None | Usually none | None |
+
+The trade-off: Game Mode needs your administrator password, and the app is not notarised yet,
+so the first launch needs **Open Anyway**.
+
+### Install in 3 steps
+
+You need an Apple silicon Mac on macOS 15 or later.
+
+1. Get **Game-Ready.zip** from the [latest release](https://github.com/CaputoDavide93/MacOS-Game-Mode/releases/latest) and unzip it.
+2. Move **Game Ready** to Applications and open it. The first time, open **System Settings → Privacy & Security** and choose **Open Anyway**.
+3. Choose **Check now**, then **Fix & Play**.
+
+Every screen is walked through in [docs/setup.md](docs/setup.md).
 
 ---
 
@@ -52,7 +79,7 @@ All screenshots use demo data (`--screenshots`), never a real network.
 | | Feature | What it does |
 |---|---|---|
 | 🎚️ | Basic and Advanced | **Basic**: one status and one button, Fix & Play, which applies every fix and opens the game. **Advanced**: every number, a readiness score, grouped results |
-| 🩺 | Pre-flight check | 11 checks in about a minute: connection type, Wi-Fi signal, the Mac → router hop, internet and game-server latency, UDP loss over IPv4 and IPv6, speed with latency under load, whether the line is busy, the Mac's power and heat, background apps, and a checklist |
+| 🩺 | Pre-flight check | About a minute, covering connection type, Wi-Fi signal, the Mac → router hop, internet and game-server latency, UDP loss over IPv4 and IPv6, speed with latency under load, whether the line is busy, the Mac's power and heat, background apps, and a checklist |
 | 🚦 | One verdict | Ready, Ready with a warning, Not ready, or Couldn't finish. A check that couldn't measure never counts as a pass |
 | ⚡ | Game Mode | Switches off the AirDrop/Handoff radio (and keeps it off, so AirDrop can't interrupt), turns off Handoff, Universal Control, the AirPlay Receiver and Low Power Mode, pauses Time Machine, stops new automatic macOS and App Store update downloads from starting, keeps the Mac awake, quits apps that get in the way. One password prompt covers all of it; every setting is put back on "off" or quit, even after the app crashes. If the Mac restarts mid-session, turning off asks for the password once more to put back the settings that needed it |
 | 🎮 | Play | Opens Xbox Cloud Gaming, GeForce NOW (its Mac app when installed) or Amazon Luna |
@@ -78,19 +105,14 @@ All screenshots use demo data (`--screenshots`), never a real network.
 - **`App/`**: the probes (ping, UDP, speed, Wi-Fi, power, apps), Game Mode, the live watch
   and the SwiftUI screens.
 
-Why each choice was made: [docs/decisions.md](docs/decisions.md). Look and feel: [docs/design.md](docs/design.md).
+How the pieces work: [docs/how-it-works.md](docs/how-it-works.md). Why each choice was made: [docs/decisions.md](docs/decisions.md). Look and feel: [docs/design.md](docs/design.md).
+All guides: [docs/README.md](docs/README.md), including the [FAQ](docs/faq.md) and [troubleshooting](docs/troubleshooting.md).
 
 ---
 
 ## 🚀 Quick Start
 
-### Download
-
-1. Get **Game-Ready.zip** from the [latest release](https://github.com/CaputoDavide93/MacOS-Game-Mode/releases/latest) and unzip it.
-2. Move **Game Ready** to Applications and open it.
-3. The first time, macOS blocks it because it isn't notarised yet: open **System Settings → Privacy & Security** and choose **Open Anyway**.
-
-Apple silicon, macOS 15 or later.
+The download steps are under [Install in 3 steps](#install-in-3-steps).
 
 ### Build from source
 
@@ -107,6 +129,21 @@ The build is ad-hoc signed, not notarised, so the first launch needs **Open Anyw
 To release: bump `MARKETING_VERSION` in `project.yml`, move the CHANGELOG's `[Unreleased]`
 notes under the new version, then `git tag vX.Y.Z && git push --tags`. The Release workflow
 tests, builds and publishes the zip with those notes.
+
+---
+
+## ✅ Supported and tested
+
+| | Status |
+|---|---|
+| Apple silicon, macOS 27 (M-series, wired) | Tested: full check, verdict and screenshots |
+| macOS 15 to 26 | Supported by the deployment target, not tested by the author |
+| Intel Macs | Not supported (arm64 build only) |
+| Wi-Fi | Not yet tested end to end; the logic is covered by unit tests |
+| Xbox Cloud Gaming, GeForce NOW, Amazon Luna | The Play button opens each; not yet run against each service |
+| Chrome, Safari, Edge | Better xCloud reading not yet run against the real page in any of them |
+
+The full list of what is verified and what is not: [docs/testing.md](docs/testing.md).
 
 ---
 
@@ -179,16 +216,18 @@ MacOS-Game-Mode/
 │   ├── Design/             # 🎨 AppIcon.svg, the icon's source
 │   └── Info.plist, GameReady.entitlements
 ├── Packages/GameReadyCore/ # 🧠 rules + tests, no I/O
-├── docs/                   # 📚 decisions, design, privacy, testing, screenshots, diagram
+├── docs/                   # 📚 setup, how it works, FAQ, troubleshooting, decisions, privacy, testing, assets
 ├── scripts/                # 🛠️ build.sh, check.sh
-├── tools/                  # 🔧 strings/<lang>.json + gen_strings.py, gen_diagram.py, gen-icon.sh
+├── tools/                  # 🔧 strings/<lang>.json + gen_strings.py, gen_diagram.py, gen-icon.sh, strip_png.py, social-preview.*
 ├── .github/workflows/      # 🤖 ci.yml, release.yml
+├── Makefile                # 🧰 check, screenshots, social-preview
 ├── project.yml             # ⚙️ XcodeGen project (the .xcodeproj is generated)
 ├── .env.example            # 🔑 optional SIGN_ID for a signed build
 ├── .gitignore
 ├── AGENTS.md               # 🤖 rules for coding agents
 ├── CLAUDE.md               # 🤖 imports AGENTS.md for Claude Code
 ├── CHANGELOG.md
+├── llms.txt                # 🤖 the project in one page for AI search
 ├── SECURITY.md
 ├── LICENSE
 └── README.md
@@ -199,7 +238,8 @@ MacOS-Game-Mode/
 ## 🧪 Testing
 
 ```bash
-scripts/check.sh            # core tests, strings, diagram, shell lint, Release build
+make check                  # core tests, strings, diagram, shell lint, Release build (same as scripts/check.sh)
+make screenshots            # retake docs/assets/screenshots/ from the demo data
 ```
 
 What's covered automatically and what has been verified on a real Mac: [docs/testing.md](docs/testing.md).
@@ -211,6 +251,20 @@ What's covered automatically and what has been verified on a real Mac: [docs/tes
 Game Mode runs one script as root, after the macOS password prompt. The script is compiled
 into the app, accepts only the app's own flag file, records what it changes and puts it back.
 Details and how to report a problem: [SECURITY.md](SECURITY.md). Every privacy promise and its limits: [docs/privacy.md](docs/privacy.md).
+
+---
+
+## 🤝 Contributing
+
+Most of what Game Ready does has not yet been run on every Mac, Wi-Fi setup and service. Reports
+from other setups are the most useful contribution. Open an issue with:
+
+- your Mac model, macOS version, and wired or Wi-Fi (no network name or address needed);
+- the output of `Game Ready --check --no-speed` run from Terminal as shown in [Usage](#-usage) (JSON with grades and numbers, no network name);
+- what you expected and what happened, plus a screenshot if text is clipped.
+
+Before a pull request, run `make check`. Strings are edited in `tools/strings/*.json`, never in
+the generated catalogue; see [AGENTS.md](AGENTS.md).
 
 ---
 
