@@ -34,7 +34,7 @@ the same gate (`.github/workflows/ci.yml`); `release.yml` builds releases.
 ## Do not change
 
 - Bundle id prefix `io.github.caputodavide93`, the product name, the guard
-  script's flag path and sudoers contract in `GuardScript.swift`, and public URLs.
+  root guard script and its flag-file checks in `GuardScript.swift` (see SECURITY.md), and public URLs.
 - `Endpoints.allHosts` is the complete list of hosts the app contacts;
   `EndpointGuardTests` fails on any other. Adding a host needs a privacy doc update.
 
