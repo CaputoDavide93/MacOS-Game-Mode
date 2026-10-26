@@ -22,5 +22,7 @@ screenshots: build ## Retake docs/assets/screenshots/ from the app's demo data, 
 	"$(APP)/Contents/MacOS/Game Ready" --screenshots docs/assets/screenshots
 	python3 tools/strip_png.py docs/assets/screenshots/*.png
 
-social-preview: ## Redraw docs/assets/social-preview.png (needs Google Chrome)
-	tools/social-preview.sh
+social-preview: ## Redraw docs/assets/social-preview.png in the shared layout (needs Google Chrome and Pillow)
+	python3 tools/brand/brand_kit.py social --name "Game Ready" --tagline "Check your Mac, Wi-Fi and internet before cloud gaming, and find what causes the lag" \
+		--chip "macOS 15+" --chip "Apple silicon" --chip "Free, MIT" --chip "Private by design" \
+		--icon docs/assets/brand/icon.png --hue 170 --out docs/assets/social-preview.png

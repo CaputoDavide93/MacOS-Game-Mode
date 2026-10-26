@@ -218,7 +218,7 @@ MacOS-Game-Mode/
 ├── Packages/GameReadyCore/ # 🧠 rules + tests, no I/O
 ├── docs/                   # 📚 setup, how it works, FAQ, troubleshooting, decisions, privacy, testing, assets
 ├── scripts/                # 🛠️ build.sh, check.sh
-├── tools/                  # 🔧 strings/<lang>.json + gen_strings.py, gen_diagram.py, gen-icon.sh, strip_png.py, social-preview.*
+├── tools/                  # 🔧 strings/<lang>.json + gen_strings.py, gen_diagram.py, gen-icon.sh, strip_png.py, brand/brand_kit.py
 ├── .github/workflows/      # 🤖 ci.yml, release.yml
 ├── Makefile                # 🧰 check, screenshots, social-preview
 ├── project.yml             # ⚙️ XcodeGen project (the .xcodeproj is generated)
