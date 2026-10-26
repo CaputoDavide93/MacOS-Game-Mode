@@ -225,7 +225,6 @@ MacOS-Game-Mode/
 ├── .env.example            # 🔑 optional SIGN_ID for a signed build
 ├── .gitignore
 ├── AGENTS.md               # 🤖 rules for coding agents
-├── CLAUDE.md               # 🤖 imports AGENTS.md for Claude Code
 ├── CHANGELOG.md
 ├── llms.txt                # 🤖 the project in one page for AI search
 ├── SECURITY.md
