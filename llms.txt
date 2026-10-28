@@ -27,6 +27,7 @@ Key facts:
 
 ## Optional
 
+- [Evidence protocol](https://github.com/CaputoDavide93/MacOS-Game-Mode/blob/main/docs/evidence.md): how to test the AirDrop and latency claim; no results published yet
 - [Testing](https://github.com/CaputoDavide93/MacOS-Game-Mode/blob/main/docs/testing.md)
 - [Decisions](https://github.com/CaputoDavide93/MacOS-Game-Mode/blob/main/docs/decisions.md)
 - [Changelog](https://github.com/CaputoDavide93/MacOS-Game-Mode/blob/main/CHANGELOG.md)

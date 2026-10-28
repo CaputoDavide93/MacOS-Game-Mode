@@ -1,0 +1,11 @@
+PING example.test (192.0.2.1): 56 data bytes
+64 bytes from 192.0.2.1: icmp_seq=0 ttl=64 time=2.512 ms
+64 bytes from 192.0.2.1: icmp_seq=1 ttl=64 time=3.100 ms
+Request timeout for icmp_seq 2
+64 bytes from 192.0.2.1: icmp_seq=3 ttl=64 time=40.250 ms
+64 bytes from 192.0.2.1: icmp_seq=3 ttl=64 time=41.000 ms (DUP!)
+64 bytes from 192.0.2.1: icmp_seq=4 ttl=64 time=2.900 ms
+
+--- example.test ping statistics ---
+5 packets transmitted, 4 packets received, 20.0% packet loss
+round-trip min/avg/max/stddev = 2.512/12.19/40.250/16.5 ms
