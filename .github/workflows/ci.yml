@@ -12,6 +12,8 @@ jobs:
       - name: Core tests
         working-directory: Packages/GameReadyCore
         run: swift test
+      - name: Measurement tool tests
+        run: python3 -m unittest discover -s tests
       - name: Strings and diagram are current
         run: |
           python3 tools/gen_strings.py --check

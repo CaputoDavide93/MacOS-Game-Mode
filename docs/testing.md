@@ -5,6 +5,7 @@
 | What | Command | Covers |
 |---|---|---|
 | Core tests | `cd Packages/GameReadyCore && swift test` | Every grading rule, the verdict, ping parsing, the 429 speed-test rule, the live layer split, history (append, prune, corrupt lines, failed writes), CSV, DNS bytes, the guard script (parses with macOS bash 3.2 and refuses to run without root, both executed; its journal, `--restore`, a failed restore and simultaneous starts are also executed against stub `pmset`/`tmutil`/`ifconfig` with the root check removed; the flag re-check is a source-level assertion), and the host allowlist |
+| Measurement tool | `python3 -m unittest discover -s tests` | `scripts/measure_lag.py`: percentiles, jitter, the permutation test, the verdict rules (including null and inconclusive), the macOS ping parser, host validation, run order, and the report and CSVs from two invented fixtures. No network |
 | Strings | `python3 tools/gen_strings.py --check` | Every finding, check, step, event and checklist item has copy; all languages have exactly the English keys and the same placeholders; the catalogue is current |
 | Diagram | `python3 tools/gen_diagram.py --check` | `docs/assets/architecture-*.svg` match the code that draws them |
 | Everything | `scripts/check.sh` | All of the above plus a Release build |
@@ -36,3 +37,7 @@ Device-only behaviour. ✅ verified · ⚠️ partly · ⬜ not yet run.
 | Light and dark render correctly | ✅ | `--screenshots`, reviewed by eye |
 | Every language fits (no clipped text) | ⬜ | `--screenshots out -AppleLanguages '(de)'` per language |
 | Translations read naturally | ⬜ | Machine-assisted; each needs a native speaker before a store release |
+| Lag measurement tool, live: 5+ alternating runs on Wi-Fi with AirDrop active, then quiet | ⬜ | `scripts/measure_lag.py --internet <host>`; only fixture data has been analysed. Protocol in [evidence.md](evidence.md) |
+| Same protocol on Ethernet (control) | ⬜ | |
+| Notarised build opens without Open Anyway | ⬜ | Needs the owner's Developer ID: [notarisation.md](notarisation.md) |
+| Safety commands in [uninstall.md](uninstall.md) leave a Mac as it was | ⬜ | Written from the code, not yet run |

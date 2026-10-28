@@ -5,6 +5,8 @@ All notable changes to this project are documented here. Format: [Keep a Changel
 ## [Unreleased]
 
 ### Added
+- **Evidence protocol**: `scripts/measure_lag.py` runs alternating quiet and AirDrop-active ping runs (router and a public host you name), writes CSVs and a report that states null results plainly; [docs/evidence.md](docs/evidence.md) explains the protocol and its limits. Tested on invented fixture data only; no real-Mac result yet.
+- Docs: [safety](docs/safety.md), [uninstall](docs/uninstall.md), [notarisation checklist](docs/notarisation.md) and a draft Homebrew cask in `packaging/homebrew/` (unpublished).
 - **AirDrop off** (Settings): never, while Game Mode is on, or always. Current macOS only lets
   AirDrop be switched off by a configuration profile, which you approve in System Settings →
   General → Device Management; Game Ready opens it, explains why, and removes it itself (after

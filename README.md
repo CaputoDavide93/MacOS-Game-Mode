@@ -20,12 +20,14 @@
 ## 💡 Why Game Ready
 
 Cloud gaming (Xbox Cloud Gaming, GeForce NOW, Amazon Luna) lags for very different reasons: the
-Mac's own Wi-Fi pausing for AirDrop, the household line filling up, or the game's servers. On
-screen they all look the same, and a speed test says nothing about which one it is.
+Mac's own Wi-Fi (AirDrop's radio is a suspected cause; see [Evidence](#-evidence)), the household
+line filling up, or the game's servers. On screen they all look the same, and a speed test says
+nothing about which one it is.
 
 Game Ready measures each layer separately, gives one plain verdict, and switches off what you
 can switch off on the Mac. While you play, it labels every hiccup as the Mac's Wi-Fi, the
-internet, or the Mac.
+internet, or the Mac. It does not make a connection faster: it finds where the problem is and
+removes the Mac-side causes it can.
 
 | | Game Ready | A web speed test | Doing it by hand |
 |---|---|---|---|
@@ -35,8 +37,8 @@ internet, or the Mac.
 | Labels lag while you play | Yes: Mac's Wi-Fi, internet or Mac | No | No |
 | Account or cloud service | None | Usually none | None |
 
-The trade-off: Game Mode needs your administrator password, and the app is not notarised yet,
-so the first launch needs **Open Anyway**.
+The trade-off: Game Mode needs your administrator password, and the app is not notarised yet
+(it is ad-hoc signed; [the checklist](docs/notarisation.md) needs the owner's Developer ID), so the first launch needs **Open Anyway**.
 
 ### Install in 3 steps
 
@@ -47,6 +49,10 @@ You need an Apple silicon Mac on macOS 15 or later.
 3. Choose **Check now**, then **Fix & Play**.
 
 Every screen is walked through in [docs/setup.md](docs/setup.md).
+
+<!-- TODO(owner): hero GIF, 10 to 15 s screen capture: Basic "Almost ready" -> Fix & Play -> game opens.
+     Save as docs/assets/hero.gif (demo data or a clean desktop, no network name), then embed it here
+     with alt text. Second clip: menu-bar dot labelling a hiccup. Do not fake either from the demo screenshots. -->
 
 ---
 
@@ -93,6 +99,20 @@ All screenshots use demo data (`--screenshots`), never a real network.
 
 ---
 
+## 🔬 Evidence
+
+No measurement yet shows that AirDrop's radio changes latency on the Mac's own Wi-Fi hop. That
+is the idea Game Ready is built around, and it is **unproven**. [`scripts/measure_lag.py`](scripts/measure_lag.py)
+runs an alternating quiet-versus-AirDrop-active protocol (at least 5 runs of each), pings your
+router and one public host you name, and writes a CSV and a plain-English report that says "no
+clear difference" when that is what it finds. Protocol, limits and a template for sharing
+results: [docs/evidence.md](docs/evidence.md).
+
+<!-- TODO(owner): after real runs on a Mac with AirDrop on, add the result here (including a null result)
+     and a chart in docs/assets/. Until then this section stays as it is. -->
+
+---
+
 ## 🗺️ Architecture
 
 <picture>
@@ -134,8 +154,27 @@ tests, builds and publishes the zip with those notes.
 
 ## ✅ Supported and tested
 
-| | Status |
+Verified means run on a real Mac by the author. Everything else is **not run**, even where unit
+tests cover the logic. The row-by-row list is [docs/testing.md](docs/testing.md).
+
+| Area | Status |
 |---|---|
+| Full check on Ethernet, Apple silicon, macOS 27 (wired) | Verified: all probes return (2 Oct 2026) |
+| Light and dark rendering | Verified: `--screenshots`, reviewed by eye |
+| Speed test | Partly: measured live; the HTTP 429 fallback is unit-tested only |
+| Full check on Wi-Fi with AirDrop on (the headline scenario) | Not run |
+| Game Mode on a real Mac: on, 30 minutes, off, restore of every setting | Not run (restore logic runs against stub commands) |
+| Game Mode after a crash or restart | Not run |
+| AirDrop-off configuration profile | Not run |
+| Handoff, Universal Control, AirPlay Receiver off and back | Not run |
+| Better xCloud read and tune, in Chrome, Safari or Edge | Not run against the real page |
+| Play opens Xbox Cloud Gaming, GeForce NOW, Amazon Luna | Not run |
+| macOS 15 to 26 | Supported by the deployment target; not run |
+| Intel Macs | Not supported (arm64 build only) |
+| VoiceOver; every language fitting the window | Not run |
+| Lag measurement tool, live | Not run. Statistics and report are unit-tested on invented fixture data |
+
+---|---|
 | Apple silicon, macOS 27 (M-series, wired) | Tested: full check, verdict and screenshots |
 | macOS 15 to 26 | Supported by the deployment target, not tested by the author |
 | Intel Macs | Not supported (arm64 build only) |
@@ -216,8 +255,10 @@ MacOS-Game-Mode/
 │   ├── Design/             # 🎨 AppIcon.svg, the icon's source
 │   └── Info.plist, GameReady.entitlements
 ├── Packages/GameReadyCore/ # 🧠 rules + tests, no I/O
-├── docs/                   # 📚 setup, how it works, FAQ, troubleshooting, decisions, privacy, testing, assets
-├── scripts/                # 🛠️ build.sh, check.sh
+├── docs/                   # 📚 setup, how it works, FAQ, troubleshooting, evidence, safety, uninstall, notarisation, decisions, privacy, testing, assets
+├── scripts/                # 🛠️ build.sh, check.sh, measure_lag.py
+├── tests/                  # 🧪 test_measure_lag.py and its fixtures
+├── packaging/homebrew/     # 📦 game-ready.rb, a draft cask (not published)
 ├── tools/                  # 🔧 strings/<lang>.json + gen_strings.py, gen_diagram.py, gen-icon.sh, strip_png.py, brand/brand_kit.py
 ├── .github/workflows/      # 🤖 ci.yml, release.yml
 ├── Makefile                # 🧰 check, screenshots, social-preview
@@ -237,7 +278,7 @@ MacOS-Game-Mode/
 ## 🧪 Testing
 
 ```bash
-make check                  # core tests, strings, diagram, shell lint, Release build (same as scripts/check.sh)
+make check                  # core tests, measurement-tool tests, strings, diagram, shell lint, Release build (same as scripts/check.sh)
 make screenshots            # retake docs/assets/screenshots/ from the demo data
 ```
 
@@ -249,7 +290,7 @@ What's covered automatically and what has been verified on a real Mac: [docs/tes
 
 Game Mode runs one script as root, after the macOS password prompt. The script is compiled
 into the app, accepts only the app's own flag file, records what it changes and puts it back.
-Details and how to report a problem: [SECURITY.md](SECURITY.md). Every privacy promise and its limits: [docs/privacy.md](docs/privacy.md).
+Every setting it changes, how each comes back and which steps need the password: [docs/safety.md](docs/safety.md). Removing it: [docs/uninstall.md](docs/uninstall.md). Details and how to report a problem: [SECURITY.md](SECURITY.md). Every privacy promise and its limits: [docs/privacy.md](docs/privacy.md).
 
 ---
 
