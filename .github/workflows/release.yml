@@ -10,7 +10,7 @@ jobs:
   release:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - name: Tag matches the app version
         run: |
           want="${GITHUB_REF_NAME#v}"
