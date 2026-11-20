@@ -8,7 +8,7 @@ jobs:
   test:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - name: Core tests
         working-directory: Packages/GameReadyCore
         run: swift test
